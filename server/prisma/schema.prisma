@@ -1,0 +1,74 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+generator zod {
+  provider = "zod-prisma-types"
+
+  output                           = "../../shared/src/lib/validate" // default is ./generated/zod
+  useMultipleFiles                 = true // default is false
+  // writeBarrelFiles                 = false // default is true
+  createInputTypes                 = false // default is true
+  // createModelTypes                 = false // default is true
+  addInputTypeValidation           = false // default is true
+  addIncludeType                   = false // default is true
+  addSelectType                    = false // default is true
+  validateWhereUniqueInput         = false // default is true
+  createOptionalDefaultValuesTypes = true // default is false
+  createRelationValuesTypes        = true // default is false
+  createPartialTypes               = true // default is false
+  // useDefaultValidators             = false // default is true
+  coerceDate                       = false // default is true
+  writeNullishInModelTypes         = true // default is false
+}
+
+model Soal {
+  id        Int        @id @default(autoincrement())
+  name      String
+  author    String
+  list      SoalItem[]
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+}
+
+model SoalItem {
+  id       Int      @id @default(autoincrement())
+  soalId   Int
+  question String
+  A        String
+  B        String
+  C        String
+  D        String
+  E        String
+  answer   String
+  soal     Soal     @relation(fields: [soalId], references: [id], onDelete: Cascade)
+  Answer   Answer[]
+}
+
+model Student {
+  id        Int      @id @default(autoincrement())
+  name      String
+  email     String   @unique
+  answers   Answer[]
+  createdAt DateTime @default(now())
+}
+
+model Answer {
+  id         Int      @id @default(autoincrement())
+  studentId  Int
+  soalId     Int
+  soalItemId Int
+  selected   String // A, B, C, D, E
+  createdAt  DateTime @default(now())
+  student    Student  @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  soalItem   SoalItem @relation(fields: [soalItemId], references: [id], onDelete: Cascade)
+}
