@@ -1,6 +1,6 @@
 import { useAsyncError, useRouteError } from "react-router-dom";
 
-
+// noinspection JSUnusedGlobalSymbols
 export function ReviewsError() {
 	const error = useAsyncError();
 	console.log(error)

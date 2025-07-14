@@ -1,7 +1,7 @@
 // components/AnswerCheck.tsx
 import { useLoaderData } from "react-router-dom";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card.tsx";
-import { Badge } from "@/components/ui/badge.tsx";
+import { Card, CardContent, CardHeader, CardTitle } from "client/src/components/ui/card.tsx";
+import { Badge } from "client/src/components/ui/badge.tsx";
 
 type Question = {
 	id: number;

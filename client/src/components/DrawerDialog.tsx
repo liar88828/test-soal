@@ -1,5 +1,5 @@
 import * as React from "react";
-import { useMediaQuery } from "@/hook/useMediaQuery.ts";
+import { useMediaQuery } from "client/src/hook/useMediaQuery.ts";
 import {
 	Dialog,
 	DialogClose,
@@ -8,8 +8,8 @@ import {
 	DialogHeader,
 	DialogTitle,
 	DialogTrigger
-} from "@/components/ui/dialog.tsx";
-import { Button } from "@/components/ui/button.tsx";
+} from "client/src/components/ui/dialog.tsx";
+import { Button } from "client/src/components/ui/button.tsx";
 import {
 	Drawer,
 	DrawerClose,
@@ -19,7 +19,7 @@ import {
 	DrawerHeader,
 	DrawerTitle,
 	DrawerTrigger
-} from "@/components/ui/drawer.tsx";
+} from "client/src/components/ui/drawer.tsx";
 
 type DrawerDialogProps = {
 	title: string;

@@ -3,11 +3,10 @@ import { Hono } from 'hono'
 import { prisma } from "../lib/db/prisma";
 import { type AnswerOptionalDefaults, SoalItemOptionalDefaultsSchema } from "@shared/lib/validate";
 import { z } from "zod";
-import * as console from "node:console";
 
-const route = new Hono()
+const userRouter = new Hono()
 
-route
+userRouter
 .get(
 	async (c) => {
 		// console.log('execute')
@@ -36,7 +35,7 @@ route
 	}
 )
 
-route
+userRouter
 .get(
 	':id', async (c) => {
 		const id = parseInt(c.req.param('id'))
@@ -211,4 +210,4 @@ route
 	return data
 });
 
-export default route
+export default userRouter

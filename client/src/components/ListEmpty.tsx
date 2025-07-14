@@ -1,4 +1,4 @@
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert.tsx";
+import { Alert, AlertDescription, AlertTitle } from "client/src/components/ui/alert.tsx";
 import { Info } from "lucide-react";
 
 

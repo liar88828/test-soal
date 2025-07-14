@@ -24,7 +24,7 @@ export default tseslint.config({
   languageOptions: {
     // other options...
     parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.route.json'],
+      project: ['./tsconfig.node.json', './tsconfig.userRouter.json'],
       tsconfigRootDir: import.meta.dirname,
     },
   },

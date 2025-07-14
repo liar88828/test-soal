@@ -72,3 +72,12 @@ model Answer {
   student    Student  @relation(fields: [studentId], references: [id], onDelete: Cascade)
   soalItem   SoalItem @relation(fields: [soalItemId], references: [id], onDelete: Cascade)
 }
+
+model User {
+  id        String   @id @default(cuid())
+  name      String
+  email     String   @unique
+  role      String   @default("USER")
+  password  String
+  createdAt DateTime @default(now())
+}

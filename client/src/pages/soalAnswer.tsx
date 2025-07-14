@@ -1,10 +1,10 @@
 import { useState } from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { Button } from "@/components/ui/button";
-import { Label } from "@/components/ui/label";
+import { Card, CardContent, CardHeader, CardTitle } from "client/src/components/ui/card";
+import { RadioGroup, RadioGroupItem } from "client/src/components/ui/radio-group";
+import { Button } from "client/src/components/ui/button";
+import { Label } from "client/src/components/ui/label";
 import { useFetcher, useLoaderData } from "react-router-dom";
-import { SoalWithRelations } from "shared/dist/lib/validate";
+import { type SoalWithRelations } from "shared/dist/lib/validate";
 
 type Question = {
 	id: number;
@@ -28,18 +28,18 @@ export const SoalAnswer = () => {
 		setAnswers({ ...answers, [questionId]: value });
 	};
 
-	const handleSubmit = () => {
-		fetcher.submit(
+	const handleSubmit = async () => {
+		await fetcher.submit(
 			{
 				data: JSON.stringify({
 					student: {
 						name: "Febrian Alif",
 						email: "febrian@example.com",
 					},
-					answers: Object.entries(answers).map(([key, selected]) => ({
+					answers: Object.entries(answers).map(([ key, selected ]) => ( {
 						soalItemId: Number(key),
 						selected,
-					})),
+					} )),
 				}),
 			},
 			{ method: "post" }
@@ -60,7 +60,7 @@ export const SoalAnswer = () => {
 						<p className="mb-4">{ q.question }</p>
 						<RadioGroup
 							value={ answers[q.id] || "" }
-							onValueChange={ (val) => handleSelect(q.id, val) }
+							onValueChange={ (val: string) => handleSelect(q.id, val) }
 							className="space-y-2"
 						>
 							{ [ "A", "B", "C", "D", "E" ].map((opt) => (

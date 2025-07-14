@@ -6,7 +6,9 @@ A full-stack TypeScript monorepo starter with shared types, using Bun, Hono, Vit
 
 ## Why bhvr?
 
-While there are plenty of existing route building stacks out there, many of them are either bloated, outdated, or have too much of a vendor lock-in. bhvr is built with the opinion that you should be able to deploy your client or server in any environment while also keeping type saftey.
+While there are plenty of existing userRouter building stacks out there, many of them are either bloated, outdated, or
+have too much of a vendor lock-in. bhvr is built with the opinion that you should be able to deploy your client or
+server in any environment while also keeping type saftey.
 
 ## Features
 
@@ -49,15 +51,15 @@ import { Hono } from 'hono'
 import { cors } from 'hono/cors'
 import type { ApiResponse } from 'shared/dist'
 
-const route = new Hono()
+const userRouter = new Hono()
 
-route.use(cors())
+userRouter.use(cors())
 
-route.get('/', (c) => {
+userRouter.get('/', (c) => {
   return c.text('Hello Hono!')
 })
 
-route.get('/hello', async (c) => {
+userRouter.get('/hello', async (c) => {
 
   const data: ApiResponse = {
     message: "Hello BHVR!",
@@ -67,14 +69,16 @@ route.get('/hello', async (c) => {
   return c.json(data, { status: 200 })
 })
 
-export default route
+export default userRouter
 ```
 
 If you wanted to add a database to Hono you can do so with a multitude of Typescript libraries like [Supabase](https://supabase.com), or ORMs like [Drizzle](https://orm.drizzle.team/docs/get-started) or [Prisma](https://www.prisma.io/orm)
 
 ### Client
 
-bhvr uses Vite + React Typescript template, which means you can build your frontend just as you would with any other React route. This makes it flexible to add UI components like [shadcn/ui](https://ui.shadcn.com) or routing using [React Router](https://reactrouter.com/start/declarative/installation).
+bhvr uses Vite + React Typescript template, which means you can build your frontend just as you would with any other
+React userRouter. This makes it flexible to add UI components like [shadcn/ui](https://ui.shadcn.com) or routing
+using [React Router](https://reactrouter.com/start/declarative/installation).
 
 ```
 client
@@ -91,7 +95,7 @@ client
 │   ├── index.css
 │   ├── main.tsx
 │   └── vite-env.d.ts
-├── tsconfig.route.json
+├── tsconfig.userRouter.json
 ├── tsconfig.json
 ├── tsconfig.node.json
 └── vite.config.ts

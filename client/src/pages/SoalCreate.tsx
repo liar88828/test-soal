@@ -1,7 +1,7 @@
 import { useActionData, useFetcher } from "react-router-dom";
-import { Button } from "@/components/ui/button.tsx";
-import { Input } from "@/components/ui/input.tsx";
-import { Label } from "@/components/ui/label.tsx";
+import { Button } from "client/src/components/ui/button.tsx";
+import { Input } from "client/src/components/ui/input.tsx";
+import { Label } from "client/src/components/ui/label.tsx";
 
 
 export function SoalCreate() {

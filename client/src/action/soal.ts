@@ -1,8 +1,8 @@
 import { SoalItemOptionalDefaultsSchema, SoalOptionalDefaultsSchema } from "shared/dist/lib/validate";
-import { ActionFunctionArgs, LoaderFunctionArgs, redirect } from "react-router-dom";
+import { type ActionFunctionArgs, type LoaderFunctionArgs, redirect } from "react-router-dom";
 import { z } from "zod";
-import { SERVER_URL } from "@/router.tsx";
-import { AnswerCheckData } from "@/pages/soalCheck.tsx";
+import { type AnswerCheckData } from "client/src/pages/soalCheck.tsx";
+import { SERVER_URL } from "@/lib/constants.ts";
 
 
 export function getSoalAll() {
@@ -93,7 +93,7 @@ export async function createSoalListAction({ request, params }: ActionFunctionAr
 	} catch {
 		return { error: "Terjadi kesalahan saat menyimpan pertanyaan." }
 	}
-};
+}
 
 export async function soalListAnswer({ request, params }: ActionFunctionArgs) {
 	const { id } = params;
@@ -129,7 +129,7 @@ export async function soalListAnswer({ request, params }: ActionFunctionArgs) {
 // loaders/soalListCheckLoader.ts
 export async function soalListCheckLoader({ params }: LoaderFunctionArgs): Promise<AnswerCheckData> {
 	const soalId = params.id;
-	// const studentId = params.studentId || 1; // bisa pakai session/auth nanti
+	// const studentId = params.studentId || 1; // bisa pakai session/authRouter nanti
 
 	const res = await fetch(`${ SERVER_URL }/soal/${ soalId }/check`);
 	const data = await res.json();

@@ -1,15 +1,15 @@
 import { useFetcher, useLoaderData, useParams } from "react-router-dom";
-import { Badge } from "@/components/ui/badge";
-import { Separator } from "@/components/ui/separator";
-import { SoalWithRelations } from "shared/dist/lib/validate";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card.tsx";
-import { Button } from "@/components/ui/button";
-import { Label } from "@/components/ui/label.tsx";
-import { Input } from "@/components/ui/input.tsx";
-import { Textarea } from "@/components/ui/textarea.tsx";
-import { ListEmpty } from "@/components/ListEmpty.tsx";
-import { DrawerDialog } from "@/components/DrawerDialog.tsx";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select.tsx";
+import { Badge } from "client/src/components/ui/badge";
+import { Separator } from "client/src/components/ui/separator";
+import { type SoalWithRelations } from "shared/dist/lib/validate";
+import { Card, CardContent, CardHeader, CardTitle } from "client/src/components/ui/card.tsx";
+import { Button } from "client/src/components/ui/button";
+import { Label } from "client/src/components/ui/label.tsx";
+import { Input } from "client/src/components/ui/input.tsx";
+import { Textarea } from "client/src/components/ui/textarea.tsx";
+import { ListEmpty } from "client/src/components/ListEmpty.tsx";
+import { DrawerDialog } from "client/src/components/DrawerDialog.tsx";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "client/src/components/ui/select.tsx";
 
 export const SoalList = () => {
 	const soal = useLoaderData() as SoalWithRelations;
