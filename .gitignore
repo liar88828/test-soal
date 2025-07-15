@@ -62,3 +62,4 @@ bun.lockb
 /server/generated/prisma/schema.prisma
 /server/generated/prisma/wasm.d.ts
 /server/generated/prisma/wasm.js
+/server/prisma/dev_test.db

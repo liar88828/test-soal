@@ -3,10 +3,12 @@ import { Label } from "@/components/ui/label.tsx";
 import { Input } from "@/components/ui/input.tsx";
 import { Button } from "@/components/ui/button.tsx";
 import { useFetcher } from "react-router-dom";
+import { LoaderProps } from "shared";
+import { loginAction } from "@/action/auth.action";
 
 export default function LoginPage() {
-	const fetcher = useFetcher()
-	const data = fetcher.data as { error: string } | undefined
+	const fetcher = useFetcher<LoaderProps<typeof loginAction>>()
+	const data = fetcher.data
 	// console.log(fetcher.data)
 	return (
 		<div className="min-h-screen flex items-center justify-center bg-gray-50">
@@ -19,7 +21,7 @@ export default function LoginPage() {
 
 						<h1 className="text-2xl font-bold text-center mb-4">Login</h1>
 
-						{ data?.error && <p className="text-red-500">{ data.error }</p> }
+						{data?.error && <p className="text-red-500">{data.error}</p>}
 
 						<div>
 							<Label htmlFor="email">Email</Label>

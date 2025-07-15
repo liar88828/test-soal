@@ -14,7 +14,7 @@ datasource db {
 generator zod {
   provider = "zod-prisma-types"
 
-  output                           = "../../shared/src/lib/validate" // default is ./generated/zod
+  output                           = "../../shared/src/lib/validate/gen" // default is ./generated/zod
   useMultipleFiles                 = true // default is false
   // writeBarrelFiles                 = false // default is true
   createInputTypes                 = false // default is true
@@ -31,13 +31,37 @@ generator zod {
   writeNullishInModelTypes         = true // default is false
 }
 
-model Soal {
-  id        Int        @id @default(autoincrement())
+model User {
+  id        String   @id @default(cuid())
   name      String
-  author    String
-  list      SoalItem[]
-  createdAt DateTime   @default(now())
-  updatedAt DateTime   @updatedAt
+  email     String   @unique
+  role      String   @default("USER") // USER, ADMIN
+  password  String
+  Student   Student?
+  createdAt DateTime @default(now())
+}
+
+model Student {
+  id              Int               @id @default(autoincrement())
+  name            String
+  email           String            @unique
+  answers         Answer[]
+  StudentSubjects StudentSubjects[]
+  userId          String            @unique
+  User            User?             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt       DateTime          @default(now())
+  updatedAt       DateTime          @updatedAt
+}
+
+model Soal {
+  id              Int               @id @default(autoincrement())
+  name            String
+  author          String
+  subjects        String
+  list            SoalItem[]
+  StudentSubjects StudentSubjects[]
+  createdAt       DateTime          @default(now())
+  updatedAt       DateTime          @updatedAt
 }
 
 model SoalItem {
@@ -50,15 +74,16 @@ model SoalItem {
   D        String
   E        String
   answer   String
-  soal     Soal     @relation(fields: [soalId], references: [id], onDelete: Cascade)
+  Soal     Soal     @relation(fields: [soalId], references: [id], onDelete: Cascade)
   Answer   Answer[]
 }
 
-model Student {
+model StudentSubjects {
   id        Int      @id @default(autoincrement())
-  name      String
-  email     String   @unique
-  answers   Answer[]
+  studentId Int
+  Student   Student  @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  soalId    Int
+  Soal      Soal     @relation(fields: [soalId], references: [id])
   createdAt DateTime @default(now())
 }
 
@@ -69,15 +94,6 @@ model Answer {
   soalItemId Int
   selected   String // A, B, C, D, E
   createdAt  DateTime @default(now())
-  student    Student  @relation(fields: [studentId], references: [id], onDelete: Cascade)
-  soalItem   SoalItem @relation(fields: [soalItemId], references: [id], onDelete: Cascade)
-}
-
-model User {
-  id        String   @id @default(cuid())
-  name      String
-  email     String   @unique
-  role      String   @default("USER")
-  password  String
-  createdAt DateTime @default(now())
+  Student    Student  @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  SoalItem   SoalItem @relation(fields: [soalItemId], references: [id], onDelete: Cascade)
 }

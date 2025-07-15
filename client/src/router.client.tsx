@@ -1,37 +1,38 @@
 import { createBrowserRouter } from "react-router";
-
 import { SoalPage } from "./pages/SoalPage.tsx";
-import { SoalList } from "./pages/SoalList.tsx";
+import { SoalListPage } from "./pages/SoalListPage.tsx";
 import { SoalCreate } from "./pages/SoalCreate.tsx";
-import Home from "./pages/home.tsx";
+import HomePage from "./pages/homePage.tsx";
 import { Loading } from "./components/loading.tsx";
 import {
 	createSoalAction,
 	createSoalListAction,
 	getSoalAll,
-	soalListAnswer,
+	soalListAnswerAction,
 	soalListCheckLoader,
 	soalListLoader
-} from "./action/soal.ts";
-import { SoalAnswer } from "./pages/soalAnswer.tsx";
+} from "./action/soal.action.ts";
+import { profileLoader, registerAction, layoutLoader, homeLoader, loginAction, logoutAction, sessionLoader, } from "./action/auth.action.ts";
+import { SoalAnswerPage } from "./pages/soalAnswer.tsx";
 import { ErrorBoundary } from "./pages/reviewsError.tsx";
-import { AnswerCheck } from "./pages/soalCheck";
+import { AnswerCheck } from "./pages/soalCheck.tsx";
 import RegisterPage from "./pages/registerPage.tsx";
 import LoginPage from "./pages/loginPage.tsx";
-import { homeLoader, loginAction, profileLoader, registerAction } from "@/action/auth.action.ts";
-import { Layout } from "@/pages/App.tsx";
-import ProfilePage from "@/pages/ProfilePage.tsx";
+import { Layout } from "./pages/Layout.tsx";
+import ProfilePage from "./pages/ProfilePage.tsx";
+import LogoutPage from "./pages/logoutPage.tsx";
 
 export const routerClient =
 	createBrowserRouter([
 		{
+			loader: layoutLoader,
 			Component: Layout,
 			hydrateFallbackElement: <Loading />,
 			children: [
 				{
 					index: true,
 					loader: homeLoader,
-					Component: Home
+					Component: HomePage
 				},
 
 				{
@@ -39,6 +40,7 @@ export const routerClient =
 					Component: LoginPage,
 					action: loginAction
 				},
+
 				{
 					path: "register",
 					Component: RegisterPage,
@@ -48,6 +50,12 @@ export const routerClient =
 					path: "profile",
 					Component: ProfilePage,
 					loader: profileLoader
+				},
+				{
+					path: "logout",
+					Component: LogoutPage,
+					action: logoutAction,
+
 				},
 
 				{
@@ -61,21 +69,22 @@ export const routerClient =
 						{
 							path: 'create',
 							Component: SoalCreate,
+							loader: sessionLoader,
 							action: createSoalAction,
 						},
 
 						{
 							path: ':id',
-							Component: SoalList,
+							Component: SoalListPage,
 							loader: soalListLoader,
 							action: createSoalListAction,
 						},
 
 						{
 							path: ':id/answer',
-							Component: SoalAnswer,
+							Component: SoalAnswerPage,
 							loader: soalListLoader,
-							action: soalListAnswer,
+							action: soalListAnswerAction,
 						},
 						{
 							path: ":id/check",

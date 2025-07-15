@@ -4,8 +4,12 @@
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {
-    "build": "tsc",
-    "dev": "bun --watch run src/index.ts"
+    "build": "bunx prisma db push && bunx prisma generate && tsc",
+    "dev": "bun --watch run src/index.ts",
+    "db:push": "bunx prisma db push",
+    "db:generate": "bunx prisma generate",
+    "db:migrate": "bunx prisma migrate --skip-generate",
+    "ts": "tsc --noEmit --incremental --allowImportingTsExtensions"
   },
   "dependencies": {
     "hono": "^4.7.11",

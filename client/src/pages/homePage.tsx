@@ -4,14 +4,14 @@ import { Card, CardContent } from "@/components/ui/card";
 import { BadgeCheck, BookOpen, Timer } from "lucide-react";
 import { Link, useLoaderData } from "react-router-dom";
 import { LoaderProps } from "shared";
-import { homeLoader } from "@/action/auth.action.ts";
+import { sessionLoader } from "@/action/auth.action.ts";
 
-export default function Home() {
-	const { token } = useLoaderData() as LoaderProps<typeof homeLoader>
+export default function HomePage() {
+	const { token } = useLoaderData() as LoaderProps<typeof sessionLoader>
 	// console.log(data)
 	return (
 		<div className="min-h-screen bg-white text-gray-900">
-			{/* Hero Section */ }
+			{/* Hero Section */}
 			<section className="px-6 py-20 text-center bg-gradient-to-b from-blue-50 to-white">
 				<h1 className="text-4xl md:text-5xl font-bold mb-4">
 					Platform Latihan Ujian & Tes Online
@@ -19,22 +19,22 @@ export default function Home() {
 				<p className="text-lg md:text-xl mb-6 max-w-2xl mx-auto">
 					Siap hadapi ujian dengan latihan soal yang interaktif, lengkap, dan gratis!
 				</p>
-				{ token ?
+				{token ?
 					<Button className="text-lg px-6 py-4 rounded-xl">
-						<Link to={ '/soal' }>
+						<Link to={'/soal'}>
 							Masuk Home
 						</Link>
 					</Button>
 					:
 					<Button className="text-lg px-6 py-4 rounded-xl">
-						<Link to={ '/login' }>
+						<Link to={'/login'}>
 							Mulai Sekarang
 						</Link>
 					</Button>
 				}
 			</section>
 
-			{/* Fitur */ }
+			{/* Fitur */}
 			<section className="px-6 py-16 bg-gray-50">
 				<h2 className="text-3xl font-semibold text-center mb-10">
 					Kenapa memilih kami?
@@ -66,7 +66,7 @@ export default function Home() {
 				</div>
 			</section>
 
-			{/* Testimoni */ }
+			{/* Testimoni */}
 			<section className="px-6 py-16">
 				<h2 className="text-3xl font-semibold text-center mb-10">
 					Apa kata mereka?
@@ -80,9 +80,9 @@ export default function Home() {
 				</div>
 			</section>
 
-			{/* Footer */ }
+			{/* Footer */}
 			<footer className="px-6 py-10 bg-gray-100 text-center text-sm text-gray-500">
-				© { new Date().getFullYear() } LatihanUjian.id — Dibuat dengan ❤️ untuk pelajar Indonesia.
+				© {new Date().getFullYear()} LatihanUjian.id — Dibuat dengan ❤️ untuk pelajar Indonesia.
 			</footer>
 		</div>
 	);

@@ -1,31 +1,75 @@
+import { userLoginSchema, userRegisterSchema } from 'shared/src/lib/validate/user.schema.ts';
 import { type ActionFunctionArgs, redirect } from "react-router-dom";
 import { SERVER_URL } from "@/lib/constants.ts";
 import { decodeToken, isExpired } from "react-jwt";
+import { LoaderProps, PayloadToken } from 'shared';
+
 
 
 export function getToken() {
 	const token = localStorage.getItem("token"); // Simpan token
-	return {
+	const user = decodeToken(token ?? '') as PayloadToken
+	const data = {
 		token,
+		user,
 		isValid: !isExpired(token ?? ''),
-		user: decodeToken(token ?? '')
 	}
+	// console.log("getToken", data);
+	return data
 }
+
+
+export function getUser() {
+	const token = localStorage.getItem("token"); // Simpan token
+	return decodeToken(token ?? '') as PayloadToken
+}
+export type GetUserLoader = LoaderProps<typeof getUser>;
+
+export async function layoutLoader() {
+	const { isValid } = getToken();
+
+	// Only open sidebar if sidebar_state is "true" AND user is logged in
+	const stored = localStorage.getItem("sidebar_state");
+	const sidebarOpen = stored === "true";
+
+	return {
+		isReady: true,
+		defaultOpen: isValid ? sidebarOpen : false,
+		isLogin: isValid
+	};
+}
+
+
+export async function logoutAction(_ctx: ActionFunctionArgs) {
+	localStorage.removeItem("token")
+	localStorage.removeItem("sidebar_state")
+	return redirect("/logout")
+}
+
+export async function sessionLoader() {
+	return getToken()
+}
+export type SessionLoader = LoaderProps<typeof sessionLoader>;
 
 export async function homeLoader() {
 	return getToken()
 }
 
 export async function loginAction({ request }: ActionFunctionArgs) {
-	const formData = await request.formData();
-	const email = formData.get("email") as string;
-	const password = formData.get("password") as string;
 
 	try {
-		const res = await fetch(`${ SERVER_URL }/auth/login`, {
+
+		const formData = await request.formData();
+
+		const data = userLoginSchema.parse({
+			email: formData.get("email") as string,
+			password: formData.get("password") as string
+		})
+
+		const res = await fetch(`${SERVER_URL}/auth/login`, {
 			method: "POST",
 			headers: { "Content-Type": "application/json" },
-			body: JSON.stringify({ email, password }),
+			body: JSON.stringify(data),
 		});
 		// console.log(await res.json());
 		if (!res.ok) {
@@ -44,16 +88,23 @@ export async function loginAction({ request }: ActionFunctionArgs) {
 }
 
 export async function registerAction({ request }: ActionFunctionArgs) {
-	const formData = await request.formData();
-	const name = formData.get("name") as string;
-	const email = formData.get("email") as string;
-	const password = formData.get("password") as string;
+
 
 	try {
-		const res = await fetch(`${ SERVER_URL }/auth/register`, {
+
+		const formData = await request.formData();
+
+		const data = userRegisterSchema.parse({
+			name: formData.get("name") as string,
+			email: formData.get("email") as string,
+			password: formData.get("password") as string,
+
+		})
+
+		const res = await fetch(`${SERVER_URL}/auth/register`, {
 			method: "POST",
 			headers: { "Content-Type": "application/json" },
-			body: JSON.stringify({ name, email, password }),
+			body: JSON.stringify(data),
 		});
 
 		if (!res.ok) {
@@ -83,9 +134,9 @@ export async function profileLoader() {
 	}
 
 	try {
-		const res = await fetch(`${ SERVER_URL }/auth/profile`, {
+		const res = await fetch(`${SERVER_URL}/auth/profile`, {
 			headers: {
-				Authorization: `Bearer ${ token }`,
+				Authorization: `Bearer ${token}`,
 			},
 		});
 

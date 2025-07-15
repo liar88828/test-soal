@@ -45,14 +45,14 @@ export type SoalItemOptionalDefaults = z.infer<typeof SoalItemOptionalDefaultsSc
 /////////////////////////////////////////
 
 export type SoalItemRelations = {
-  soal: SoalWithRelations;
+  Soal: SoalWithRelations;
   Answer: AnswerWithRelations[];
 };
 
 export type SoalItemWithRelations = z.infer<typeof SoalItemSchema> & SoalItemRelations
 
 export const SoalItemWithRelationsSchema: z.ZodType<SoalItemWithRelations> = SoalItemSchema.merge(z.object({
-  soal: z.lazy(() => SoalWithRelationsSchema),
+  Soal: z.lazy(() => SoalWithRelationsSchema),
   Answer: z.lazy(() => AnswerWithRelationsSchema).array(),
 }))
 
@@ -61,14 +61,14 @@ export const SoalItemWithRelationsSchema: z.ZodType<SoalItemWithRelations> = Soa
 /////////////////////////////////////////
 
 export type SoalItemOptionalDefaultsRelations = {
-  soal: SoalOptionalDefaultsWithRelations;
+  Soal: SoalOptionalDefaultsWithRelations;
   Answer: AnswerOptionalDefaultsWithRelations[];
 };
 
 export type SoalItemOptionalDefaultsWithRelations = z.infer<typeof SoalItemOptionalDefaultsSchema> & SoalItemOptionalDefaultsRelations
 
 export const SoalItemOptionalDefaultsWithRelationsSchema: z.ZodType<SoalItemOptionalDefaultsWithRelations> = SoalItemOptionalDefaultsSchema.merge(z.object({
-  soal: z.lazy(() => SoalOptionalDefaultsWithRelationsSchema),
+  Soal: z.lazy(() => SoalOptionalDefaultsWithRelationsSchema),
   Answer: z.lazy(() => AnswerOptionalDefaultsWithRelationsSchema).array(),
 }))
 
@@ -77,28 +77,28 @@ export const SoalItemOptionalDefaultsWithRelationsSchema: z.ZodType<SoalItemOpti
 /////////////////////////////////////////
 
 export type SoalItemPartialRelations = {
-  soal?: SoalPartialWithRelations;
+  Soal?: SoalPartialWithRelations;
   Answer?: AnswerPartialWithRelations[];
 };
 
 export type SoalItemPartialWithRelations = z.infer<typeof SoalItemPartialSchema> & SoalItemPartialRelations
 
 export const SoalItemPartialWithRelationsSchema: z.ZodType<SoalItemPartialWithRelations> = SoalItemPartialSchema.merge(z.object({
-  soal: z.lazy(() => SoalPartialWithRelationsSchema),
+  Soal: z.lazy(() => SoalPartialWithRelationsSchema),
   Answer: z.lazy(() => AnswerPartialWithRelationsSchema).array(),
 })).partial()
 
 export type SoalItemOptionalDefaultsWithPartialRelations = z.infer<typeof SoalItemOptionalDefaultsSchema> & SoalItemPartialRelations
 
 export const SoalItemOptionalDefaultsWithPartialRelationsSchema: z.ZodType<SoalItemOptionalDefaultsWithPartialRelations> = SoalItemOptionalDefaultsSchema.merge(z.object({
-  soal: z.lazy(() => SoalPartialWithRelationsSchema),
+  Soal: z.lazy(() => SoalPartialWithRelationsSchema),
   Answer: z.lazy(() => AnswerPartialWithRelationsSchema).array(),
 }).partial())
 
 export type SoalItemWithPartialRelations = z.infer<typeof SoalItemSchema> & SoalItemPartialRelations
 
 export const SoalItemWithPartialRelationsSchema: z.ZodType<SoalItemWithPartialRelations> = SoalItemSchema.merge(z.object({
-  soal: z.lazy(() => SoalPartialWithRelationsSchema),
+  Soal: z.lazy(() => SoalPartialWithRelationsSchema),
   Answer: z.lazy(() => AnswerPartialWithRelationsSchema).array(),
 }).partial())
 

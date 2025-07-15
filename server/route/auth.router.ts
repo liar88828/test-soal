@@ -1,21 +1,22 @@
-// routes/authRouter.ts
+import { userRegisterSchema, userLoginSchema } from '@shared/lib/validate/user.schema';
 import { Hono } from "hono";
 import { sign, verify } from "hono/jwt"; // pastikan kamu pakai `hono/jwt`
 import { prisma } from "../lib/db/prisma";
-import { UserOptionalDefaultsSchema } from "@shared/lib/validate";
 import { password } from "bun";
 import { JWT_SECRET } from "@shared/constant";
+import type { PayloadToken } from 'shared/dist';
 
 const authRouter = new Hono();
-export type PayloadToken = { userId: string, exp: number }
+
 authRouter.post("/register", async (c) => {
 	// console.log('execute  register')
 	const rawData = await c.req.json();
-	const { success, data } = UserOptionalDefaultsSchema.safeParse(rawData);
+
+	const { success, data } = userRegisterSchema.safeParse(rawData);
+
 	if (!success) {
 		return c.json({ error: "Semua field wajib diisi" }, 400);
 	}
-
 	const existingUser = await prisma.user.findUnique({
 		where: { email: data.email }
 	});
@@ -23,7 +24,7 @@ authRouter.post("/register", async (c) => {
 		return c.json({ error: "Email sudah digunakan" }, 400);
 	}
 
-	const hashedPassword = await Bun.password.hash(data.password,);
+	const hashedPassword = await Bun.password.hash(data.password);
 
 	await prisma.user.create({
 		data: {
@@ -37,10 +38,9 @@ authRouter.post("/register", async (c) => {
 });
 
 authRouter.post("/login", async (c) => {
-	console.log('execute login')
 
 	const rawData = await c.req.json();
-	const { success, data } = UserOptionalDefaultsSchema.omit({ name: true }).safeParse(rawData)
+	const { success, data } = userLoginSchema.safeParse(rawData)
 	if (!success) {
 		return c.json({ error: "Tolong isi dengan benar" }, 404);
 
@@ -51,10 +51,13 @@ authRouter.post("/login", async (c) => {
 		return c.json({ error: "Email tidak ditemukan" }, 404);
 	}
 
-	if (!( await password.verify(data.password, user.password) )) {
+	if (!(await password.verify(data.password, user.password))) {
 		return c.json({ error: "Password salah" }, 401);
 	}
-	const payload = {
+	const payload: PayloadToken = {
+		role: user.role,
+		name: user.name,
+		email: user.email,
 		userId: user.id,
 		exp: Math.floor(Date.now() / 1000) + 60 * 60, // Token expires in 5 minutes
 	}
@@ -65,7 +68,7 @@ authRouter.post("/login", async (c) => {
 
 authRouter.get("/profile", async (c) => {
 	const authHeader = c.req.header("Authorization");
-	if (!authHeader || !authHeader.startsWith("Bearer ")) {
+	if (!authHeader?.startsWith("Bearer ")) {
 		return c.json({ error: "Unauthorized" }, 401);
 	}
 
@@ -90,7 +93,9 @@ authRouter.get("/profile", async (c) => {
 
 		return c.json({ user });
 	} catch (err) {
-		return c.json({ error: "Token tidak valid atau kedaluwarsa" }, 401);
+		console.error("Error verifying token:", err);
+		return c.json({ error: "Token tidak valid atau kedaluwarsa" },
+			401);
 	}
 });
 

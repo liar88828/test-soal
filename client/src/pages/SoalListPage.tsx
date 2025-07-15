@@ -1,8 +1,7 @@
 import { useFetcher, useLoaderData, useParams } from "react-router-dom";
 import { Badge } from "client/src/components/ui/badge";
 import { Separator } from "client/src/components/ui/separator";
-import { type SoalWithRelations } from "shared/dist/lib/validate";
-import { Card, CardContent, CardHeader, CardTitle } from "client/src/components/ui/card.tsx";
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "client/src/components/ui/card.tsx";
 import { Button } from "client/src/components/ui/button";
 import { Label } from "client/src/components/ui/label.tsx";
 import { Input } from "client/src/components/ui/input.tsx";
@@ -10,75 +9,80 @@ import { Textarea } from "client/src/components/ui/textarea.tsx";
 import { ListEmpty } from "client/src/components/ListEmpty.tsx";
 import { DrawerDialog } from "client/src/components/DrawerDialog.tsx";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "client/src/components/ui/select.tsx";
+import { type LoaderProps } from "shared";
+import { createSoalListAction, soalListLoader } from "@/action/soal.action";
 
-export const SoalList = () => {
-	const soal = useLoaderData() as SoalWithRelations;
-	// console.log("soal", soal);
+export const SoalListPage = () => {
+	const soal = useLoaderData<LoaderProps<typeof soalListLoader>>()
+
 	return (
 		<div className="p-6 space-y-6">
-			<div className={ 'flex justify-between items-end' }>
+			<div className={'flex justify-between items-end'}>
 				<div className="">
-					<h1 className="text-2xl">{ soal.name }</h1>
-					<p>Penulis: { soal.author }</p>
+					<h1 className="text-2xl">{soal.name}</h1>
+					<p>Penulis: {soal.author}</p>
 				</div>
 				<DrawerDialog
 					title="Tambah Soal"
 					// description="Tambahkan Soal "
 					triggerLabel="Tambah Soal"
-					// footer={ <Button type="submit">Save changes</Button> }
+				// footer={ <Button type="submit">Save changes</Button> }
 				>
 					<CreateQuestionForm />
 				</DrawerDialog>
 			</div>
-			<Card>
-				<CardHeader>
-					<CardTitle></CardTitle>
-				</CardHeader>
-				<CardContent>
 
-					<div className="space-y-6">
-						{ soal.list.length === 0
-							? <ListEmpty
-								title={ 'Belum ada soal' }
-								description={ 'Soal ini belum memiliki pertanyaan. Tambahkan pertanyaan baru untuk memulai.' }
-							/>
-							: soal.list.map((item, idx) => (
-								<div key={ item.id } className="space-y-3">
-									<div className="flex items-center gap-2">
-										<Badge variant="secondary">#{ idx + 1 }</Badge>
-										<p className="font-medium">{ item.question }</p>
-									</div>
-									<ul className="ml-6  space-y-1 text-muted-foreground">
-										<li>A: { item.A }</li>
-										<li>B: { item.B }</li>
-										<li>C: { item.C }</li>
-										<li>D: { item.D }</li>
-										<li>E: { item.E }</li>
-									</ul>
-									<p>
-										<strong className="text-emerald-600">Jawaban: { item.answer }</strong>
-									</p>
-									<Separator />
-								</div>
-							)) }
-					</div>
-				</CardContent>
-			</Card>
+
+
+			{soal.list.length === 0
+				? <ListEmpty
+					title={'Belum ada soal'}
+					description={'Soal ini belum memiliki pertanyaan. Tambahkan pertanyaan baru untuk memulai.'}
+				/>
+				: <div className="grid gap-6 lg:grid-cols-2 grid-cols-1 ">{soal.list.map((item, idx) => (
+					<Card key={item.id} className="gap-2">
+						<CardHeader >
+							<CardTitle >
+								<Badge variant="secondary">#{idx + 1}</Badge>
+							</CardTitle >
+							<CardDescription className=" font-bold  "> {item.question} </CardDescription>
+						</CardHeader>
+						<CardContent >
+							<ul className="ml-6 space-y-3 text-muted-foreground ">
+								<li>A: {item.A}</li>
+								<li>B: {item.B}</li>
+								<li>C: {item.C}</li>
+								<li>D: {item.D}</li>
+								<li>E: {item.E}</li>
+							</ul>
+							{/* <p>
+								</p> */}
+						</CardContent>
+						<CardFooter>
+							{/* <Separator /> */}
+							<strong className="text-emerald-600">Jawaban: {item.answer}</strong>
+
+						</CardFooter>
+					</Card>
+				))}</div>
+			}
+
 		</div>
 	);
 };
 
 export function CreateQuestionForm() {
-	const fetcher = useFetcher();
-	const busy = fetcher.state !== "idle";
+	const fetcher = useFetcher<LoaderProps<typeof createSoalListAction>>();
 	const { id } = useParams()
+
+	const busy = fetcher.state !== "idle";
 	console.log(fetcher.formAction)
 	return (
 		<fetcher.Form method="POST"
-		              action={ `/soal/${ id }` }
-		              className="space-y-6"
+			action={`/soal/${id}`}
+			className="space-y-6"
 		>
-			<input type="hidden" name={ 'soalId' } value={ id } />
+			<input type="hidden" name={'soalId'} value={id} />
 			<div>
 				<Label htmlFor="question">Pertanyaan</Label>
 				<Textarea name="question" id="question" required />
@@ -125,8 +129,8 @@ export function CreateQuestionForm() {
 
 			<Separator />
 
-			<Button type="submit" disabled={ busy }>
-				{ busy ? "Menyimpan..." : "Simpan Pertanyaan" }
+			<Button type="submit" disabled={busy}>
+				{busy ? "Menyimpan..." : "Simpan Pertanyaan"}
 			</Button>
 		</fetcher.Form>
 	);

@@ -43,15 +43,15 @@ export type AnswerOptionalDefaults = z.infer<typeof AnswerOptionalDefaultsSchema
 /////////////////////////////////////////
 
 export type AnswerRelations = {
-  student: StudentWithRelations;
-  soalItem: SoalItemWithRelations;
+  Student: StudentWithRelations;
+  SoalItem: SoalItemWithRelations;
 };
 
 export type AnswerWithRelations = z.infer<typeof AnswerSchema> & AnswerRelations
 
 export const AnswerWithRelationsSchema: z.ZodType<AnswerWithRelations> = AnswerSchema.merge(z.object({
-  student: z.lazy(() => StudentWithRelationsSchema),
-  soalItem: z.lazy(() => SoalItemWithRelationsSchema),
+  Student: z.lazy(() => StudentWithRelationsSchema),
+  SoalItem: z.lazy(() => SoalItemWithRelationsSchema),
 }))
 
 /////////////////////////////////////////
@@ -59,15 +59,15 @@ export const AnswerWithRelationsSchema: z.ZodType<AnswerWithRelations> = AnswerS
 /////////////////////////////////////////
 
 export type AnswerOptionalDefaultsRelations = {
-  student: StudentOptionalDefaultsWithRelations;
-  soalItem: SoalItemOptionalDefaultsWithRelations;
+  Student: StudentOptionalDefaultsWithRelations;
+  SoalItem: SoalItemOptionalDefaultsWithRelations;
 };
 
 export type AnswerOptionalDefaultsWithRelations = z.infer<typeof AnswerOptionalDefaultsSchema> & AnswerOptionalDefaultsRelations
 
 export const AnswerOptionalDefaultsWithRelationsSchema: z.ZodType<AnswerOptionalDefaultsWithRelations> = AnswerOptionalDefaultsSchema.merge(z.object({
-  student: z.lazy(() => StudentOptionalDefaultsWithRelationsSchema),
-  soalItem: z.lazy(() => SoalItemOptionalDefaultsWithRelationsSchema),
+  Student: z.lazy(() => StudentOptionalDefaultsWithRelationsSchema),
+  SoalItem: z.lazy(() => SoalItemOptionalDefaultsWithRelationsSchema),
 }))
 
 /////////////////////////////////////////
@@ -75,29 +75,29 @@ export const AnswerOptionalDefaultsWithRelationsSchema: z.ZodType<AnswerOptional
 /////////////////////////////////////////
 
 export type AnswerPartialRelations = {
-  student?: StudentPartialWithRelations;
-  soalItem?: SoalItemPartialWithRelations;
+  Student?: StudentPartialWithRelations;
+  SoalItem?: SoalItemPartialWithRelations;
 };
 
 export type AnswerPartialWithRelations = z.infer<typeof AnswerPartialSchema> & AnswerPartialRelations
 
 export const AnswerPartialWithRelationsSchema: z.ZodType<AnswerPartialWithRelations> = AnswerPartialSchema.merge(z.object({
-  student: z.lazy(() => StudentPartialWithRelationsSchema),
-  soalItem: z.lazy(() => SoalItemPartialWithRelationsSchema),
+  Student: z.lazy(() => StudentPartialWithRelationsSchema),
+  SoalItem: z.lazy(() => SoalItemPartialWithRelationsSchema),
 })).partial()
 
 export type AnswerOptionalDefaultsWithPartialRelations = z.infer<typeof AnswerOptionalDefaultsSchema> & AnswerPartialRelations
 
 export const AnswerOptionalDefaultsWithPartialRelationsSchema: z.ZodType<AnswerOptionalDefaultsWithPartialRelations> = AnswerOptionalDefaultsSchema.merge(z.object({
-  student: z.lazy(() => StudentPartialWithRelationsSchema),
-  soalItem: z.lazy(() => SoalItemPartialWithRelationsSchema),
+  Student: z.lazy(() => StudentPartialWithRelationsSchema),
+  SoalItem: z.lazy(() => SoalItemPartialWithRelationsSchema),
 }).partial())
 
 export type AnswerWithPartialRelations = z.infer<typeof AnswerSchema> & AnswerPartialRelations
 
 export const AnswerWithPartialRelationsSchema: z.ZodType<AnswerWithPartialRelations> = AnswerSchema.merge(z.object({
-  student: z.lazy(() => StudentPartialWithRelationsSchema),
-  soalItem: z.lazy(() => SoalItemPartialWithRelationsSchema),
+  Student: z.lazy(() => StudentPartialWithRelationsSchema),
+  SoalItem: z.lazy(() => SoalItemPartialWithRelationsSchema),
 }).partial())
 
 export default AnswerSchema;
