@@ -25,7 +25,7 @@ export type AnswerCheckData = {
 }
 type Variant = "default" | 'secondary' |   'destructive' | 'outline'
 
-export function AnswerCheck() {
+export default function AnswerCheck() {
 	const { answers, list } = useLoaderData() as AnswerCheckData
 
 	const getAnswerByItemId = (id: number) => answers.find((a) => a.soalItemId === id);

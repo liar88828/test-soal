@@ -3,7 +3,6 @@ import { createBrowserRouter, redirect } from 'react-router'
 import { SoalPage } from './pages/question/SoalPage.tsx'
 import { SoalList } from './pages/question/SoalList.tsx'
 import { SoalCreate } from './pages/question/SoalCreate.tsx'
-import Home from './pages/auth/home.tsx'
 import { Loading } from './components/mini/loading.tsx'
 import {
 	createSoalAction,
@@ -13,9 +12,10 @@ import {
 	soalListCheckLoader,
 	soalListLoader,
 } from './action/soal.ts'
-import { SoalAnswer } from './pages/question/soalAnswer.tsx'
+import Home from './pages/auth/home.tsx'
 import { ErrorBoundary } from './pages/question/reviewsError.tsx'
-import { AnswerCheck } from './pages/question/soalCheck.tsx'
+import AnswerCheck from './pages/question/soalCheck.tsx'
+import SoalAnswer from './pages/question/soalAnswer.tsx'
 import RegisterPage from './pages/auth/registerPage.tsx'
 import LoginPage from './pages/auth/loginPage.tsx'
 import {
