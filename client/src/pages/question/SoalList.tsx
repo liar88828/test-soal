@@ -1,18 +1,19 @@
 import { useFetcher, useLoaderData, useParams } from "react-router-dom";
 import { Badge } from "client/src/components/ui/badge";
 import { Separator } from "client/src/components/ui/separator";
-import { type SoalWithRelations } from "shared/dist/lib/validate";
 import { Card, CardContent, CardHeader, CardTitle } from "client/src/components/ui/card.tsx";
 import { Button } from "client/src/components/ui/button";
 import { Label } from "client/src/components/ui/label.tsx";
 import { Input } from "client/src/components/ui/input.tsx";
 import { Textarea } from "client/src/components/ui/textarea.tsx";
-import { ListEmpty } from "client/src/components/ListEmpty.tsx";
-import { DrawerDialog } from "client/src/components/DrawerDialog.tsx";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "client/src/components/ui/select.tsx";
+import { DrawerDialog } from "@/components/mini/DrawerDialog";
+import { ListEmpty } from "@/components/mini/ListEmpty";
+import { LoaderProps } from "shared";
+import { soalListLoader } from "@/action/soal";
 
 export const SoalList = () => {
-	const soal = useLoaderData() as SoalWithRelations;
+	const soal = useLoaderData() as LoaderProps<typeof soalListLoader>
 	// console.log("soal", soal);
 	return (
 		<div className="p-6 space-y-6">

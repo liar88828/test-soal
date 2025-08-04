@@ -11,13 +11,13 @@ export default function ProfilePage() {
 			<Card>
 				<CardHeader className="flex flex-col items-center text-center">
 					<Avatar className="w-20 h-20 mb-2">
-						<AvatarFallback>
+						{/* <AvatarFallback>
 							{ user.name
 							.split(" ")
 							.map((word) => word[0])
 							.join("")
 							.toUpperCase() }
-						</AvatarFallback>
+						</AvatarFallback> */}
 					</Avatar>
 					<CardTitle className="text-lg font-semibold">
 						{ user.name }

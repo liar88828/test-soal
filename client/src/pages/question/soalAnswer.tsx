@@ -19,6 +19,7 @@ type Question = {
 
 export const SoalAnswer = () => {
 	const fetcher = useFetcher()
+	
 	const data = useLoaderData() as SoalWithRelations;
 
 	const [ answers, setAnswers ] = useState<{ [key: number]: string }>({});

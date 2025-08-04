@@ -1,14 +1,14 @@
-'use client'
 import { Link, Outlet, useLoaderData } from "react-router-dom";
-import type { Soal } from "shared/dist/lib/validate";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, } from 'client/src//components/ui/card'
 import { Button } from 'client/src/components/ui/button'
-import { DrawerDialog } from "client/src/components/DrawerDialog.tsx";
-import { SoalCreate } from "client/src//pages/SoalCreate.tsx";
+import { SoalCreate } from "./SoalCreate";
+import { DrawerDialog } from "@/components/mini/DrawerDialog";
+import { LoaderProps } from "shared";
+import { getSoalAll } from "@/action/soal";
 
-
-export function SoalPage() {
-	const soals = useLoaderData() as ( Soal & { _count: { list: number } } )[]
+export function SoalPage ()
+{
+	const soals = useLoaderData() as LoaderProps<typeof getSoalAll>
 
 	// console.log(data)
 	return (
@@ -31,7 +31,7 @@ export function SoalPage() {
 				</div>
 			</div>
 			<div className="space-y-2 overflow-y-auto pb-4 ">
-				{ soals.map((soal) => (
+				{ soals.map( ( soal ) => (
 					<Card key={ soal.id } className="  flex flex-row justify-between">
 						<CardHeader>
 							<CardTitle>{ soal.name }</CardTitle>
@@ -55,7 +55,7 @@ export function SoalPage() {
 							</div>
 						</CardContent>
 					</Card>
-				)) }
+				) ) }
 			</div>
 			<><Outlet /></>
 		</div>
