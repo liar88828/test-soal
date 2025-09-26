@@ -1,12 +1,5 @@
 import { Card, CardContent } from '@/components/ui/card'
-import {
-	Table,
-	TableHeader,
-	TableRow,
-	TableHead,
-	TableBody,
-	TableCell,
-} from '@/components/ui/table'
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow, } from '@/components/ui/table'
 
 const students = [
 	{ name: 'Alya Rahma', nisn: '1001234567', gender: 'Perempuan' },

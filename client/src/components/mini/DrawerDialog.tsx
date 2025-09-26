@@ -1,25 +1,8 @@
 import * as React from "react";
-import { useMediaQuery } from "client/src/hook/useMediaQuery.ts";
-import {
-	Dialog,
-	DialogClose,
-	DialogContent,
-	DialogDescription,
-	DialogHeader,
-	DialogTitle,
-	DialogTrigger
-} from "client/src/components/ui/dialog.tsx";
+import { useMediaQuery } from "@/hooks/useMediaQuery.ts";
+import { Dialog, DialogClose, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "client/src/components/ui/dialog.tsx";
 import { Button } from "client/src/components/ui/button.tsx";
-import {
-	Drawer,
-	DrawerClose,
-	DrawerContent,
-	DrawerDescription,
-	DrawerFooter,
-	DrawerHeader,
-	DrawerTitle,
-	DrawerTrigger
-} from "client/src/components/ui/drawer.tsx";
+import { Drawer, DrawerClose, DrawerContent, DrawerDescription, DrawerFooter, DrawerHeader, DrawerTitle, DrawerTrigger } from "client/src/components/ui/drawer.tsx";
 
 type DrawerDialogProps = {
 	title: string;
@@ -27,6 +10,8 @@ type DrawerDialogProps = {
 	triggerLabel: string;
 	children: React.ReactNode;
 	footer?: React.ReactNode;
+	onOpen?: (open: boolean) => void;
+	isOpen?: boolean;
 };
 
 export function DrawerDialog(
@@ -36,17 +21,36 @@ export function DrawerDialog(
 		triggerLabel,
 		children,
 		footer,
+		onOpen: onOpenAction,
+		isOpen = false
 	}: DrawerDialogProps) {
-	const [ open, setOpen ] = React.useState(false);
+	const [ open, setOpen ] = React.useState(isOpen);
 	const isDesktop = useMediaQuery("(min-width: 768px)");
+
+	React.useEffect(() => {
+		setOpen(isOpen);
+	}, [ isOpen ]);
+
+	// console.log(isOpen);
+	const onOpen = (value: boolean) => {
+		// console.log('test')
+		if (onOpenAction) {
+			onOpenAction(value)
+		}
+		setOpen(value)
+	}
 
 	if (isDesktop) {
 		return (
-			<Dialog open={ open } onOpenChange={ setOpen }>
+			<Dialog open={ open } onOpenChange={ onOpen }>
 				<DialogTrigger asChild>
-					<Button variant="outline">{ triggerLabel }</Button>
+					<Button variant="default">{ triggerLabel }</Button>
 				</DialogTrigger>
-				<DialogContent className="sm:max-w-[425px]">
+
+				<DialogContent
+					className="sm:max-w-[425px]"
+
+				>
 					<DialogHeader>
 						<DialogTitle>{ title }</DialogTitle>
 						{ description && <DialogDescription>{ description }</DialogDescription> }
@@ -62,9 +66,9 @@ export function DrawerDialog(
 	}
 
 	return (
-		<Drawer open={ open } onOpenChange={ setOpen }>
+		<Drawer open={ open } onOpenChange={ onOpen }>
 			<DrawerTrigger asChild>
-				<Button variant="outline">{ triggerLabel }</Button>
+				<Button variant="default">{ triggerLabel }</Button>
 			</DrawerTrigger>
 			<DrawerContent>
 				<DrawerHeader className="text-left">

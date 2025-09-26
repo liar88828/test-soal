@@ -1,10 +1,10 @@
 import { redirect } from 'react-router-dom'
 import { getSession } from "./session.ts"
 
+
 export async function studentProfileLoader ()
 {
     const { user, } = getSession()
-
     if ( !user )
     {
         return redirect( '/auth/login' )

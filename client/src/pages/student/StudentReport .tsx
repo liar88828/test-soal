@@ -1,12 +1,5 @@
 import { Card, CardContent } from '@/components/ui/card'
-import {
-	Table,
-	TableBody,
-	TableCell,
-	TableHead,
-	TableHeader,
-	TableRow,
-} from '@/components/ui/table'
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow, } from '@/components/ui/table'
 
 const reportData = [
 	{ subject: 'Matematika', grade: 88, semester: 'Ganjil' },

@@ -1,5 +1,4 @@
 import { studentProfileLoader } from '@/action/student'
-import ProfilePage from '@/components/ProfilePage'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'

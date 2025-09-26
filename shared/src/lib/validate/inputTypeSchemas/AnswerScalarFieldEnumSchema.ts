@@ -1,5 +1,5 @@
 import { z } from 'zod';
 
-export const AnswerScalarFieldEnumSchema = z.enum(['id','studentId','soalId','soalItemId','selected','createdAt']);
+export const AnswerScalarFieldEnumSchema = z.enum([ 'id', 'soalId', 'selected', 'createdAt', 'studentId', 'soalABCId', 'soalTextId' ]);
 
 export default AnswerScalarFieldEnumSchema;

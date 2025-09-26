@@ -1,5 +1,5 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { Avatar } from "@/components/ui/avatar";
 import { useLoaderData } from "react-router-dom";
 import { profileLoader } from "@/action/auth.action.ts";
 import { LoaderProps } from "shared";

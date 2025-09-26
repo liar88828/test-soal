@@ -1,14 +1,6 @@
 import { useState } from 'react'
-import {
-	Card,
-	CardContent,
-	CardHeader,
-	CardTitle,
-} from 'client/src/components/ui/card'
-import {
-	RadioGroup,
-	RadioGroupItem,
-} from 'client/src/components/ui/radio-group'
+import { Card, CardContent, CardHeader, CardTitle, } from 'client/src/components/ui/card'
+import { RadioGroup, RadioGroupItem, } from 'client/src/components/ui/radio-group'
 import { Button } from 'client/src/components/ui/button'
 import { Label } from 'client/src/components/ui/label'
 import { useFetcher, useLoaderData } from 'react-router-dom'

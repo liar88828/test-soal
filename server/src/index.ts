@@ -1,8 +1,8 @@
 import { Hono } from 'hono'
 import { cors } from 'hono/cors'
 import type { ApiResponse } from 'shared/dist'
-import routeSoal from "../route/soal.router";
 import authRouter from "../route/auth.router";
+import soalRouter from "../route/soal.router";
 
 const app = new Hono()
 app.use(cors())
@@ -17,7 +17,7 @@ app.get('/hello', async (c) => {
 	return c.json(data, { status: 200 })
 })
 
-app.route('/soal', routeSoal)
+app.route('/soal', soalRouter)
 app.route('/auth', authRouter)
 
 export default app

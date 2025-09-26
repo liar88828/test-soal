@@ -4,7 +4,6 @@ import * as React from "react"
 import { Slot } from "@radix-ui/react-slot"
 import { cva, VariantProps } from "class-variance-authority"
 import { PanelLeftIcon } from "lucide-react"
-
 import { useIsMobile } from "@/hooks/use-mobile"
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
@@ -42,19 +41,20 @@ function useSidebar() {
 	return context
 }
 
-function SidebarProvider({
-	                         defaultOpen = true,
-	                         open: openProp,
-	                         onOpenChange: setOpenProp,
-	                         className,
-	                         style,
-	                         children,
-	                         ...props
-                         }: React.ComponentProps<"div"> & {
-	defaultOpen?: boolean
-	open?: boolean
-	onOpenChange?: (open: boolean) => void
-}) {
+function SidebarProvider(
+	{
+		defaultOpen = true,
+		open: openProp,
+		onOpenChange: setOpenProp,
+		className,
+		style,
+		children,
+		...props
+	}: React.ComponentProps<"div"> & {
+		defaultOpen?: boolean
+		open?: boolean
+		onOpenChange?: (open: boolean) => void
+	}) {
 	const isMobile = useIsMobile()
 	const [ openMobile, setOpenMobile ] = React.useState(false)
 
@@ -140,18 +140,19 @@ function SidebarProvider({
 	)
 }
 
-function Sidebar({
-	                 side = "left",
-	                 variant = "sidebar",
-	                 collapsible = "offcanvas",
-	                 className,
-	                 children,
-	                 ...props
-                 }: React.ComponentProps<"div"> & {
-	side?: "left" | "right"
-	variant?: "sidebar" | "floating" | "inset"
-	collapsible?: "offcanvas" | "icon" | "none"
-}) {
+function Sidebar(
+	{
+		side = "left",
+		variant = "sidebar",
+		collapsible = "offcanvas",
+		className,
+		children,
+		...props
+	}: React.ComponentProps<"div"> & {
+		side?: "left" | "right"
+		variant?: "sidebar" | "floating" | "inset"
+		collapsible?: "offcanvas" | "icon" | "none"
+	}) {
 	const { isMobile, state, openMobile, setOpenMobile } = useSidebar()
 
 	if (collapsible === "none") {
@@ -242,11 +243,12 @@ function Sidebar({
 	)
 }
 
-function SidebarTrigger({
-	                        className,
-	                        onClick,
-	                        ...props
-                        }: React.ComponentProps<typeof Button>) {
+function SidebarTrigger(
+	{
+		className,
+		onClick,
+		...props
+	}: React.ComponentProps<typeof Button>) {
 	const { toggleSidebar } = useSidebar()
 
 	return (
@@ -307,10 +309,11 @@ function SidebarInset({ className, ...props }: React.ComponentProps<"main">) {
 	)
 }
 
-function SidebarInput({
-	                      className,
-	                      ...props
-                      }: React.ComponentProps<typeof Input>) {
+function SidebarInput(
+	{
+		className,
+		...props
+	}: React.ComponentProps<typeof Input>) {
 	return (
 		<Input
 			data-slot="sidebar-input"
@@ -382,11 +385,12 @@ function SidebarGroup({ className, ...props }: React.ComponentProps<"div">) {
 	)
 }
 
-function SidebarGroupLabel({
-	                           className,
-	                           asChild = false,
-	                           ...props
-                           }: React.ComponentProps<"div"> & { asChild?: boolean }) {
+function SidebarGroupLabel(
+	{
+		className,
+		asChild = false,
+		...props
+	}: React.ComponentProps<"div"> & { asChild?: boolean }) {
 	const Comp = asChild ? Slot : "div"
 
 	return (
@@ -403,11 +407,12 @@ function SidebarGroupLabel({
 	)
 }
 
-function SidebarGroupAction({
-	                            className,
-	                            asChild = false,
-	                            ...props
-                            }: React.ComponentProps<"button"> & { asChild?: boolean }) {
+function SidebarGroupAction(
+	{
+		className,
+		asChild = false,
+		...props
+	}: React.ComponentProps<"button"> & { asChild?: boolean }) {
 	const Comp = asChild ? Slot : "button"
 
 	return (

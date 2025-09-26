@@ -1,6 +1,6 @@
 import { type ActionFunctionArgs, redirect } from 'react-router-dom'
-import { SERVER_URL } from '@/lib/constants.ts'
-import { deleteSession, getSession, isLogin, isProtectedRoute, loginSession } from './session'
+import { SERVER_URL } from '@/lib/constants'
+import { deleteSession, getSession, isLogin, loginSession } from './session'
 
 const exampleUser = {
 	id: 1,
@@ -24,7 +24,7 @@ export async function loginAction({ request }: ActionFunctionArgs) {
 	const password = formData.get('password') as string
 
 	try {
-		const res = await fetch(`${SERVER_URL}/auth/login`, {
+		const res = await fetch(`${ SERVER_URL }/auth/login`, {
 			method: 'POST',
 			headers: { 'Content-Type': 'application/json' },
 			body: JSON.stringify({ email, password }),
@@ -52,7 +52,7 @@ export async function registerAction({ request }: ActionFunctionArgs) {
 	const password = formData.get('password') as string
 
 	try {
-		const res = await fetch(`${SERVER_URL}/auth/register`, {
+		const res = await fetch(`${ SERVER_URL }/auth/register`, {
 			method: 'POST',
 			headers: { 'Content-Type': 'application/json' },
 			body: JSON.stringify({ name, email, password }),
@@ -71,8 +71,13 @@ export async function registerAction({ request }: ActionFunctionArgs) {
 	}
 }
 
-export async function AuthLoader ()
-{
+export async function logoutAction() {
+	deleteSession()
+	console.log('logout')
+	return redirect('/auth/login')
+}
+
+export async function AuthLoader() {
 	const isvalid = isLogin()
 	console.log('AuthLoader', isvalid)
 	if (isvalid) {
@@ -80,12 +85,7 @@ export async function AuthLoader ()
 	}
 }
 
-export async function logoutAction ()
-{
-	deleteSession()
-	console.log('logout')
-	return redirect('/auth/login')
-}
+
 
 export async function profileLoader() {
 	const token = getSession().token
@@ -95,9 +95,9 @@ export async function profileLoader() {
 	}
 
 	try {
-		const res = await fetch(`${SERVER_URL}/auth/profile`, {
+		const res = await fetch(`${ SERVER_URL }/auth/profile`, {
 			headers: {
-				Authorization: `Bearer ${token}`,
+				Authorization: `Bearer ${ token }`,
 			},
 		})
 

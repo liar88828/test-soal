@@ -3,9 +3,10 @@ import { Label } from "@/components/ui/label.tsx";
 import { Input } from "@/components/ui/input.tsx";
 import { Button } from "@/components/ui/button.tsx";
 import { useFetcher } from "react-router-dom";
+import { registerAction } from "@/action/auth.action.ts";
 
 export default function RegisterPage() {
-	const fetcher = useFetcher()
+	const fetcher = useFetcher<typeof registerAction>()
 	const data = fetcher.data as { error: string } | undefined
 
 	return (
@@ -38,7 +39,7 @@ export default function RegisterPage() {
 						<Button type="submit" className="w-full">Daftar</Button>
 					</fetcher.Form>
 					<p className="text-sm text-center mt-2 text-muted-foreground">
-						Sudah punya akun? <a href="/login" className="underline">Login</a>
+						Sudah punya akun? <a href="/auth/login" className="underline">Login</a>
 					</p>
 				</CardContent>
 			</Card>

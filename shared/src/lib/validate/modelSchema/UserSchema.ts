@@ -5,12 +5,12 @@ import { z } from 'zod';
 /////////////////////////////////////////
 
 export const UserSchema = z.object({
-	id: z.string().cuid(),
-	name: z.string(),
-	email: z.string(),
-	role: z.string(),
-	password: z.string(),
-	createdAt: z.date(),
+  id: z.string().cuid(),
+  name: z.string(),
+  email: z.string(),
+  role: z.string(),
+  password: z.string(),
+  createdAt: z.date(),
 })
 
 export type User = z.infer<typeof UserSchema>
@@ -28,9 +28,9 @@ export type UserPartial = z.infer<typeof UserPartialSchema>
 /////////////////////////////////////////
 
 export const UserOptionalDefaultsSchema = UserSchema.merge(z.object({
-	id: z.string().cuid().optional(),
-	role: z.string().optional(),
-	createdAt: z.date().optional(),
+  id: z.string().cuid().optional(),
+  role: z.string().optional(),
+  createdAt: z.date().optional(),
 }))
 
 export type UserOptionalDefaults = z.infer<typeof UserOptionalDefaultsSchema>

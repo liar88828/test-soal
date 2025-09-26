@@ -1,13 +1,5 @@
-import { Button } from '@/components/ui/button'
-import {
-	Card,
-	CardContent,
-	CardDescription,
-	CardFooter,
-	CardHeader,
-	CardTitle,
-} from '@/components/ui/card'
-import { useLoaderData, useNavigate } from 'react-router-dom'
+import { Card, CardContent, } from '@/components/ui/card'
+import { useNavigate } from 'react-router-dom'
 import React from 'react'
 import { Badge } from '@/components/ui/badge'
 

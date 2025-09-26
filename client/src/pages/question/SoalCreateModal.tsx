@@ -4,7 +4,7 @@ import { Input } from "client/src/components/ui/input.tsx";
 import { Label } from "client/src/components/ui/label.tsx";
 
 
-export function SoalCreate() {
+export function SoalCreateModal() {
 	const fetcher = useFetcher();
 	const actionData = useActionData() as { error?: string };
 	const busy = fetcher.state !== "idle";
@@ -12,7 +12,7 @@ export function SoalCreate() {
 	// console.log(fetcher.formAction)
 	// console.log(fetcher.data)
 	return (
-		<div className="p-6 max-w-xl mx-auto">
+		<div className="p-6  ">
 			<h1 className="text-2xl font-bold mb-4">Buat Soal Baru</h1>
 
 			{ actionData?.error && (

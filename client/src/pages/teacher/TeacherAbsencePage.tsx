@@ -1,32 +1,12 @@
 import { useState } from 'react'
 import { Card, CardContent } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
-import {
-	Dialog,
-	DialogContent,
-	DialogHeader,
-	DialogTitle,
-	DialogFooter,
-	DialogTrigger,
-} from '@/components/ui/dialog'
+import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle, DialogTrigger, } from '@/components/ui/dialog'
 import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
-import {
-	Select,
-	SelectTrigger,
-	SelectValue,
-	SelectContent,
-	SelectItem,
-} from '@/components/ui/select'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue, } from '@/components/ui/select'
 import { toast } from 'sonner'
-import {
-	Table,
-	TableHeader,
-	TableBody,
-	TableRow,
-	TableCell,
-	TableHead,
-} from '@/components/ui/table'
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow, } from '@/components/ui/table'
 import { Badge } from '@/components/ui/badge'
 
 type Absence = {
@@ -76,7 +56,7 @@ export default function TeacherAbsencePage() {
 
 	return (
 		<div className='min-h-screen bg-muted p-6'>
-			<div className='max-w-3xl mx-auto space-y-8'>
+			<div className=' mx-auto space-y-8'>
 				<div>
 					<h1 className='text-3xl font-bold text-primary'>Absensi Guru</h1>
 					<p className='text-muted-foreground'>

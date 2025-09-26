@@ -1,5 +1,5 @@
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { DollarSign, CreditCard, Receipt, Wallet } from 'lucide-react'
+import { CreditCard, DollarSign, Receipt, Wallet } from 'lucide-react'
 import { Link } from 'react-router-dom'
 
 const financeMenus = [

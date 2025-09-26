@@ -1,17 +1,16 @@
-import { SoalItemOptionalDefaultsSchema, SoalOptionalDefaultsSchema } from "shared/dist/lib/validate";
+import { SoalABCOptionalDefaultsSchema, SoalOptionalDefaultsSchema, SoalTextOptionalDefaultsSchema } from "shared/dist/lib/validate";
 import { type ActionFunctionArgs, type LoaderFunctionArgs, redirect } from "react-router-dom";
 import { z } from "zod";
-import { type AnswerCheckData } from "client/src/pages/soalCheck.tsx";
-import { SERVER_URL } from "@/lib/constants.ts";
+import { SERVER_URL } from "@/lib/constants";
+import { type  AnswerCheckData } from "@/pages/question/soalCheck";
+import type { SoalAll, SoalDetail } from "shared";
+import { toastError, toastSuccess } from "@/components/mini/toast";
 
 
-export function getSoalAll() {
+export async function getSoalAll() {
 	return fetch(`${ SERVER_URL }/soal`)
 	.then((res) => res.json())
-	.then((data) => {
-		console.log(data)
-		return data
-	})
+	.then((data) => data as SoalAll[])
 
 }
 
@@ -54,13 +53,14 @@ export async function soalListLoader({ params }: LoaderFunctionArgs) {
 	const { id } = params
 	return fetch(`${ SERVER_URL }/soal/${ id }`)
 	.then((res) => res.json())
-	.then((data) => data)
+	.then((data) => data as SoalDetail)
 }
 
-export async function createSoalListAction({ request, params }: ActionFunctionArgs) {
-	// console.log('exeute')
+export async function createSoalABCAction({ request, params }: ActionFunctionArgs) {
+	// console.log('exeute abc')
 	try {
 		const formData = await request.formData()
+		const questionId = Number(formData.get("questionItemId"))
 		const payload = {
 			question: formData.get("question"),
 			soalId: Number(formData.get("soalId")),
@@ -72,25 +72,87 @@ export async function createSoalListAction({ request, params }: ActionFunctionAr
 			answer: formData.get("answer"),
 		}//satisfies SoalItemOptionalDefaults
 		// console.log(payload)
-		const valid = SoalItemOptionalDefaultsSchema.safeParse(payload)
+		const valid = SoalABCOptionalDefaultsSchema.safeParse(payload)
 		if (!valid.success) {
-			const error = z.prettifyError(valid.error)
-			// console.log(error)
-			return { error }
+			throw new Error(z.prettifyError(valid.error))
 		}
 		console.log(valid.data)
-		const res = await fetch(`${ SERVER_URL }/soal/${ params.id }/question`, {
-			method: "POST",
-			headers: { "Content-Type": "application/json" },
-			body: JSON.stringify(valid.data),
-		})
+
+		let res: Response
+		if (questionId) {
+			res = await fetch(`${ SERVER_URL }/soal/${ params.id }/question-abc/${ questionId }`, {
+				method: "PUT",
+				headers: { "Content-Type": "application/json" },
+				body: JSON.stringify(valid.data),
+			})
+		} else {
+			res = await fetch(`${ SERVER_URL }/soal/${ params.id }/question-abc`, {
+				method: "POST",
+				headers: { "Content-Type": "application/json" },
+				body: JSON.stringify(valid.data),
+			})
+
+		}
+
+		if (!res.ok) {
+			throw new Error("Failed to save question")
+		}
+		toastSuccess('Success Create Data')
+		return redirect(`/soal/${ params.id }`)
+	} catch (e) {
+
+		if (e instanceof Error) {
+			toastError(e.message)
+			return { error: e.message }
+		}
+		return { error: "Terjadi kesalahan saat menyimpan pertanyaan." }
+	}
+}
+
+export async function createSoalTextAction({ request, params }: ActionFunctionArgs) {
+	try {
+		const formData = await request.formData()
+		const questionId = Number(formData.get("questionItemId"))
+
+		const payload = {
+			question: formData.get("question"),
+			text: formData.get("text"),
+			answer: formData.get("answer"),
+			soalId: Number(formData.get("soalId")),
+		} // satisfies SoalTextOptionalDefaults
+
+		const valid = SoalTextOptionalDefaultsSchema.safeParse(payload)
+		if (!valid.success) {
+			throw new Error(z.prettifyError(valid.error))
+		}
+
+		let res: Response
+		if (questionId) {
+			// Update existing soal text
+			res = await fetch(`${ SERVER_URL }/soal/${ params.id }/question-text/${ questionId }`, {
+				method: "PUT",
+				headers: { "Content-Type": "application/json" },
+				body: JSON.stringify(valid.data),
+			})
+		} else {
+			// Create new soal text
+			res = await fetch(`${ SERVER_URL }/soal/${ params.id }/question-text`, {
+				method: "POST",
+				headers: { "Content-Type": "application/json" },
+				body: JSON.stringify(valid.data),
+			})
+		}
 
 		if (!res.ok) {
 			return { error: "Failed to save question" }
 		}
-
+		toastSuccess('Success Create Data')
 		return redirect(`/soal/${ params.id }`)
-	} catch {
+	} catch (e) {
+		if (e instanceof Error) {
+			toastError(e.message)
+			return { error: e.message }
+		}
 		return { error: "Terjadi kesalahan saat menyimpan pertanyaan." }
 	}
 }

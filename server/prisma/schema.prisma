@@ -35,14 +35,14 @@ model Soal {
   id        Int        @id @default(autoincrement())
   name      String
   author    String
-  list      SoalItem[]
+	SoalABC  SoalABC[]
+	SoalText SoalText[]
   createdAt DateTime   @default(now())
   updatedAt DateTime   @updatedAt
 }
 
-model SoalItem {
-  id       Int      @id @default(autoincrement())
-  soalId   Int
+model SoalABC {
+	id Int @id @default(autoincrement())
   question String
   A        String
   B        String
@@ -50,8 +50,21 @@ model SoalItem {
   D        String
   E        String
   answer   String
-  soal     Soal     @relation(fields: [soalId], references: [id], onDelete: Cascade)
-  Answer   Answer[]
+
+	Answer Answer[]
+	soalId Int
+	Soal   Soal     @relation(fields: [soalId], references: [id], onDelete: Cascade)
+}
+
+model SoalText {
+	id       Int    @id @default(autoincrement())
+	question String
+	text     String
+	answer   String
+
+	Answer Answer[]
+	soalId Int
+	Soal   Soal     @relation(fields: [soalId], references: [id], onDelete: Cascade)
 }
 
 model Student {
@@ -63,14 +76,18 @@ model Student {
 }
 
 model Answer {
-  id         Int      @id @default(autoincrement())
-  studentId  Int
-  soalId     Int
-  soalItemId Int
-  selected   String // A, B, C, D, E
-  createdAt  DateTime @default(now())
-  student    Student  @relation(fields: [studentId], references: [id], onDelete: Cascade)
-  soalItem   SoalItem @relation(fields: [soalItemId], references: [id], onDelete: Cascade)
+	id        Int      @id @default(autoincrement())
+	soalId    Int
+	selected  String // A, B, C, D, E
+	createdAt DateTime @default(now())
+
+	studentId Int
+	student   Student @relation(fields: [studentId], references: [id], onDelete: Cascade)
+
+	soalABCId  Int?
+	SoalABC    SoalABC?  @relation(fields: [soalABCId], references: [id], onDelete: Cascade)
+	soalTextId Int?
+	SoalText   SoalText? @relation(fields: [soalTextId], references: [id], onDelete: Cascade)
 }
 
 model User {

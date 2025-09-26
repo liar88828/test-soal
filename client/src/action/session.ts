@@ -1,4 +1,4 @@
-import { SessionPayload } from 'shared'
+import { type SessionPayload } from 'shared'
 import { decodeToken, isExpired } from 'react-jwt'
 import { redirect } from 'react-router-dom'
 

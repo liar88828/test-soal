@@ -5,7 +5,10 @@
   "types": "dist/index.d.ts",
   "scripts": {
     "build": "tsc",
-    "dev": "bun --watch run src/index.ts"
+    "dev": "bun --watch run src/index.ts",
+    "push": "bunx prisma db push",
+    "ts": "tsc --noEmit --incremental"
+
   },
   "dependencies": {
     "hono": "^4.7.11",

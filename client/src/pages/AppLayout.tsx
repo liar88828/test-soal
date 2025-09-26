@@ -1,57 +1,13 @@
-import {
-	Link,
-	Outlet,
-	useFetcher,
-	useLoaderData,
-	useNavigate,
-} from 'react-router-dom'
+import { Link, Outlet, useFetcher, useLoaderData, useNavigate, } from 'react-router-dom'
 import { SidebarProvider, SidebarTrigger } from '@/components/ui/sidebar.tsx'
 
-import {
-	Sidebar,
-	SidebarContent,
-	SidebarGroup,
-	SidebarGroupContent,
-	SidebarGroupLabel,
-	SidebarMenu,
-	SidebarMenuButton,
-	SidebarMenuItem,
-} from '@/components/ui/sidebar'
+import { Sidebar, SidebarContent, SidebarGroup, SidebarGroupContent, SidebarGroupLabel, SidebarMenu, SidebarMenuButton, SidebarMenuItem, } from '@/components/ui/sidebar'
 
-import {
-	Home,
-	UserIcon,
-	Calendar,
-	Settings,
-	Book,
-	Users,
-	Shield,
-	DollarSign,
-	FileText,
-	LogOut,
-	LogIn,
-	FolderKanban,
-	SquareChartGantt,
-	Warehouse,
-} from 'lucide-react'
+import { Book, Calendar, DollarSign, FileText, FolderKanban, Home, LogIn, LogOut, Settings, Shield, SquareChartGantt, UserIcon, Users, Warehouse, } from 'lucide-react'
 
-import {
-	NavigationMenu,
-	NavigationMenuItem,
-	NavigationMenuLink,
-	NavigationMenuList,
-} from '@/components/ui/navigation-menu'
+import { NavigationMenu, NavigationMenuItem, NavigationMenuLink, NavigationMenuList, } from '@/components/ui/navigation-menu'
 import { Button } from '@/components/ui/button'
-import {
-	Sheet,
-	SheetClose,
-	SheetContent,
-	SheetDescription,
-	SheetFooter,
-	SheetHeader,
-	SheetTitle,
-	SheetTrigger,
-} from '@/components/ui/sheet'
+import { Sheet, SheetClose, SheetContent, SheetDescription, SheetFooter, SheetHeader, SheetTitle, SheetTrigger, } from '@/components/ui/sheet'
 import { NavigationMenuProps } from '@radix-ui/react-navigation-menu'
 import { appLoader } from '@/action/auth.action'
 import { Toaster } from '@/components/ui/sonner'
@@ -72,7 +28,7 @@ const items = [
 			},
 			{
 				title: 'Jadwal',
-				url: '/student/jadwal',
+				url: '/student/schedule',
 				icon: Calendar,
 			},
 			{
@@ -127,6 +83,11 @@ const items = [
 				url: '/teacher/absence',
 				icon: SquareChartGantt,
 			},
+			// {
+			// 	title: 'Absensi Guru',
+			// 	url: '/teacher/soal',
+			// 	icon: SquareChartGantt,
+			// },
 
 			// {
 			// 	title: 'Settings',
@@ -178,7 +139,7 @@ const items = [
 			{
 				title: 'Biaya Ruangan',
 				url: '/finance/room',
-				icon: Warehouse ,
+				icon: Warehouse,
 			},
 			{
 				title: 'Settings',
@@ -242,25 +203,25 @@ export function AppSidebar() {
 	return (
 		<Sidebar>
 			<SidebarContent>
-				{items.map((itemParent) => (
-					<SidebarGroup key={itemParent.title}>
-						<SidebarGroupLabel>{itemParent.title}</SidebarGroupLabel>
+				{ items.map((itemParent) => (
+					<SidebarGroup key={ itemParent.title }>
+						<SidebarGroupLabel>{ itemParent.title }</SidebarGroupLabel>
 						<SidebarGroupContent>
 							<SidebarMenu>
-								{itemParent.child.map((item) => (
-									<SidebarMenuItem key={item.title}>
+								{ itemParent.child.map((item) => (
+									<SidebarMenuItem key={ item.title }>
 										<SidebarMenuButton asChild>
-											<a href={item.url}>
+											<a href={ item.url }>
 												<item.icon />
-												<span>{item.title}</span>
+												<span>{ item.title }</span>
 											</a>
 										</SidebarMenuButton>
 									</SidebarMenuItem>
-								))}
+								)) }
 							</SidebarMenu>
 						</SidebarGroupContent>
 					</SidebarGroup>
-				))}
+				)) }
 			</SidebarContent>
 		</Sidebar>
 	)
@@ -274,64 +235,66 @@ const navItems = [
 ]
 
 export const NavMenu = (props: NavigationMenuProps) => (
-	<NavigationMenu {...props}>
+	<NavigationMenu { ...props }>
 		<NavigationMenuList>
-			{navItems.map((item, index) => (
-				<NavigationMenuItem key={index}>
+			{ navItems.map((item, index) => (
+				<NavigationMenuItem key={ index }>
 					<NavigationMenuLink asChild>
-						<Link to={item.to}>{item.label}</Link>
+						<Link to={ item.to }>{ item.label }</Link>
 					</NavigationMenuLink>
 				</NavigationMenuItem>
-			))}
+			)) }
 		</NavigationMenuList>
 	</NavigationMenu>
 )
 
-export const NavbarPage = ({ isLogin }: { isLogin: boolean }) => {
+export const NavbarPage = () => {
+	const { isValid } = useLoaderData<typeof appLoader>()
 	const fetcher = useFetcher()
 	const navigate = useNavigate()
 	return (
-		<nav className=' top-6 inset-x-4 h-16 bg-background border border-b-2  max-w-screen-xl mx-auto '>
-			<div className='h-full flex items-center justify-between mx-auto px-4'>
-				{isLogin ? <SidebarTrigger /> : null}
+		<nav className=' top-6 inset-x-4 h-16 bg-background border border-b-2   mx-auto '>
+			<div className='h-full flex items-center justify-between mx-auto px-4 max-w-screen-xl'>
+				{ isValid ? <SidebarTrigger /> : null }
 
-				{/* Desktop Menu */}
+				{/* Desktop Menu */ }
 				<NavMenu className='hidden md:block' />
 
 				<div className='flex items-center gap-3'>
-					{/*<Button*/}
-					{/*	variant="outline"*/}
-					{/*	className="hidden sm:inline-flex rounded-full"*/}
-					{/*>*/}
-					{/*	Sign In*/}
-					{/*</Button>*/}
+					{/*<Button*/ }
+					{/*	variant="outline"*/ }
+					{/*	className="hidden sm:inline-flex rounded-full"*/ }
+					{/*>*/ }
+					{/*	Sign In*/ }
+					{/*</Button>*/ }
 					<Button
 						className='rounded-full'
-						onClick={() => {
-							if (isLogin) {
+						onClick={ () => {
+							if (isValid) {
 								fetcher.submit({}, { method: 'post', action: '/auth/logout' })
 							} else {
 								console.log('redirect to login')
 								navigate('/auth/login')
 							}
-						}}>
-						{isLogin ? (
+						} }
+					>
+						{ isValid ? (
 							<>
-								{' '}
+								{ ' ' }
 								<LogOut /> Logout
 							</>
 						) : (
 							<>
-								{' '}
-								<LogIn /> Login{' '}
+								{ ' ' }
+								<LogIn /> Login{ ' ' }
 							</>
-						)}
+						) }
 					</Button>
 
-					{/* Mobile Menu */}
+					{/* Mobile Menu */ }
 					<div className='md:hidden'>
 						<SheetDemo />
-						{/*<NavigationSheet />*/}
+						{/*<NavigationSheet />*/ }
 					</div>
 				</div>
 			</div>
@@ -353,17 +316,19 @@ export function SheetDemo() {
 					</SheetHeader>
 
 					<nav className='mt-6 flex flex-col gap-3'>
-						{navItems.map((item, index) => (
+						{ navItems.map((item, index) => (
 							<SheetClose
 								asChild
-								key={index}>
+								key={ index }
+							>
 								<Link
-									to={item.to}
-									className='text-sm font-medium text-muted-foreground hover:text-primary transition-colors'>
-									{item.label}
+									to={ item.to }
+									className='text-sm font-medium text-muted-foreground hover:text-primary transition-colors'
+								>
+									{ item.label }
 								</Link>
 							</SheetClose>
-						))}
+						)) }
 					</nav>
 				</div>
 
@@ -371,7 +336,8 @@ export function SheetDemo() {
 					<SheetClose asChild>
 						<Button
 							variant='outline'
-							className='w-full'>
+							className='w-full'
+						>
 							Close
 						</Button>
 					</SheetClose>
@@ -384,15 +350,17 @@ export function SheetDemo() {
 export default function AppLayout() {
 	const { isValid } = useLoaderData<typeof appLoader>()
 	return (
-		<SidebarProvider open={isValid ? undefined : false}>
+		<SidebarProvider open={ isValid ? undefined : false }>
 			<AppSidebar />
-			<main className={'w-full'}>
-				<NavbarPage isLogin={isValid} />
+			<main className={ 'w-full' }>
+				<NavbarPage />
 				<div className=' mx-auto flex flex-col gap-6  min-h-screen'>
 					<Outlet />
 				</div>
 			</main>
-			<Toaster />
+			<Toaster
+				position={ 'top-right' }
+			/>
 		</SidebarProvider>
 	)
 }
