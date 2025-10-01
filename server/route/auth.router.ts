@@ -1,27 +1,27 @@
 // routes/authRouter.ts
-import { Hono } from 'hono'
-import { sign, verify } from 'hono/jwt' // pastikan kamu pakai `hono/jwt`
-import { prisma } from '../lib/db/prisma'
-import { UserOptionalDefaultsSchema } from '@shared/lib/validate'
-import { password } from 'bun'
-import { JWT_SECRET } from '@shared/constant'
-import { type SessionPayload } from '@shared/types'
+import { Hono } from "hono"
+import { sign, verify } from "hono/jwt" // pastikan kamu pakai `hono/jwt`
+import { prisma } from "../lib/db/prisma"
+import { UserOptionalDefaultsSchema } from "@shared/lib/validate"
+import { password } from "bun"
+import { JWT_SECRET } from "@shared/constant"
+import { type SessionPayload } from "@shared/types"
 
 const authRouter = new Hono()
 export type PayloadToken = { userId: string; exp: number }
-authRouter.post('/register', async (c) => {
+authRouter.post("/register", async (c) => {
 	// console.log('execute  register')
 	const rawData = await c.req.json()
 	const { success, data } = UserOptionalDefaultsSchema.safeParse(rawData)
 	if (!success) {
-		return c.json({ error: 'Semua field wajib diisi' }, 400)
+		return c.json({ error: "Semua field wajib diisi" }, 400)
 	}
 
 	const existingUser = await prisma.user.findUnique({
 		where: { email: data.email },
 	})
 	if (existingUser) {
-		return c.json({ error: 'Email sudah digunakan' }, 400)
+		return c.json({ error: "Email sudah digunakan" }, 400)
 	}
 
 	const hashedPassword = await Bun.password.hash(data.password)
@@ -43,27 +43,27 @@ authRouter.post('/register', async (c) => {
 	}
 	const token = await sign(payload, JWT_SECRET)
 
-	return c.json({ message: 'Register berhasil', token })
+	return c.json({ message: "Register berhasil", token })
 })
 
-authRouter.post('/login', async (c) => {
-	console.log('execute login')
+authRouter.post("/login", async (c) => {
+	console.log("execute login")
 
 	const rawData = await c.req.json()
 	const { success, data } = UserOptionalDefaultsSchema.omit({
 		name: true,
 	}).safeParse(rawData)
 	if (!success) {
-		return c.json({ error: 'Tolong isi dengan benar' }, 404)
+		return c.json({ error: "Tolong isi dengan benar" }, 404)
 	}
 
 	const user = await prisma.user.findUnique({ where: { email: data?.email } })
 	if (!user) {
-		return c.json({ error: 'Email tidak ditemukan' }, 404)
+		return c.json({ error: "Email tidak ditemukan" }, 404)
 	}
 
-	if (!(await password.verify(data.password, user.password))) {
-		return c.json({ error: 'Password salah' }, 401)
+	if (!( await password.verify(data.password, user.password) )) {
+		return c.json({ error: "Password salah" }, 401)
 	}
 	const payload: SessionPayload = {
 		userId: user.id,
@@ -74,19 +74,19 @@ authRouter.post('/login', async (c) => {
 	}
 	const token = await sign(payload, JWT_SECRET)
 
-	return c.json({ message: 'Login berhasil',  token })
+	return c.json({ message: "Login berhasil", token })
 })
 
-authRouter.get('/profile', async (c) => {
-	const authHeader = c.req.header('Authorization')
-	if (!authHeader || !authHeader.startsWith('Bearer ')) {
-		return c.json({ error: 'Unauthorized' }, 401)
+authRouter.get("/profile", async (c) => {
+	const authHeader = c.req.header("Authorization")
+	if (!authHeader || !authHeader.startsWith("Bearer ")) {
+		return c.json({ error: "Unauthorized" }, 401)
 	}
 
-	const token = authHeader.split(' ')[1]
+	const token = authHeader.split(" ")[1]
 
 	try {
-		const payload = (await verify(token ?? '', JWT_SECRET)) as PayloadToken
+		const payload = ( await verify(token ?? "", JWT_SECRET) ) as PayloadToken
 
 		const user = await prisma.user.findUnique({
 			where: { id: payload.userId },
@@ -99,12 +99,12 @@ authRouter.get('/profile', async (c) => {
 		})
 
 		if (!user) {
-			return c.json({ error: 'User tidak ditemukan' }, 404)
+			return c.json({ error: "User tidak ditemukan" }, 404)
 		}
 
 		return c.json({ user })
 	} catch (err) {
-		return c.json({ error: 'Token tidak valid atau kedaluwarsa' }, 401)
+		return c.json({ error: "Token tidak valid atau kedaluwarsa" }, 401)
 	}
 })
 

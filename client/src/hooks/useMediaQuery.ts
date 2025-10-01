@@ -8,7 +8,7 @@ import { useEffect, useState } from "react"
  * @returns boolean - Whether the query matches
  */
 export function useMediaQuery(query: string): boolean {
-	const [matches, setMatches] = useState(() => {
+	const [ matches, setMatches ] = useState(() => {
 		if (typeof window === "undefined") return false
 		return window.matchMedia(query).matches
 	})
@@ -23,7 +23,7 @@ export function useMediaQuery(query: string): boolean {
 		media.addEventListener("change", updateMatch)
 
 		return () => media.removeEventListener("change", updateMatch)
-	}, [query])
+	}, [ query ])
 
 	return matches
 }

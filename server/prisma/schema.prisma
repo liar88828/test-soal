@@ -2,54 +2,54 @@
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
 generator client {
-  provider = "prisma-client-js"
-  output   = "../generated/prisma"
+	provider = "prisma-client-js"
+	output   = "../generated/prisma"
 }
 
 datasource db {
-  provider = "sqlite"
-  url      = env("DATABASE_URL")
+	provider = "sqlite"
+	url      = env("DATABASE_URL")
 }
 
 generator zod {
-  provider = "zod-prisma-types"
+	provider = "zod-prisma-types"
 
-  output                           = "../../shared/src/lib/validate" // default is ./generated/zod
-  useMultipleFiles                 = true // default is false
-  // writeBarrelFiles                 = false // default is true
-  createInputTypes                 = false // default is true
-  // createModelTypes                 = false // default is true
-  addInputTypeValidation           = false // default is true
-  addIncludeType                   = false // default is true
-  addSelectType                    = false // default is true
-  validateWhereUniqueInput         = false // default is true
-  createOptionalDefaultValuesTypes = true // default is false
-  createRelationValuesTypes        = true // default is false
-  createPartialTypes               = true // default is false
-  // useDefaultValidators             = false // default is true
-  coerceDate                       = false // default is true
-  writeNullishInModelTypes         = true // default is false
+	output                           = "../../shared/src/lib/validate" // default is ./generated/zod
+	useMultipleFiles                 = true // default is false
+	// writeBarrelFiles                 = false // default is true
+	createInputTypes                 = false // default is true
+	// createModelTypes                 = false // default is true
+	addInputTypeValidation           = false // default is true
+	addIncludeType                   = false // default is true
+	addSelectType                    = false // default is true
+	validateWhereUniqueInput         = false // default is true
+	createOptionalDefaultValuesTypes = true // default is false
+	createRelationValuesTypes        = true // default is false
+	createPartialTypes               = true // default is false
+	// useDefaultValidators             = false // default is true
+	coerceDate                       = false // default is true
+	writeNullishInModelTypes         = true // default is false
 }
 
 model Soal {
-  id        Int        @id @default(autoincrement())
-  name      String
-  author    String
-	SoalABC  SoalABC[]
-	SoalText SoalText[]
-  createdAt DateTime   @default(now())
-  updatedAt DateTime   @updatedAt
+	id        Int        @id @default(autoincrement())
+	name      String
+	author    String
+	SoalABC   SoalABC[]
+	SoalText  SoalText[]
+	createdAt DateTime   @default(now())
+	updatedAt DateTime   @updatedAt
 }
 
 model SoalABC {
-	id Int @id @default(autoincrement())
-  question String
-  A        String
-  B        String
-  C        String
-  D        String
-  E        String
-  answer   String
+	id       Int    @id @default(autoincrement())
+	question String
+	A        String
+	B        String
+	C        String
+	D        String
+	E        String
+	answer   String
 
 	Answer Answer[]
 	soalId Int
@@ -68,11 +68,11 @@ model SoalText {
 }
 
 model Student {
-  id        Int      @id @default(autoincrement())
-  name      String
-  email     String   @unique
-  answers   Answer[]
-  createdAt DateTime @default(now())
+	id        Int      @id @default(autoincrement())
+	name      String
+	email     String   @unique
+	answers   Answer[]
+	createdAt DateTime @default(now())
 }
 
 model Answer {
@@ -91,10 +91,10 @@ model Answer {
 }
 
 model User {
-  id        String   @id @default(cuid())
-  name      String
-  email     String   @unique
-  role      String   @default("USER")
-  password  String
-  createdAt DateTime @default(now())
+	id        String   @id @default(cuid())
+	name      String
+	email     String   @unique
+	role      String   @default("USER")
+	password  String
+	createdAt DateTime @default(now())
 }

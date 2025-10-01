@@ -2,7 +2,7 @@ import { SoalABCOptionalDefaultsSchema, SoalOptionalDefaultsSchema, SoalTextOpti
 import { type ActionFunctionArgs, type LoaderFunctionArgs, redirect } from "react-router-dom";
 import { z } from "zod";
 import { SERVER_URL } from "@/lib/constants";
-import { type  AnswerCheckData } from "@/pages/question/soalCheck";
+import { type  AnswerCheckData } from "@/components/page/question/soalCheck";
 import type { SoalAll, SoalDetail } from "shared";
 import { toastError, toastSuccess } from "@/components/mini/toast";
 
@@ -11,7 +11,6 @@ export async function getSoalAll() {
 	return fetch(`${ SERVER_URL }/soal`)
 	.then((res) => res.json())
 	.then((data) => data as SoalAll[])
-
 }
 
 export async function createSoalAction({ request }: ActionFunctionArgs) {
@@ -97,7 +96,7 @@ export async function createSoalABCAction({ request, params }: ActionFunctionArg
 		if (!res.ok) {
 			throw new Error("Failed to save question")
 		}
-		toastSuccess('Success Create Data')
+		toastSuccess("Success Create Data")
 		return redirect(`/soal/${ params.id }`)
 	} catch (e) {
 
@@ -146,7 +145,7 @@ export async function createSoalTextAction({ request, params }: ActionFunctionAr
 		if (!res.ok) {
 			return { error: "Failed to save question" }
 		}
-		toastSuccess('Success Create Data')
+		toastSuccess("Success Create Data")
 		return redirect(`/soal/${ params.id }`)
 	} catch (e) {
 		if (e instanceof Error) {

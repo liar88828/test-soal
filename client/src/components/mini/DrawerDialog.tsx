@@ -7,7 +7,7 @@ import { Drawer, DrawerClose, DrawerContent, DrawerDescription, DrawerFooter, Dr
 type DrawerDialogProps = {
 	title: string;
 	description?: string;
-	triggerLabel: string;
+	triggerLabel: React.ReactNode
 	children: React.ReactNode;
 	footer?: React.ReactNode;
 	onOpen?: (open: boolean) => void;
@@ -47,10 +47,7 @@ export function DrawerDialog(
 					<Button variant="default">{ triggerLabel }</Button>
 				</DialogTrigger>
 
-				<DialogContent
-					className="sm:max-w-[425px]"
-
-				>
+				<DialogContent className=" p-6">
 					<DialogHeader>
 						<DialogTitle>{ title }</DialogTitle>
 						{ description && <DialogDescription>{ description }</DialogDescription> }
@@ -75,7 +72,7 @@ export function DrawerDialog(
 					<DrawerTitle>{ title }</DrawerTitle>
 					{ description && <DrawerDescription>{ description }</DrawerDescription> }
 				</DrawerHeader>
-				<div className="px-4">{ children }</div>
+				<div className="px-6">{ children }</div>
 				<DrawerFooter className="pt-2">
 					{ footer }
 					<DrawerClose asChild>

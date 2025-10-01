@@ -1,9 +1,9 @@
-import { Hono } from 'hono'
+import { Hono } from "hono"
 import { prisma } from "../lib/db/prisma";
 import { type AnswerOptionalDefaults, SoalABCOptionalDefaultsSchema, SoalOptionalDefaultsSchema, SoalTextOptionalDefaultsSchema } from "@shared/lib/validate";
 import { z } from "zod";
 import type { SoalAll, SoalDetail } from "@shared/types/soal-type";
-import { validator } from 'hono/validator'
+import { validator } from "hono/validator"
 
 const userRouter = new Hono()
 userRouter
@@ -18,13 +18,13 @@ userRouter
 	}
 )
 .post(
-	validator('form', (value, c) => {
+	validator("form", (value, c) => {
 		const valid = SoalOptionalDefaultsSchema.safeParse(value)
-		if (!valid.success) return c.text('Data Not Valid', 401)
+		if (!valid.success) return c.text("Data Not Valid", 401)
 		return valid.data
 	}),
 	async (c) => {
-		const data = c.req.valid('form')
+		const data = c.req.valid("form")
 		return c.json(await prisma.soal.create({ data }))
 	}
 )
@@ -32,9 +32,9 @@ userRouter
 userRouter
 
 .get(
-	':soalId',
+	":soalId",
 	async (c) => {
-		const id = parseInt(c.req.param('soalId'))
+		const id = parseInt(c.req.param("soalId"))
 		const soal: SoalDetail | null = await prisma.soal.findUnique({
 			where: { id },
 			include: {
@@ -46,9 +46,9 @@ userRouter
 		return c.json(soal)
 	})
 
-.put(':soalId',
+.put(":soalId",
 	async (c) => {
-		const id = parseInt(c.req.param('soalId'))
+		const id = parseInt(c.req.param("soalId"))
 		const body = await c.req.json()
 
 		// Update soal and replace all list items
@@ -75,24 +75,24 @@ userRouter
 		return c.json(soal)
 	})
 
-.delete(':soalId',
+.delete(":soalId",
 	async (c) => {
-		const id = parseInt(c.req.param('soalId'))
+		const id = parseInt(c.req.param("soalId"))
 		await prisma.soal.delete({
 			where: { id },
 		})
-		return c.json({ message: 'Deleted successfully' })
+		return c.json({ message: "Deleted successfully" })
 	})
 // -------------ABC
-.get(':soalId/question-abc',
+.get(":soalId/question-abc",
 	async (c) => {
-		return c.text('hello this question')
+		return c.text("hello this question")
 	})
 
-.post(':soalId/question-abc',
+.post(":soalId/question-abc",
 	async (c) => {
-		console.log('execute')
-		const _soalId = c.req.param('soalId')
+		console.log("execute")
+		const _soalId = c.req.param("soalId")
 		const body = await c.req.json()
 
 		const parsed = SoalABCOptionalDefaultsSchema.safeParse(body)
@@ -110,11 +110,11 @@ userRouter
 		return c.json({ message: "Pertanyaan berhasil ditambahkan", }, 201)
 	})
 
-.put(':soalId/question-abc/:questionItemId',
+.put(":soalId/question-abc/:questionItemId",
 	async (c) => {
-		console.log('execute put')
-		const _soalId = c.req.param('soalId')
-		const questionItemId = c.req.param('questionItemId')
+		console.log("execute put")
+		const _soalId = c.req.param("soalId")
+		const questionItemId = c.req.param("questionItemId")
 		const body = await c.req.json()
 
 		const parsed = SoalABCOptionalDefaultsSchema
@@ -138,10 +138,10 @@ userRouter
 	})
 // -------------TEXT
 
-.post(':soalId/question-text',
+.post(":soalId/question-text",
 	async (c) => {
-		console.log('execute text create')
-		const _soalId = c.req.param('soalId')
+		console.log("execute text create")
+		const _soalId = c.req.param("soalId")
 		const body = await c.req.json()
 
 		const parsed = SoalTextOptionalDefaultsSchema.safeParse(body)
@@ -164,11 +164,11 @@ userRouter
 	}
 )
 
-.put(':soalId/question-text/:questionItemId',
+.put(":soalId/question-text/:questionItemId",
 	async (c) => {
-		console.log('execute text update')
-		const _soalId = c.req.param('soalId')
-		const questionItemId = c.req.param('questionItemId')
+		console.log("execute text update")
+		const _soalId = c.req.param("soalId")
+		const questionItemId = c.req.param("questionItemId")
 		const body = await c.req.json()
 
 		const parsed = SoalTextOptionalDefaultsSchema
@@ -199,10 +199,10 @@ userRouter
 	}
 )
 
-.post(':soalId/answer',
+.post(":soalId/answer",
 	async (c) => {
-		console.log('execute awnser')
-		const soalId = Number(c.req.param('id'));
+		console.log("execute awnser")
+		const soalId = Number(c.req.param("id"));
 		const body = await c.req.json();
 
 		const answerSchema = z.object({
@@ -213,7 +213,7 @@ userRouter
 			answers: z.array(
 				z.object({
 					soalItemId: z.number(),
-					selected: z.enum([ 'A', 'B', 'C', 'D', 'E' ]),
+					selected: z.enum([ "A", "B", "C", "D", "E" ]),
 				})
 			),
 		});
@@ -251,13 +251,13 @@ userRouter
 			data: dataAnswers,
 		});
 
-		return c.json({ message: 'Jawaban berhasil disimpan' });
+		return c.json({ message: "Jawaban berhasil disimpan" });
 	})
 
-.get(':soalId/check',
+.get(":soalId/check",
 	async (c) => {
-		console.log('execute awnser')
-		const soalId = Number(c.req.param('id'));
+		console.log("execute awnser")
+		const soalId = Number(c.req.param("id"));
 		// const studentId = Number(c.req.param('studentId'));
 
 		// Cek soal dan relasi item-nya
@@ -267,12 +267,12 @@ userRouter
 		});
 		// console.log('soal', soal)
 		if (!soal) {
-			return c.json({ error: 'SoalItem tidak ditemukan' }, 404);
+			return c.json({ error: "SoalItem tidak ditemukan" }, 404);
 		}
 
 		// Cek jawaban siswa untuk soal ini
 		const studentDB = await prisma.student.findFirst()
-		console.log('studentDB', studentDB)
+		console.log("studentDB", studentDB)
 
 		const answers = await prisma.answer.findMany({
 			where: {
@@ -284,12 +284,12 @@ userRouter
 				selected: true,
 			},
 		});
-		console.log('answers', answers)
+		console.log("answers", answers)
 
 		if (answers.length === 0) {
 			return c.json({
 				data: [],
-				error: 'Jawaban siswa tidak ditemukan'
+				error: "Jawaban siswa tidak ditemukan"
 			}, 404);
 		}
 		const data = c.json({

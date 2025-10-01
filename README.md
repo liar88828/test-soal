@@ -126,18 +126,18 @@ function App() {
     <>
       <div>
         <a href="https://github.com/stevedylandev/bhvr" target="_blank">
-          <img src={beaver} className="logo" alt="beaver logo" />
+          <img src={beaver} classTitle="logo" alt="beaver logo" />
         </a>
       </div>
       <h1>bhvr</h1>
       <h2>Bun + Hono + Vite + React</h2>
       <p>A typesafe fullstack monorepo</p>
-      <div className="card">
+      <div classTitle="card">
         <button onClick={sendRequest}>
           Call API
         </button>
         {data && (
-          <pre className='response'>
+          <pre classTitle='response'>
             <code>
             Message: {data.message} <br />
             Success: {data.success.toString()}
@@ -145,7 +145,7 @@ function App() {
           </pre>
         )}
       </div>
-      <p className="read-the-docs">
+      <p classTitle="read-the-docs">
         Click the beaver to learn more
       </p>
     </>

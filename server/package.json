@@ -8,7 +8,6 @@
     "dev": "bun --watch run src/index.ts",
     "push": "bunx prisma db push",
     "ts": "tsc --noEmit --incremental"
-
   },
   "dependencies": {
     "hono": "^4.7.11",
