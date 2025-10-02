@@ -1,6 +1,7 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card.tsx"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow, } from "@/components/ui/table.tsx"
 import { Badge } from "@/components/ui/badge.tsx"
+import { VariantCSS } from "@/components/page/finance/VariantCSS.tsx";
 
 const dummySubjectFinance = [
 	{
@@ -56,7 +57,9 @@ export default function FinanceSubjects() {
 									<TableCell>{ subject.description }</TableCell>
 									<TableCell>
 										<Badge
-											variant={ subject.cost > 100000 ? "warning" : "success" }
+											variant={
+												( subject.cost > 100000 ? "warning" : "success" ) as VariantCSS
+											}
 										>
 											{ subject.cost > 100000 ? "Biaya Tinggi" : "Normal" }
 										</Badge>

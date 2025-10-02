@@ -14,7 +14,6 @@ import LoginPage from "@/components/page/auth/loginPage.tsx"
 import ProfilePage from "@/components/page/auth/ProfilePage.tsx"
 import StudentHome from "@/components/page/student/StudentHome.tsx"
 import { ProtectLayout, PublicLayout } from "./components/page/root/AppLayout.tsx"
-import StudentSchedulePage from "@/components/page/student/StudentSchedulePage.tsx"
 import StudentAnnouncementsPage from "@/components/page/student/StudentAnnouncementsPage.tsx"
 import TeacherHome from "@/components/page/teacher/TeacherHome.tsx"
 import TeacherClassesPage from "@/components/page/teacher/TeacherClassesPage.tsx"
@@ -22,7 +21,6 @@ import TeacherClassDetailPage from "@/components/page/teacher/TeacherClassDetail
 import TeacherGrades from "@/components/page/teacher/TeacherGrades.tsx"
 import AnnouncementPage from "@/components/page/announcements/announcement-page.tsx"
 import TeacherScheduleCard from "@/components/page/schedule/teacher-schedule-card.tsx"
-import StudentReportPage from "@/components/page/student/StudentReportPage.tsx"
 import TeacherStudentPage from "@/components/page/teacher/TeacherStudentPage.tsx"
 import TeacherAbsencePage from "@/components/page/absence/teacher-absence-page.tsx"
 import FinanceHome from "@/components/page/finance/FinanceHome.tsx"
@@ -38,13 +36,13 @@ import { SoalABCComponent } from "@/components/page/question/SoalABCComponent.ts
 import { SoalTextComponent } from "@/components/page/question/SoalTextComponent.tsx";
 import { ErrorBoundary } from "@/components/page/root/ErrorBoundary.tsx";
 import { announcementDetailAction, announcementDetailLoader, announcementPageAction, announcementPageLoader } from "@/action/announcement.ts";
-import AcademicClassesDetailPage from "@/components/page/academic/academic-classes-detail-page.tsx";
-import AcademicClassesDetailSchedulePage from "@/components/page/academic/academic-classes-detail-schedule-page.tsx";
+import AcademicGradeClassPage from "@/components/page/academic/academic-grade-class-page.tsx";
+import AcademicGradeClassDetailPage from "@/components/page/academic/academic-grade-class-detail-page.tsx";
 import AcademicTeacherPage from "@/components/page/academic/academic-teacher-page.tsx";
 import AcademicTeacherDetailPage from "@/components/page/academic/academic-teacher-detail-page.tsx";
 import { publicMiddleware, testMiddleware, validMiddleware } from "@/action/session.middleware.ts";
 import { AcademicSchedulePage } from "@/components/page/academic/academic-schedule-page.tsx";
-import AcademicClassesPage from "@/components/page/academic/academic-classes-page.tsx";
+import AcademicGradePage from "@/components/page/academic/academic-grade-page.tsx";
 import AcademicScheduleOptionPage from "@/components/page/academic/academic-schedule-option-page.tsx";
 import StudentProfile from "@/components/page/student/component/student-profile-page.tsx";
 import StudentProfilePage from "@/components/page/student/component/student-profile-page.tsx";
@@ -117,21 +115,21 @@ export const mainRouter = createBrowserRouter(
 									Component: AcademicSchedulePage,
 								},
 								{
-									path: "option",
+									path: "schedule",
 									Component: AcademicScheduleOptionPage,
 								},
 								{
 									path: "classes",
-									Component: AcademicClassesPage,
+									Component: AcademicGradePage,
 								},
 								{
 									path: "classes/:id",
-									Component: AcademicClassesDetailPage,
+									Component: AcademicGradeClassPage,
 								},
 
 								{
 									path: "classes/:id/schedule",
-									Component: AcademicClassesDetailSchedulePage,
+									Component: AcademicGradeClassDetailPage,
 								},
 								{
 									path: "teacher",
@@ -168,21 +166,21 @@ export const mainRouter = createBrowserRouter(
 									Component: StudentProfilePage,
 									loader: studentProfileLoader,
 								},
-								{
-									path: "schedule",
-									Component: StudentSchedulePage,
-									loader: studentProfileLoader,
-								},
+								// {
+								// 	path: "schedule",
+								// 	Component: StudentSchedulePage,
+								// 	loader: studentProfileLoader,
+								// },
 								{
 									path: "announcements",
 									Component: StudentAnnouncementsPage,
 									loader: studentProfileLoader,
 								},
-								{
-									path: "report",
-									Component: StudentReportPage,
-									action: createSoalAction,
-								},
+								// {
+								// 	path: "report",
+								// 	Component: StudentReportPage,
+								// 	action: createSoalAction,
+								// },
 							],
 						},
 

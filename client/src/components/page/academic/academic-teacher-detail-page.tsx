@@ -1,11 +1,13 @@
-import { AcademicTeacherDetailProfile, exampleTeacher } from "@/components/page/teacher/components/teacher-profile.tsx";
-import { exampleSubject, TeacherSubjectsTable } from "@/components/page/academic/components/teacher-subjects-table.tsx";
+import { TeacherProfile } from "@/components/page/teacher/components/teacher-profile.tsx";
+import { useParams } from "react-router-dom";
+import { TeacherSubjectsTable } from "@/components/page/teacher/components/teacher-subjects-table.tsx";
 
 export default function AcademicTeacherDetailPage() {
+	const params = useParams<{ id: string }>()
 	return (
 		<div className="space-y-4">
-			<AcademicTeacherDetailProfile teacher={ exampleTeacher } />
-			<TeacherSubjectsTable subjects={ exampleSubject } />
+			<TeacherProfile idTeacher={ params.id } />
+			<TeacherSubjectsTable idTeacher={ params.id } />
 		</div>
 	);
 }

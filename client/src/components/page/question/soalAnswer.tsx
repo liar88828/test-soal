@@ -4,7 +4,7 @@ import { RadioGroup, RadioGroupItem, } from "@/components/ui/radio-group.tsx"
 import { Button } from "@/components/ui/button.tsx"
 import { Label } from "@/components/ui/label.tsx"
 import { useFetcher, useLoaderData } from "react-router-dom"
-import { type SoalWithRelations } from "shared/dist/lib/validate"
+import { soalListLoader } from "@/action/soal.ts";
 
 type Question = {
 	id: number
@@ -20,7 +20,7 @@ type Question = {
 export default function SoalAnswer() {
 	const fetcher = useFetcher()
 
-	const data = useLoaderData() as SoalWithRelations
+	const data = useLoaderData<typeof soalListLoader>()
 
 	const [ answers, setAnswers ] = useState<{ [key: number]: string }>({})
 	const [ submitted, setSubmitted ] = useState(false)
@@ -52,7 +52,7 @@ export default function SoalAnswer() {
 		<div className="max-w-2xl mx-auto py-10">
 			<h1 className="text-2xl font-bold mb-6">{ data.name }</h1>
 
-			{ data.list.map((q) => (
+			{ data.SoalABC.map((q) => (
 				<Card
 					key={ q.id }
 					className="mb-6"

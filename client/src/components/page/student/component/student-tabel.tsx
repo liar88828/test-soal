@@ -5,10 +5,12 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { Button } from "@/components/ui/button.tsx";
 import { Link } from "react-router-dom";
 import { Eye } from "lucide-react";
-import { SiswaType } from "@/interface/siswaType.tsx";
+import { useStudent } from "@/lib/swr/use-student.tsx";
+import { TableLoading } from "@/components/mini/TableComponent.tsx";
 
 
-export function StudentTabel({ siswas }: { siswas: SiswaType[] }) {
+export function StudentTabel(props: { idClass?: string }) {
+	const { data: siswas } = useStudent(props.idClass);
 	const [ search, setSearch ] = useState<string>("")
 
 	return (
@@ -33,21 +35,23 @@ export function StudentTabel({ siswas }: { siswas: SiswaType[] }) {
 						</TableRow>
 					</TableHeader>
 					<TableBody>
-						{ siswas
-						.filter(item => item.namaLengkap.toLowerCase().includes(search.toLowerCase()))
-						.map((student, index) => (
-							<TableRow key={ student.nis }>
-								<TableCell>{ index + 1 }</TableCell>
-								<TableCell>{ student.namaLengkap }</TableCell>
-								<TableCell>{ student.jurusan }</TableCell>
-								<TableCell>{ student.alamat }</TableCell>
-								<TableCell>
-									<Button asChild variant={ "outline" }>
-										<Link to={ `/student/${ student.nis }` }><Eye /></Link>
-									</Button>
-								</TableCell>
-							</TableRow>
-						)) }
+						{
+							!siswas ? <TableLoading spanCol={ 4 } />
+								: siswas
+								.filter(item => item.namaLengkap.toLowerCase().includes(search.toLowerCase()))
+								.map((student, index) => (
+									<TableRow key={ student.nis }>
+										<TableCell>{ index + 1 }</TableCell>
+										<TableCell>{ student.namaLengkap }</TableCell>
+										<TableCell>{ student.jurusan }</TableCell>
+										<TableCell>{ student.alamat }</TableCell>
+										<TableCell>
+											<Button asChild variant={ "outline" }>
+												<Link to={ `/student/${ student.nis }` }><Eye /></Link>
+											</Button>
+										</TableCell>
+									</TableRow>
+								)) }
 					</TableBody>
 				</Table>
 			</CardContent>

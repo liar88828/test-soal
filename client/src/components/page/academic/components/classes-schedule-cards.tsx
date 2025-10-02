@@ -1,29 +1,14 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card.tsx";
+import { useClassSchedule } from "@/lib/swr/use-class.tsx";
+import { ScheduleItem } from "@/interface/schedule-item.tsx";
 
-// Schedule type
-export type ScheduleItem = {
-	day: string;
-	subject: string;
-	teacher: string;
-	time: string;
-	room: string;
-}
 
-// Example exampleSchedule data
-export const exampleSchedule: ScheduleItem[] = [
-	{ day: "Monday", subject: "Math", teacher: "Mr. Fandy", time: "08:00 - 09:30", room: "701" },
-	{ day: "Monday", subject: "Science", teacher: "Ms. Silvia", time: "09:30 - 11:00", room: "701" },
-	{ day: "Tuesday", subject: "English", teacher: "Ms. Anita", time: "08:00 - 09:30", room: "701" },
-	{ day: "Tuesday", subject: "History", teacher: "Mr. Azmi", time: "09:30 - 11:00", room: "701" },
-	{ day: "Wednesday", subject: "Math", teacher: "Mr. Fandy", time: "08:00 - 09:30", room: "701" },
-	{ day: "Wednesday", subject: "Science", teacher: "Ms. Silvia", time: "09:30 - 11:00", room: "701" },
-	{ day: "Thursday", subject: "English", teacher: "Ms. Anita", time: "08:00 - 09:30", room: "701" },
-	{ day: "Thursday", subject: "History", teacher: "Mr. Azmi", time: "09:30 - 11:00", room: "701" },
-	{ day: "Friday", subject: "Math", teacher: "Mr. Fandy", time: "08:00 - 09:30", room: "701" },
-	{ day: "Friday", subject: "Science", teacher: "Ms. Silvia", time: "09:30 - 11:00", room: "701" },
-];
+export function ClassesScheduleCards(props: { idClass: string }) {
+	const { data: schedule } = useClassSchedule(props.idClass);
 
-export function ClassesScheduleCards({ schedule }: { schedule: ScheduleItem[] }) {
+	if (!schedule) {
+		return null
+	}
 	// Group exampleSchedule by day
 	const scheduleByDay = schedule.reduce<Record<string, ScheduleItem[]>>((acc, curr) => {
 		if (!acc[curr.day]) acc[curr.day] = [];

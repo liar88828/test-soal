@@ -1,7 +1,7 @@
-import { Card, CardContent } from "@/components/ui/card"
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow, } from "@/components/ui/table"
-import { Badge } from "@/components/ui/badge"
-import { Input } from "@/components/ui/input"
+import { Card, CardContent } from "@/components/ui/card.tsx"
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow, } from "@/components/ui/table.tsx"
+import { Badge } from "@/components/ui/badge.tsx"
+import { Input } from "@/components/ui/input.tsx"
 import { statusColor } from "@/components/page/absence/teacher-absence-page.tsx"
 
 const absences = [

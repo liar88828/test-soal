@@ -6,21 +6,6 @@ import { Eye } from "lucide-react";
 import dayjs from "dayjs"
 import { scheduleData } from "@/assets/example/scheduleData.ts";
 
-export type Schedule = {
-	id: number;
-	day: string;
-	time: string;
-	subject: string;
-	classTitle: string;
-	totalStudent: number;
-	present: number;
-	absent: number;
-	sick: number;
-	permission: number;
-	teacher: string;
-	room: string;
-};
-
 export default function TeacherScheduleCard() {
 	return (
 		<div className="min-h-screen bg-muted ">

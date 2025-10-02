@@ -1,4 +1,4 @@
-import { SiswaType } from "@/interface/siswaType.tsx";
+import { SiswaType } from "@/interface/siswa-type.tsx";
 
 export const exampleSiswaList: SiswaType[] = [
 	{

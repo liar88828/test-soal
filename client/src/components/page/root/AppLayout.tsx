@@ -88,7 +88,7 @@ export function PublicLayout() {
 					<div className="flex items-center gap-3">
 						<Button className="rounded-full" asChild>
 
-							{ !session ?
+							{ ( !session || !session.isValid ) ?
 								<Link to={ "/auth/login" }>
 									<LogInIcon /> Login
 								</Link>

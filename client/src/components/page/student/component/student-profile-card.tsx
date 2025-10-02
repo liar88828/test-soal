@@ -1,4 +1,4 @@
-import { SiswaType } from "@/interface/siswaType.tsx";
+import { SiswaType } from "@/interface/siswa-type.tsx";
 import { Card, CardContent, CardHeader } from "@/components/ui/card.tsx";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar.tsx";
 import { Badge, BookOpen, Calendar, Mail, MapPin, UserIcon, UsersIcon } from "lucide-react";

@@ -1,6 +1,7 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card.tsx"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow, } from "@/components/ui/table.tsx"
 import { Badge } from "@/components/ui/badge.tsx"
+import { VariantCSS } from "@/components/page/finance/VariantCSS.tsx";
 
 const dummyFinanceClass = [
 	{ id: 1, className: "X IPA 1", studentCount: 32, totalPaid: 12000000 },
@@ -37,7 +38,7 @@ export default function FinanceClasses() {
 									<TableCell>
 										<Badge
 											variant={
-												cls.totalPaid >= 10000000 ? "success" : "destructive"
+												( cls.totalPaid >= 10000000 ? "success" : "destructive" ) as VariantCSS
 											}
 										>
 											{ cls.totalPaid >= 10000000 ? "Lancar" : "Tertunggak" }

@@ -1,226 +1,74 @@
-import { useForm } from "react-hook-form"
-import { z } from "zod"
-import { zodResolver } from "@hookform/resolvers/zod"
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form.tsx"
-import { Button } from "@/components/ui/button.tsx"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select.tsx"
-import { Input } from "@/components/ui/input.tsx"
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, } from "@/components/ui/dialog.tsx"
-import { useState } from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card.tsx";
-import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table.tsx";
+import { useEffect, useState } from "react";
+import { nanoid } from "nanoid";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
 
-const mapelOptions: Mapel[] = [
-	{ id: "1", name: "Matematika", sks: 4 },
-	{ id: "2", name: "Ilmu Pengetahuan Alam (IPA)", sks: 6 },
-	{ id: "3", name: "Bahasa Indonesia", sks: 2 },
-	{ id: "4", name: "Bahasa Inggris", sks: 2 },
-	{ id: "5", name: "Ilmu Pengetahuan Sosial (IPS)", sks: 3 },
-	{ id: "6", name: "Pendidikan Agama", sks: 2 },
-	{ id: "7", name: "Pendidikan Jasmani", sks: 1 },
-]
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger, } from "@/components/ui/dialog";
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage, } from "@/components/ui/form";
+import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, TableRow, } from "@/components/ui/table";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { EditIcon, Plus, TrashIcon } from "lucide-react";
+import { useMapelStore } from "@/stores/use-mapel-store.ts";
 
-export const FormSchema = z.object({
-	mapelId: z.string().min(1, "Pilih mata pelajaran"),
-	sks: z.number().min(1),
-})
 
-export function EditModal(
-	{
-		handleSave,
-		setEditing,
-		editing
+export function AcademicScheduleOption() {
+	const [ editing, setEditing ] = useState<FormValues | null>(null);
+	const { mapels, removeMapel, addMapel, updateMapel } = useMapelStore();
 
-	}: {
-		handleSave: (data: Mapel) => void
-		setEditing: () => void
-		editing: Mapel | null
-	}) {
-	return (
-		<Dialog>
-			<DialogTrigger asChild>
-				<Button
-					size="sm"
-					variant="outline"
-					onClick={ setEditing }
-				>
-					Edit
-				</Button>
-			</DialogTrigger>
-			<DialogContent className="sm:max-w-lg">
-				<DialogHeader>
-					<DialogTitle>Edit Mata Pelajaran</DialogTitle>
-				</DialogHeader>
-				{ editing && (
-					<MapelForm
-						initialData={ editing }
-						onSave={ handleSave }
-					/>
-				) }
-			</DialogContent>
-		</Dialog>
-	);
-}
-
-export function AddMapelModal({ onSave }: { onSave: (data: Mapel) => void }) {
-	return (
-		<Dialog>
-			<DialogTrigger asChild>
-				<Button variant="default">+ Tambah Mapel</Button>
-			</DialogTrigger>
-			<DialogContent className="sm:max-w-[425px] p-6">
-				<DialogHeader>
-					<DialogTitle>Tambah Mata Pelajaran</DialogTitle>
-				</DialogHeader>
-				<MapelForm onSave={ onSave } />
-			</DialogContent>
-		</Dialog>
-	)
-}
-
-export function MapelForm(
-	{
-		onSave,
-		initialData,
-	}: {
-		onSave: (data: Mapel) => void
-		initialData?: Mapel
-	}) {
-	const form = useForm<z.infer<typeof FormSchema>>({
-		resolver: zodResolver(FormSchema),
-		defaultValues: {
-			mapelId: initialData?.id ?? "",
-			sks: initialData?.sks ?? 0,
-		},
-	})
-
-	const selectedMapel = mapelOptions.find((m) => m.id === form.watch("mapelId"))
-
-	return (
-		<Form { ...form }>
-			<form
-				onSubmit={ form.handleSubmit(() => {
-					const data: Mapel = {
-						id: initialData?.id ?? String(Date.now()),
-						name: selectedMapel?.name ?? "",
-						sks: selectedMapel?.sks ?? 0,
-					}
-					onSave(data)
-				}) }
-				className="space-y-6"
-			>
-				{/* Select Mapel */ }
-				<FormField
-					control={ form.control }
-					name="mapelId"
-					render={ ({ field }) => (
-						<FormItem>
-							<FormLabel>Pilih Mata Pelajaran</FormLabel>
-							<Select
-								onValueChange={ (val) => {
-									field.onChange(val)
-									const mapel = mapelOptions.find((m) => m.id === val)
-									if (mapel) {
-										form.setValue("sks", mapel.sks)
-									}
-								} }
-								value={ field.value }
-							>
-								<FormControl>
-									<SelectTrigger>
-										<SelectValue placeholder="Pilih mapel" />
-									</SelectTrigger>
-								</FormControl>
-								<SelectContent>
-									{ mapelOptions.map((m) => (
-										<SelectItem key={ m.id } value={ m.id }>
-											{ m.name }
-										</SelectItem>
-									)) }
-								</SelectContent>
-							</Select>
-							<FormMessage />
-						</FormItem>
-					) }
-				/>
-
-				{/* SKS (auto filled) */ }
-				<FormField
-					control={ form.control }
-					name="sks"
-					render={ ({ field }) => (
-						<FormItem>
-							<FormLabel>Jumlah SKS</FormLabel>
-							<FormControl>
-								<Input { ...field } type="number" value={ selectedMapel?.sks ?? 0 } readOnly />
-							</FormControl>
-							<FormMessage />
-						</FormItem>
-					) }
-				/>
-
-				<div className="flex justify-end">
-					<Button type="submit">{ initialData ? "Update" : "Simpan" }</Button>
-				</div>
-			</form>
-		</Form>
-	)
-}
-
-export type Mapel = {
-	id: string
-	name: string
-	sks: number
-}
-
-export const exampleMapelOptions: Mapel[] = [
-	{ id: "1", name: "Matematika", sks: 4 },
-	{ id: "2", name: "Ilmu Pengetahuan Alam (IPA)", sks: 6 },
-	{ id: "3", name: "Bahasa Indonesia", sks: 2 },
-	{ id: "4", name: "Bahasa Inggris", sks: 2 },
-	{ id: "5", name: "Ilmu Pengetahuan Sosial (IPS)", sks: 3 },
-	{ id: "6", name: "Pendidikan Agama", sks: 2 },
-	{ id: "7", name: "Pendidikan Jasmani", sks: 1 },
-]
-
-export function AcademicScheduleOption({ mapelOptions }: { mapelOptions: Mapel[] }) {
-	const [ mapels, setMapels ] = useState<Mapel[]>(mapelOptions)
-	const [ editing, setEditing ] = useState<Mapel | null>(null)
-
-	const handleSave = (data: Mapel) => {
+	const handleSave = (data: FormValues) => {
+		console.log(data);
 		if (editing) {
-			// update
-			setMapels((prev) =>
-				prev.map((m) => ( m.id === editing.id ? { ...m, ...data } : m ))
-			)
-			setEditing(null)
+			updateMapel(editing.id, data);
+			setEditing(null);
 		} else {
-			// add new
-			setMapels((prev) => [ ...prev, { ...data, id: String(Date.now()) } ])
+			addMapel({
+				...data,
+				id: nanoid(),
+				idGrade: ""
+			});
 		}
-	}
-
-	const handleDelete = (id: string) => {
-		setMapels((prev) => prev.filter((m) => m.id !== id))
-	}
-
+	};
+// console.log(editing,'test')
 	return (
 		<Card>
 			<CardHeader>
-				<div className="flex justify-between">
-					<CardTitle>Daftar Mata Pelajaran</CardTitle>
-					<AddMapelModal onSave={ handleSave } />
+				<div className="flex justify-between items-center">
+					<CardTitle>Daftar Mata Pelajaran yy</CardTitle>
+
+					{/* Tombol Add */ }
+					<Dialog>
+						<DialogTrigger asChild>
+							<Button><Plus /></Button>
+						</DialogTrigger>
+						<DialogContent>
+							<DialogHeader>
+								<DialogTitle>Tambah Mapel</DialogTitle>
+								<DialogDescription>
+									Isi form untuk menambahkan mata pelajaran baru
+								</DialogDescription>
+							</DialogHeader>
+							<AcademicScheduleOptionForm
+								editing={ null }
+								onSave={ handleSave }
+							/>
+						</DialogContent>
+					</Dialog>
 				</div>
 			</CardHeader>
+
 			<CardContent>
 				<Table>
-					<TableCaption>Daftar Mata Pelajaran & Jumlah SKS</TableCaption>
+					<TableCaption>Daftar Mata Pelajaran & Jumlah JP xx</TableCaption>
 					<TableHeader>
 						<TableRow>
 							<TableHead className="w-[50px] text-center">No</TableHead>
 							<TableHead>Nama Mata Pelajaran</TableHead>
-							<TableHead className="text-center">Jumlah SKS</TableHead>
-							<TableHead className="text-center w-[120px]">Aksi</TableHead>
+							<TableHead className="text-center">Jumlah JP</TableHead>
+							<TableHead className="text-center">Guru</TableHead>
+							<TableHead className="text-center w-[160px]">Aksi</TableHead>
 						</TableRow>
 					</TableHeader>
 					<TableBody>
@@ -228,26 +76,131 @@ export function AcademicScheduleOption({ mapelOptions }: { mapelOptions: Mapel[]
 							<TableRow key={ m.id }>
 								<TableCell className="text-center">{ i + 1 }</TableCell>
 								<TableCell>{ m.name }</TableCell>
-								<TableCell className="text-center">{ m.sks }</TableCell>
+								<TableCell className="text-center">{ m.jp }</TableCell>
+								<TableCell className="text-center">{ m.nameTeacher }</TableCell>
 								<TableCell className="text-center space-x-2">
-									<EditModal setEditing={ () => setEditing(m) }
-									           handleSave={ handleSave }
-									           editing={ editing }
-									/>
+									{/* Edit */ }
+									<Dialog
+										open={ !!editing && editing.id === m.id }
+										onOpenChange={ (isOpen) => {
+											if (!isOpen) setEditing(null);
+										} }
+									>
+										<DialogTrigger asChild>
+											<Button size="sm" onClick={ () => setEditing(m) }
+											>
+												<EditIcon />
+											</Button>
+										</DialogTrigger>
+										<DialogContent>
+											<DialogHeader>
+												<DialogTitle>Edit Mapel</DialogTitle>
+											</DialogHeader>
+											<AcademicScheduleOptionForm
+												editing={ editing }
+												onSave={ handleSave }
+												onClose={ () => setEditing(null) }
+											/>
+										</DialogContent>
+									</Dialog>
+
+									{/* Delete */ }
 									<Button
 										size="sm"
 										variant="destructive"
-										onClick={ () => handleDelete(m.id) }
+										onClick={ () => removeMapel(m.id) }
 									>
-										Hapus
+										<TrashIcon />
 									</Button>
 								</TableCell>
 							</TableRow>
 						)) }
 					</TableBody>
 				</Table>
-
 			</CardContent>
 		</Card>
-	)
+	);
+}
+
+// ---- Schema ----
+const formSchema = z.object({
+	name: z.string().min(2, "Nama minimal 2 karakter"),
+	nameTeacher: z.string().min(2, "Nama Guru minimal 2 karakter"),
+	idTeacher: z.string().min(2, "id Guru minimal 2 karakter"),
+	id: z.string().min(2, "ID minimal 2 karakter"),
+	jp: z.number().min(1, "JP minimal 1"),
+});
+
+type FormValues = z.infer<typeof formSchema>;
+
+// ---- Form Reusable ----
+function AcademicScheduleOptionForm(
+	{
+		editing,
+		onSave,
+		onClose,
+	}: {
+		editing: FormValues | null;
+		onSave: (data: FormValues) => void;
+		onClose?: () => void;
+	}) {
+
+	const form = useForm<FormValues>({
+		resolver: zodResolver(formSchema),
+		defaultValues: { name: "", jp: 1, nameTeacher: "", idTeacher: "", id: "" },
+	});
+
+	useEffect(() => {
+		if (editing) {
+			form.reset({ name: editing.name, jp: editing.jp });
+		} else {
+			form.reset({ name: "", jp: 1 });
+		}
+	}, [ editing, form ]);
+
+	const onSubmit = (values: FormValues) => {
+		console.log(values);
+		onSave(values);
+		form.reset();
+		onClose?.();
+	};
+	console.log(form.formState.errors)
+	return (
+		<Form { ...form }>
+			<form onSubmit={ form.handleSubmit(onSubmit) } className="space-y-4">
+				<FormField
+					control={ form.control }
+					name="name"
+					render={ ({ field }) => (
+						<FormItem>
+							<FormLabel>Nama Mapel</FormLabel>
+							<FormControl>
+								<Input placeholder="contoh: Matematika" { ...field } />
+							</FormControl>
+							<FormMessage />
+						</FormItem>
+					) }
+				/>
+
+				<FormField
+					control={ form.control }
+					name="jp"
+					render={ ({ field }) => (
+						<FormItem>
+							<FormLabel>Jumlah JP</FormLabel>
+							<FormControl>
+								<Input type="number" { ...field } onChange={ (e) => field.onChange(e.target.valueAsNumber) } />
+							</FormControl>
+							<FormMessage />
+						</FormItem>
+					) }
+				/>
+
+				<Button type="submit" className="w-full">
+					{ editing ? "Update Mapel" : "Tambah Mapel" }
+				</Button>
+
+			</form>
+		</Form>
+	);
 }

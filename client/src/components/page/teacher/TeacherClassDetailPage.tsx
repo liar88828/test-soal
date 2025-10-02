@@ -1,9 +1,11 @@
-import { exampleSiswaList } from "@/assets/example/siswaList.ts";
 import { StudentTabel } from "@/components/page/student/component/student-tabel.tsx";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { ClassAttendanceTable, exampleWeeks } from "@/components/page/teacher/ClassAttendanceTable.tsx";
+import { ClassAttendanceTable } from "@/components/page/teacher/ClassAttendanceTable.tsx";
+import { useParams } from "react-router-dom";
 
 export default function TeacherClassDetailPage() {
+	const params = useParams<{ id: string }>()
+
 	return (
 		<div className=" space-y-6">
 			<div className="">
@@ -16,10 +18,10 @@ export default function TeacherClassDetailPage() {
 					<TabsTrigger value="input-nilai">Input Nilai</TabsTrigger>
 				</TabsList>
 				<TabsContent value="semua-siswa">
-					<StudentTabel siswas={ exampleSiswaList } />
+					<StudentTabel idClass={ params.id } />
 				</TabsContent>
 				<TabsContent value="input-nilai">
-					<ClassAttendanceTable weekClass={ exampleWeeks } />
+					<ClassAttendanceTable idClass={ params.id } />
 				</TabsContent>
 			</Tabs>
 		</div>

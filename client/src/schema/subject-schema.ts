@@ -6,7 +6,8 @@ export const subjectSchema = z.object({
 	day: z.string().min(1, "Day is required"),
 	startTime: z.string().min(1, "Start time is required"),
 	endTime: z.string().min(1, "End time is required"),
-	sks: z.number().min(1, "SKS must be at least 1"),
+	jp: z.number().min(1, "SKS must be at least 1"),
 	id: z.string().optional(),
+	idTeacher: z.string(),
 });
 export type SubjectSchema = z.infer<typeof subjectSchema>

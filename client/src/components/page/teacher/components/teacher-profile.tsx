@@ -1,31 +1,15 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card.tsx";
 import { Button } from "@/components/ui/button.tsx";
+import { useTeacherStore } from "@/stores/use-teacher-store.ts";
 
-export  type Teacher = {
-	id: string;
-	name: string;
-	subject: string;
-	phone: string;
-	email: string;
-	address?: string;
-	photo?: string;
-	gender?: "Male" | "Female";
-	birthDate?: string;
-};
 
-export const exampleTeacher: Teacher = {
-	id: "1",
-	name: "Mr. Fandy",
-	subject: "Math",
-	phone: "08123456789",
-	email: "fandy@example.com",
-	address: "Jl. Merdeka No. 10, Jakarta",
-	photo: "https://randomuser.me/api/portraits/men/1.jpg",
-	gender: "Male",
-	birthDate: "1980-05-12",
-};
+export function TeacherProfile(props: { idTeacher?: string }) {
+	// const { data: teacher } = useTeacherDetails(props.idTeacher)
+	const teacher = useTeacherStore(state => state.teachers.find(i => i.id === props.idTeacher))
+	if (!teacher) {
+		return null;
+	}
 
-export function AcademicTeacherDetailProfile({ teacher }: { teacher: Teacher }) {
 	return (
 		<Card>
 			<CardHeader>

@@ -1,6 +1,6 @@
 import { type ActionFunctionArgs, LoaderFunctionArgs, redirect } from "react-router-dom"
 import { SERVER_URL } from "@/lib/constants"
-import { deleteSession, getSession, isLogin, loginSession } from "./session"
+import { deleteSession, getSession, isLogin, loginSession, SessionContext } from "./session"
 import { userContext } from "@/hooks/context.ts";
 
 const exampleUser = {
@@ -21,7 +21,7 @@ export async function AuthLoader({ context }: LoaderFunctionArgs) {
 }
 
 export async function sessionLoader({ context }: LoaderFunctionArgs) {
-	return context.get(userContext)
+	return context.get(userContext) as SessionContext | null
 }
 
 export async function protectLoader({ context }: LoaderFunctionArgs) {

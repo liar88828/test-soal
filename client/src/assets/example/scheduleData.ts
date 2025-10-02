@@ -1,6 +1,6 @@
-import { Schedule } from "@/components/page/schedule/teacher-schedule-card.tsx";
+import { ScheduleType } from "@/interface/schedule-type.tsx";
 
-export const scheduleData: Schedule[] = [
+export const scheduleData: ScheduleType[] = [
 	{
 		id: 134234,
 		day: "Senin",

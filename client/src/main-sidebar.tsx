@@ -1,4 +1,21 @@
-import { Book, Calendar, DollarSign, FileText, FolderKanban, Home, Megaphone, SchoolIcon, Settings, SettingsIcon, Shield, SquareChartGantt, UserIcon, Users, UsersIcon, Warehouse } from "lucide-react";
+import {
+	Book,
+	Calendar,
+	CalendarCheck2Icon,
+	DollarSign,
+	FileText,
+	FolderKanban,
+	Home,
+	Megaphone,
+	SchoolIcon,
+	Settings,
+	Shield,
+	SquareChartGantt,
+	UserIcon,
+	Users,
+	UsersIcon,
+	Warehouse
+} from "lucide-react";
 
 export const mainSidebar = [
 	{
@@ -15,7 +32,7 @@ export const mainSidebar = [
 		title: "Academic",
 		child: [
 			{
-				title: "class",
+				title: "Class",
 				url: "/academic/classes",
 				icon: SchoolIcon,
 			},
@@ -25,9 +42,9 @@ export const mainSidebar = [
 			// 	icon: LayoutDashboardIcon,
 			// },
 			{
-				title: "option",
-				url: "/academic/option",
-				icon: SettingsIcon,
+				title: "Schedule",
+				url: "/academic/schedule",
+				icon: CalendarCheck2Icon,
 			},
 			{
 				title: "guru",
@@ -54,16 +71,16 @@ export const mainSidebar = [
 				url: "/student/profile",
 				icon: UserIcon,
 			},
-			{
-				title: "Jadwal",
-				url: "/student/schedule",
-				icon: Calendar,
-			},
-			{
-				title: "Rapot",
-				url: "/student/report",
-				icon: FileText,
-			},
+			// {
+			// 	title: "Jadwal",
+			// 	url: "/student/schedule",
+			// 	icon: Calendar,
+			// },
+			// {
+			// 	title: "Rapot",
+			// 	url: "/student/report",
+			// 	icon: FileText,
+			// },
 			// {
 			// 	title: 'Settings',
 			// 	url: '/student/settings',

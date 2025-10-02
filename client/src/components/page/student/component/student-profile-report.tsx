@@ -1,19 +1,11 @@
 import { Card, CardContent, CardHeader } from "@/components/ui/card.tsx";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table.tsx";
+import { TableLoading } from "@/components/mini/TableComponent.tsx";
+import { useStudentNilai } from "@/lib/swr/use-student.tsx";
 
-export type NilaiType = {
-	mataPelajaran: string
-	nilai: number
-	keterangan: string
-}
-export const exampleNilai: NilaiType[] = [
-	{ mataPelajaran: "Matematika", nilai: 88, keterangan: "Baik" },
-	{ mataPelajaran: "Bahasa Indonesia", nilai: 92, keterangan: "Sangat Baik" },
-	{ mataPelajaran: "Bahasa Inggris", nilai: 85, keterangan: "Baik" },
-	{ mataPelajaran: "Fisika", nilai: 78, keterangan: "Cukup" },
-]
 
-export function StudentProfileReport({ nilai }: { nilai: NilaiType[] }) {
+export function StudentProfileReport(props: { idStudent?: string }) {
+	const { data: nilai } = useStudentNilai(props.idStudent)
 	return (
 		<Card className="shadow-md border rounded-2xl">
 			<CardHeader>
@@ -34,14 +26,15 @@ export function StudentProfileReport({ nilai }: { nilai: NilaiType[] }) {
 					</TableHeader>
 					<TableBody>
 						{
-							nilai.map((n, idx: number) => (
-								<TableRow key={ idx }>
-									<TableCell>{ idx + 1 }</TableCell>
-									<TableCell>{ n.mataPelajaran }</TableCell>
-									<TableCell className="text-center font-semibold">{ n.nilai }</TableCell>
-									<TableCell className="text-center">{ n.keterangan }</TableCell>
-								</TableRow>
-							)) }
+							!nilai ? <TableLoading spanCol={ 4 } /> :
+								nilai.map((n, idx: number) => (
+									<TableRow key={ idx }>
+										<TableCell>{ idx + 1 }</TableCell>
+										<TableCell>{ n.mataPelajaran }</TableCell>
+										<TableCell className="text-center font-semibold">{ n.nilai }</TableCell>
+										<TableCell className="text-center">{ n.keterangan }</TableCell>
+									</TableRow>
+								)) }
 
 					</TableBody>
 				</Table>

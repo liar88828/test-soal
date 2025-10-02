@@ -1,12 +1,16 @@
-import { ReportType } from "@/assets/example/exampleReports.ts";
 import { Card, CardContent } from "@/components/ui/card.tsx";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table.tsx";
+import { TableLoading } from "@/components/mini/TableComponent.tsx";
+
+import { useStudentReport } from "@/lib/swr/use-student.tsx";
 
 
-export function StudentReportTable({ reports }: { reports: ReportType[] }) {
+export function StudentReportTable(props: { idStudent: string }) {
+	const { data: reports } = useStudentReport(props.idStudent,)
+
 	return (
 		<Card>
-			<CardContent className="p-4">
+			<CardContent>
 				<Table>
 					<TableHeader>
 						<TableRow>
@@ -16,15 +20,17 @@ export function StudentReportTable({ reports }: { reports: ReportType[] }) {
 						</TableRow>
 					</TableHeader>
 					<TableBody>
-						{ reports.map((item, idx) => (
-							<TableRow key={ idx }>
-								<TableCell>{ item.subject }</TableCell>
-								<TableCell>{ item.semester }</TableCell>
-								<TableCell className="text-right font-semibold">
-									{ item.grade }
-								</TableCell>
-							</TableRow>
-						)) }
+						{
+							!reports ? <TableLoading spanCol={ 3 } /> :
+								reports.map((item, idx) => (
+									<TableRow key={ idx }>
+										<TableCell>{ item.subject }</TableCell>
+										<TableCell>{ item.semester }</TableCell>
+										<TableCell className="text-right font-semibold">
+											{ item.grade }
+										</TableCell>
+									</TableRow>
+								)) }
 					</TableBody>
 				</Table>
 			</CardContent>

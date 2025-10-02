@@ -3,7 +3,8 @@ import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, Tabl
 import { Button } from "@/components/ui/button.tsx";
 import { Link } from "react-router-dom";
 import { Eye } from "lucide-react";
-import { ClassRow, exampleClass } from "@/components/page/academic/components/AcademicClassesDetailTabel.tsx";
+import { exampleGradeClass } from "@/assets/example/exampleClass.ts";
+import { ClassRow } from "@/interface/class-row.ts";
 
 export type AcademicClass = {
 	id: string
@@ -14,7 +15,7 @@ export type AcademicClass = {
 }
 
 export const exampleAcademicClasses: AcademicClass[] = [
-	{ id: "paud", name: "PAUD", level: "PAUD", grade: null, list: exampleClass },
+	{ id: "paud", name: "PAUD", level: "PAUD", grade: null, list: exampleGradeClass },
 	{ id: "tk-kecil", name: "TK Kecil", level: "TK", grade: null },
 	{ id: "tk-besar", name: "TK Besar", level: "TK", grade: null },
 
@@ -34,7 +35,7 @@ export const exampleAcademicClasses: AcademicClass[] = [
 	{ id: "smk-12", name: "Kelas 12", level: "SMK", grade: 12 },
 ]
 
-export function AcademicTable({ academicClass }: { academicClass: AcademicClass[] }) {
+export function AcademicGradeTable({ academicClass }: { academicClass: AcademicClass[] }) {
 	return (
 		<Card>
 			<CardHeader>

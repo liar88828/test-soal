@@ -2,6 +2,7 @@ import { Badge } from "@/components/ui/badge.tsx"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card.tsx"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow, } from "@/components/ui/table.tsx"
 import { Button } from "@/components/ui/button.tsx"
+import { VariantCSS } from "@/components/page/finance/VariantCSS.tsx";
 
 const dummyBills = [
 	{
@@ -61,7 +62,7 @@ export default function FinanceBills() {
 									<TableCell>
 										<Badge
 											variant={
-												bill.status === "Lunas" ? "success" : "destructive"
+												( bill.status === "Lunas" ? "success" : "destructive" ) as VariantCSS
 											}
 										>
 											{ bill.status }

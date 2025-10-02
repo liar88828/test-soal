@@ -1,15 +1,124 @@
-import { UseFormReturn } from "react-hook-form";
-import { SubjectSchema } from "@/components/page/academic/components/subject-schema.ts";
+import { subjectSchema, SubjectSchema } from "@/schema/subject-schema.ts";
+import { useSubjectStore } from "@/stores/use-subject-store.ts";
 import { useEffect, useState } from "react";
-import { useSubjectStore } from "@/stores/subject-store.ts";
-import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog.tsx";
+import { useForm, UseFormReturn } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card.tsx";
+import { Table, TableBody, TableCell, TableFooter, TableHead, TableHeader, TableRow } from "@/components/ui/table.tsx";
 import { Button } from "@/components/ui/button.tsx";
+import { PencilIcon, TrashIcon } from "lucide-react";
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog.tsx";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form.tsx";
 import { Input } from "@/components/ui/input.tsx";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select.tsx";
 
 
-export function AcademicTeacherDetailForm(
+export function TeacherSubjectsTable(props: { idTeacher?: string }) {
+	// const { data } = useTeacherSubjects(props.idTeacher);
+	const { subjects } = useSubjectStore()
+	const newSubject = subjects.filter(t => t.idTeacher === props.idTeacher)
+	console.log(subjects)
+	const { deleteSubject } = useSubjectStore();
+	const [ editing, setEditing ] = useState<SubjectSchema | null>(null);
+
+// helper to parse "HH:mm" into minutes
+	function timeToMinutes(time: string) {
+		const [ h, m ] = time.split(":").map(Number);
+		return h * 60 + m;
+	}
+
+// get duration in minutes
+	function getDuration(start: string, end: string) {
+		return timeToMinutes(end) - timeToMinutes(start);
+	}
+
+// totals
+	const totalSks = subjects.reduce((sum, item) => sum + item.jp, 0);
+
+	const totalMinutes = subjects.reduce(
+		(sum, item) => sum + getDuration(item.startTime, item.endTime),
+		0
+	);
+
+	const hours = Math.floor(totalMinutes / 60);
+	const minutes = totalMinutes % 60;
+	const form = useForm<SubjectSchema>({
+		resolver: zodResolver(subjectSchema),
+		defaultValues: { className: "", subjectName: "", day: "", jp: 2, idTeacher: props.idTeacher },
+	});
+
+	// console.log(form.formState.errors);
+	return (
+		<Card>
+			<CardHeader className="flex flex-row items-center justify-between">
+				<CardTitle>Subjects Taught</CardTitle>
+				<AcademicTeacherDetailForm
+					form={ form }
+					editing={ editing } setEditing={ setEditing }
+				/>
+			</CardHeader>
+
+			<CardContent>
+				<Table>
+					<TableHeader>
+						<TableRow>
+							<TableHead>No</TableHead>
+							<TableHead>Class</TableHead>
+							<TableHead>Subject</TableHead>
+							<TableHead>JP</TableHead>
+							<TableHead>Schedule</TableHead>
+							<TableHead className="text-right">Actions</TableHead>
+						</TableRow>
+					</TableHeader>
+					<TableBody>
+						{ newSubject.map((subj, i) => (
+							<TableRow key={ subj.id }>
+								<TableCell>{ i + 1 }</TableCell>
+								<TableCell>{ subj.className }</TableCell>
+								<TableCell>{ subj.subjectName }</TableCell>
+								<TableCell>{ subj.jp }</TableCell>
+								<TableCell>
+									{ subj.day } { subj.startTime }-{ subj.endTime }
+								</TableCell>
+								<TableCell className="flex justify-end gap-2">
+									<Button
+										size="sm"
+										variant="outline"
+										onClick={ () => {
+											setEditing(subj);
+											form.reset(subj);
+										} }
+									>
+										<PencilIcon size={ 16 } />
+									</Button>
+									<Button
+										size="sm"
+										variant="destructive"
+										onClick={ () => deleteSubject(subj.id as string) }
+									>
+										<TrashIcon size={ 16 } />
+									</Button>
+								</TableCell>
+							</TableRow>
+						)) }
+					</TableBody>
+					<TableFooter>
+						<TableRow>
+							<TableCell></TableCell>
+							<TableCell></TableCell>
+							<TableCell>Total JP</TableCell>
+							<TableCell>{ totalSks }</TableCell>
+							<TableCell>{ hours }h { minutes }m</TableCell>
+							<TableCell></TableCell>
+						</TableRow>
+					</TableFooter>
+				</Table>
+			</CardContent>
+		</Card>
+	);
+}
+
+function AcademicTeacherDetailForm(
 	{
 		form,
 		editing,
@@ -39,6 +148,7 @@ export function AcademicTeacherDetailForm(
 			setOpen(true) // auto-open when editing
 		}
 	}, [ editing, form ])
+
 	const updateValue = (newBase: string, newSuffix: string) => {
 		const value = `${ newBase }${ newSuffix }`;
 		form.setValue("className", value);
@@ -72,6 +182,7 @@ export function AcademicTeacherDetailForm(
 
 				<Form { ...form }>
 					<form onSubmit={ form.handleSubmit(onSubmit) } className="space-y-4">
+
 						<FormField
 							control={ form.control }
 							name="className"
@@ -173,6 +284,7 @@ export function AcademicTeacherDetailForm(
 								</FormItem>
 							) }
 						/>
+
 						<FormField
 							control={ form.control }
 							name="day"
@@ -227,9 +339,10 @@ export function AcademicTeacherDetailForm(
 								) }
 							/>
 						</div>
+
 						<FormField
 							control={ form.control }
-							name="sks"
+							name="jp"
 							render={ ({ field }) => (
 								<FormItem>
 									<FormLabel>SKS</FormLabel>
@@ -244,6 +357,7 @@ export function AcademicTeacherDetailForm(
 								</FormItem>
 							) }
 						/>
+
 						<DialogFooter>
 							<Button type="submit">{ editing ? "Update" : "Save" }</Button>
 						</DialogFooter>
