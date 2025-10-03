@@ -7,7 +7,7 @@ import { sessionLoader } from "@/action/auth.action.ts";
 
 export default function Home() {
 	const session = useLoaderData<typeof sessionLoader>()
-	// console.log(data)
+	// console.log(dataAvailableOnClass)
 	return (
 		<div className="min-h-screen  text-gray-900">
 			{/* Hero Section */ }

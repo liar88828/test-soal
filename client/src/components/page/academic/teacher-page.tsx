@@ -1,6 +1,5 @@
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import * as z from "zod";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
@@ -13,20 +12,10 @@ import { useTeacherStore } from "@/stores/use-teacher-store.ts";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select.tsx";
 import { Link } from "react-router-dom";
 import { Eye } from "lucide-react";
-import { subjects } from "@/components/page/academic/components/subjects.tsx";
+import { subjects } from "@/assets/subjects.tsx";
+import { teacherFormData, TeacherFormData } from "@/schema/teacher-form-data.tsx";
+import { useMapelClassStore } from "@/stores/use-mapel-class-store.ts";
 
-const schema = z.object({
-	name: z.string().min(2),
-	subject: z.string(),
-	phone: z.string(),
-	email: z.email(),
-	address: z.string(),
-	photo: z.url(),
-	gender: z.enum([ "Male", "Female" ]),
-	birthDate: z.string(),
-});
-
-type FormData = z.infer<typeof schema>;
 
 export function TeacherForm(
 	{
@@ -40,8 +29,8 @@ export function TeacherForm(
 	}) {
 	const { addTeacher, updateTeacher } = useTeacherStore();
 
-	const form = useForm<FormData>({
-		resolver: zodResolver(schema),
+	const form = useForm<TeacherFormData>({
+		resolver: zodResolver(teacherFormData),
 		defaultValues: editing ?? {
 			name: "",
 			subject: "",
@@ -72,8 +61,7 @@ export function TeacherForm(
 		}
 	}, [ editing, form ]);
 
-	console.log(editing);
-	const onSubmit = (values: FormData) => {
+	const onSubmit = (values: TeacherFormData) => {
 		if (editing) {
 			updateTeacher(editing.id, values);
 		} else {
@@ -82,6 +70,7 @@ export function TeacherForm(
 		onClose();
 	};
 
+	console.log(editing);
 	return (
 		<Dialog open={ open } onOpenChange={ onClose }>
 			<DialogContent className="max-w-lg">
@@ -239,6 +228,7 @@ export function TeacherForm(
 
 export default function TeacherTablePage() {
 	const { teachers, deleteTeacher } = useTeacherStore();
+	const { getSubjectByIdTeacher } = useMapelClassStore()
 	const [ open, setOpen ] = useState(false);
 	const [ editing, setEditing ] = useState<TeacherType | null>(null);
 
@@ -262,6 +252,7 @@ export default function TeacherTablePage() {
 							<TableHead>Subject</TableHead>
 							<TableHead>Email</TableHead>
 							<TableHead>Phone</TableHead>
+							<TableHead>Total JP</TableHead>
 							<TableHead>Actions</TableHead>
 						</TableRow>
 					</TableHeader>
@@ -272,6 +263,7 @@ export default function TeacherTablePage() {
 								<TableCell>{ t.subject }</TableCell>
 								<TableCell>{ t.email }</TableCell>
 								<TableCell>{ t.phone }</TableCell>
+								<TableCell>{ getSubjectByIdTeacher(t.id).totalJP }</TableCell>
 								<TableCell className="space-x-2">
 									<Button asChild variant={ "outline" }>
 										<Link to={ `/academic/teacher/${ t.id }` }>

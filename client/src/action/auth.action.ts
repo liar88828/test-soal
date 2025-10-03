@@ -115,8 +115,8 @@ export async function profileLoader() {
 		}
 
 		await res.json()
-		// console.log('profile', data)
-		// return data.user;
+		// console.log('profile', dataAvailableOnClass)
+		// return dataAvailableOnClass.user;
 		return exampleUser
 	} catch (error) {
 		console.error("Gagal mengambil profil:", error)

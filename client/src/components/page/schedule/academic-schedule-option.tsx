@@ -1,7 +1,5 @@
 import { useEffect, useState } from "react";
-import { nanoid } from "nanoid";
 import { useForm } from "react-hook-form";
-import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 
 import { Button } from "@/components/ui/button";
@@ -11,24 +9,21 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage, } from 
 import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, TableRow, } from "@/components/ui/table";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { EditIcon, Plus, TrashIcon } from "lucide-react";
-import { useMapelStore } from "@/stores/use-mapel-store.ts";
+import { useMapelClassStore } from "@/stores/use-mapel-class-store.ts";
+import { mapelFormSchema, MapelFormValues } from "@/schema/mapel-form-schema.tsx";
 
 
 export function AcademicScheduleOption() {
-	const [ editing, setEditing ] = useState<FormValues | null>(null);
-	const { mapels, removeMapel, addMapel, updateMapel } = useMapelStore();
+	const [ editing, setEditing ] = useState<MapelFormValues | null>(null);
+	const { mapels, removeMapelForTeacher, addMapelForTeacher, updateMapelForTeacher } = useMapelClassStore();
 
-	const handleSave = (data: FormValues) => {
+	const handleSave = (data: MapelFormValues) => {
 		console.log(data);
-		if (editing) {
-			updateMapel(editing.id, data);
+		if (editing && editing.id) {
+			updateMapelForTeacher(editing.id, data);
 			setEditing(null);
 		} else {
-			addMapel({
-				...data,
-				id: nanoid(),
-				idGrade: ""
-			});
+			addMapelForTeacher(data);
 		}
 	};
 // console.log(editing,'test')
@@ -65,7 +60,7 @@ export function AcademicScheduleOption() {
 					<TableHeader>
 						<TableRow>
 							<TableHead className="w-[50px] text-center">No</TableHead>
-							<TableHead>Nama Mata Pelajaran</TableHead>
+							<TableHead>Mata Pelajaran</TableHead>
 							<TableHead className="text-center">Jumlah JP</TableHead>
 							<TableHead className="text-center">Guru</TableHead>
 							<TableHead className="text-center w-[160px]">Aksi</TableHead>
@@ -75,7 +70,7 @@ export function AcademicScheduleOption() {
 						{ mapels.map((m, i) => (
 							<TableRow key={ m.id }>
 								<TableCell className="text-center">{ i + 1 }</TableCell>
-								<TableCell>{ m.name }</TableCell>
+								<TableCell>{ m.nameSubject }</TableCell>
 								<TableCell className="text-center">{ m.jp }</TableCell>
 								<TableCell className="text-center">{ m.nameTeacher }</TableCell>
 								<TableCell className="text-center space-x-2">
@@ -108,7 +103,7 @@ export function AcademicScheduleOption() {
 									<Button
 										size="sm"
 										variant="destructive"
-										onClick={ () => removeMapel(m.id) }
+										onClick={ () => removeMapelForTeacher(m.id) }
 									>
 										<TrashIcon />
 									</Button>
@@ -123,15 +118,15 @@ export function AcademicScheduleOption() {
 }
 
 // ---- Schema ----
-const formSchema = z.object({
-	name: z.string().min(2, "Nama minimal 2 karakter"),
-	nameTeacher: z.string().min(2, "Nama Guru minimal 2 karakter"),
-	idTeacher: z.string().min(2, "id Guru minimal 2 karakter"),
-	id: z.string().min(2, "ID minimal 2 karakter"),
-	jp: z.number().min(1, "JP minimal 1"),
-});
-
-type FormValues = z.infer<typeof formSchema>;
+// const formSchema = z.object({
+// 	name: z.string().min(2, "Nama minimal 2 karakter"),
+// 	nameTeacher: z.string().min(2, "Nama Guru minimal 2 karakter"),
+// 	idTeacher: z.string().min(2, "id Guru minimal 2 karakter"),
+// 	id: z.string().min(2, "ID minimal 2 karakter"),
+// 	jp: z.number().min(1, "JP minimal 1"),
+// });
+//
+// type FormValues = z.infer<typeof formSchema>;
 
 // ---- Form Reusable ----
 function AcademicScheduleOptionForm(
@@ -140,25 +135,25 @@ function AcademicScheduleOptionForm(
 		onSave,
 		onClose,
 	}: {
-		editing: FormValues | null;
-		onSave: (data: FormValues) => void;
+		editing: MapelFormValues | null;
+		onSave: (data: MapelFormValues) => void;
 		onClose?: () => void;
 	}) {
 
-	const form = useForm<FormValues>({
-		resolver: zodResolver(formSchema),
-		defaultValues: { name: "", jp: 1, nameTeacher: "", idTeacher: "", id: "" },
+	const form = useForm<MapelFormValues>({
+		resolver: zodResolver(mapelFormSchema),
+		defaultValues: { nameSubject: "", jp: 1, nameTeacher: "", idTeacher: "", id: "" },
 	});
 
 	useEffect(() => {
 		if (editing) {
-			form.reset({ name: editing.name, jp: editing.jp });
+			form.reset({ nameSubject: editing.nameSubject, jp: editing.jp });
 		} else {
-			form.reset({ name: "", jp: 1 });
+			form.reset({ nameSubject: "", jp: 1 });
 		}
 	}, [ editing, form ]);
 
-	const onSubmit = (values: FormValues) => {
+	const onSubmit = (values: MapelFormValues) => {
 		console.log(values);
 		onSave(values);
 		form.reset();
@@ -170,7 +165,7 @@ function AcademicScheduleOptionForm(
 			<form onSubmit={ form.handleSubmit(onSubmit) } className="space-y-4">
 				<FormField
 					control={ form.control }
-					name="name"
+					name="nameSubject"
 					render={ ({ field }) => (
 						<FormItem>
 							<FormLabel>Nama Mapel</FormLabel>

@@ -34,7 +34,8 @@ server in any environment while also keeping type saftey.
 
 ### Server
 
-bhvr uses Hono as a backend API for it's simplicity and massive ecosystem of plugins. If you have ever used Express then it might feel familiar. Declaring routes and returning data is easy.
+bhvr uses Hono as a backend API for it's simplicity and massive ecosystem of plugins. If you have ever used Express then
+it might feel familiar. Declaring routes and returning dataAvailableOnClass is easy.
 
 ```
 server
@@ -61,12 +62,12 @@ userRouter.get('/', (c) => {
 
 userRouter.get('/hello', async (c) => {
 
-  const data: ApiResponse = {
+  const dataAvailableOnClass: ApiResponse = {
     message: "Hello BHVR!",
     success: true
   }
 
-  return c.json(data, { status: 200 })
+  return c.json(dataAvailableOnClass, { status: 200 })
 })
 
 export default userRouter
@@ -110,7 +111,7 @@ import './App.css'
 const SERVER_URL = import.meta.env.VITE_SERVER_URL || "http://localhost:3000"
 
 function App() {
-  const [data, setData] = useState<ApiResponse | undefined>()
+  const [dataAvailableOnClass, setData] = useState<ApiResponse | undefined>()
 
   async function sendRequest() {
     try {
@@ -136,11 +137,11 @@ function App() {
         <button onClick={sendRequest}>
           Call API
         </button>
-        {data && (
+        {dataAvailableOnClass && (
           <pre classTitle='response'>
             <code>
-            Message: {data.message} <br />
-            Success: {data.success.toString()}
+            Message: {dataAvailableOnClass.message} <br />
+            Success: {dataAvailableOnClass.success.toString()}
             </code>
           </pre>
         )}

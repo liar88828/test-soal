@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import { nanoid } from "nanoid";
 import { useForm } from "react-hook-form";
-import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 
 import { Button } from "@/components/ui/button";
@@ -11,23 +10,10 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage, } from 
 import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, TableRow, } from "@/components/ui/table";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { EditIcon, Plus, TrashIcon } from "lucide-react";
-import { useMapelStore } from "@/stores/use-mapel-store.ts";
-// xxx
-// ---- Schema ----
-export const mapelFormSchema = z.object({
-	jp: z.number().min(1, "JP minimal 1"),
-	idTeacher: z.string(),
-	nameTeacher: z.string(),
-	idGrade: z.string(),
-	id: z.string().optional(),
-	nameSubject: z.string(),
+import { useMapelClassStore } from "@/stores/use-mapel-class-store.ts";
+import { mapelFormSchema, MapelFormValues } from "@/schema/mapel-form-schema.tsx";
 
-});
 
-export type MapelFormValues = z.infer<typeof mapelFormSchema>;
-// type MapelType = { id: string; name: string; jp: number };
-
-// ---- Form Reusable ----
 function AcademicScheduleOptionForm(
 	{
 		editing,
@@ -104,17 +90,17 @@ function AcademicScheduleOptionForm(
 	);
 }
 
-// ---- Main Component ----
+
 export function AcademicScheduleOption() {
 	const [ editing, setEditing ] = useState<Required<MapelFormValues> | null>(null);
-	const { mapels, removeMapel, addMapel, updateMapel } = useMapelStore();
+	const { mapels, removeMapelForTeacher, addMapelForTeacher, updateMapelForTeacher } = useMapelClassStore();
 
 	const handleSave = (data: MapelFormValues) => {
 		if (editing) {
-			updateMapel(editing.id, data);
+			updateMapelForTeacher(editing.id, data);
 			setEditing(null);
 		} else {
-			addMapel({
+			addMapelForTeacher({
 				...data,
 				id: nanoid(),
 
@@ -155,7 +141,7 @@ export function AcademicScheduleOption() {
 					<TableHeader>
 						<TableRow>
 							<TableHead className="w-[50px] text-center">No</TableHead>
-							<TableHead>Nama Mata Pelajaran</TableHead>
+							<TableHead>Mata Pelajaran</TableHead>
 							<TableHead className="text-center">Jumlah JP</TableHead>
 							<TableHead className="text-center w-[160px]">Aksi</TableHead>
 						</TableRow>
@@ -196,7 +182,7 @@ export function AcademicScheduleOption() {
 									<Button
 										size="sm"
 										variant="destructive"
-										onClick={ () => removeMapel(m.id) }
+										onClick={ () => removeMapelForTeacher(m.id) }
 									>
 										<TrashIcon />
 									</Button>

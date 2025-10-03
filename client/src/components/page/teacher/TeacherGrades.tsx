@@ -104,7 +104,7 @@ export function ClassInputTable({ students }: { students: StudentGradesProps[] }
 	}
 
 	const onSave = () => {
-		console.log("Saving students data:", studentList)
+		console.log("Saving students dataAvailableOnClass:", studentList)
 		// TODO: send studentList to API
 	}
 

@@ -27,7 +27,7 @@ export async function createSoalAction({ request }: ActionFunctionArgs) {
 		if (!result.success) {
 			const error = z.treeifyError(result.error)
 			console.error(error);
-			// Optionally return error data for form feedback
+			// Optionally return error dataAvailableOnClass for form feedback
 			return { error };
 		}
 		const res = await fetch(`${ SERVER_URL }/soal`, {
@@ -162,7 +162,7 @@ export async function soalListAnswer({ request, params }: ActionFunctionArgs) {
 	const raw = form.get("data");
 
 	if (!raw) {
-		return new Response("Missing data", { status: 400 });
+		return new Response("Missing dataAvailableOnClass", { status: 400 });
 	}
 
 	const { student, answers } = JSON.parse(raw as string);
@@ -196,10 +196,10 @@ export async function soalListCheckLoader({ params }: LoaderFunctionArgs): Promi
 	const data = await res.json();
 
 	if (!res.ok) {
-		throw new Error("Gagal mengambil data review");
+		throw new Error("Gagal mengambil dataAvailableOnClass review");
 	}
 
-// const data = await res.json();
+// const dataAvailableOnClass = await res.json();
 	console.log(data)
 	return data
 }

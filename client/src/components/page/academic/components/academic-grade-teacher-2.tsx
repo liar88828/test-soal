@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { nanoid } from "nanoid";
 import { useForm } from "react-hook-form";
-import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Button } from "@/components/ui/button.tsx";
 import { Input } from "@/components/ui/input.tsx";
@@ -12,16 +11,16 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card.t
 import { EditIcon, Plus, TrashIcon } from "lucide-react";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select.tsx";
 import { toast } from "sonner";
-import { useOptionStore } from "@/stores/use-option-store.ts";
-import { subjects } from "@/components/page/academic/components/subjects.tsx";
+import { useOptionGradePerClassStore } from "@/stores/use-option-grade-per-class-store.ts";
+import { subjects } from "@/assets/subjects.tsx";
 import { formatToHour } from "@/components/page/academic/components/academic-grade-option.tsx";
+import { optionFormSchema, OptionFormValues } from "@/schema/option-form-schema.tsx";
 
-// ---- Main Component ----
+
 export function AcademicGradeOptionTable(props: { idGrade: string }) {
 	const [ editing, setEditing ] = useState<OptionFormValues | null>(null);
-	const { removeOption, addOption, updateOption, dataOptions } = useOptionStore();
-
-	const options = dataOptions.filter(i => i.idGrade === props.idGrade);
+	const { removeOption, addOption, updateOption, getDataByGrade } = useOptionGradePerClassStore();
+	const { dataAvailableOnClass, totalJP, totalTime } = getDataByGrade(props.idGrade)
 
 	const handleSave = (data: OptionFormValues) => {
 		if (editing && editing.id) {
@@ -61,24 +60,24 @@ export function AcademicGradeOptionTable(props: { idGrade: string }) {
 			</CardHeader>
 
 			<CardContent>
-				<Table>
+				<Table className={ "text-center" }>
 					<TableCaption>Daftar Mata Pelajaran & Jumlah JP ddsd</TableCaption>
 					<TableHeader>
 						<TableRow>
 							<TableHead className="w-[50px] text-center">No</TableHead>
-							<TableHead>Nama Mata Pelajaran</TableHead>
+							<TableHead>Mata Pelajaran</TableHead>
 							<TableHead className="text-end">Jumlah JP</TableHead>
 							<TableHead className="text-start">Jumlah Jam</TableHead>
 							<TableHead className="text-center ">Aksi</TableHead>
 						</TableRow>
 					</TableHeader>
 					<TableBody>
-						{ options.map((m, i) => (
+						{ dataAvailableOnClass.map((m, i) => (
 							<TableRow key={ m.id }>
 								<TableCell className="text-center">{ i + 1 }</TableCell>
-								<TableCell>{ m.name }</TableCell>
-								<TableCell className="text-start">{ m.jp }</TableCell>
-								<TableCell className="text-end">{ formatToHour(m.jp * 45) }</TableCell>
+								<TableCell>{ m.nameSubject }</TableCell>
+								<TableCell className="text-end">{ m.jp }</TableCell>
+								<TableCell className="text-start">{ formatToHour(m.jp * 45) }</TableCell>
 								<TableCell className="text-center space-x-2">
 									{/* Edit */ }
 									<Dialog
@@ -122,8 +121,8 @@ export function AcademicGradeOptionTable(props: { idGrade: string }) {
 						<TableRow>
 							<TableCell></TableCell>
 							<TableCell></TableCell>
-							<TableCell className={ "text-center" }>{ options.reduce((sum, item) => sum + item.jp, 0) }</TableCell>
-							<TableCell></TableCell>
+							<TableCell className={ "text-end" }>{ totalJP }</TableCell>
+							<TableCell className={ "text-start" }>{ totalTime }</TableCell>
 						</TableRow>
 					</TableFooter>
 
@@ -146,12 +145,12 @@ function AcademicScheduleOptionForm(
 		idGrade: string;
 	}) {
 
-	const { dataOptions } = useOptionStore();
+	const { dataOptions } = useOptionGradePerClassStore();
 
 	const newSubject = subjects.filter((i) =>
 		!dataOptions.some((j) => {
-			if (editing && editing.name === i) return false;
-			const name = j.name === i;
+			if (editing && editing.nameSubject === i) return false;
+			const name = j.nameSubject === i;
 			const grande = j.idGrade === idGrade
 			return name && grande;
 		})
@@ -160,7 +159,7 @@ function AcademicScheduleOptionForm(
 	const form = useForm<OptionFormValues>({
 		resolver: zodResolver(optionFormSchema),
 		defaultValues: editing ? editing : {
-			name: "Math",
+			nameSubject: "Math",
 			jp: 1,
 			idGrade
 		},
@@ -169,7 +168,7 @@ function AcademicScheduleOptionForm(
 	const onSubmit = (values: OptionFormValues) => {
 		onSave(values);
 		form.reset({
-			name: "Math",
+			nameSubject: "Math",
 			jp: 1,
 			idGrade
 		});
@@ -192,7 +191,7 @@ function AcademicScheduleOptionForm(
 
 				<FormField
 					control={ form.control }
-					name="name"
+					name="nameSubject"
 					render={ ({ field }) => (
 						<FormItem>
 							<FormLabel>Subject</FormLabel>
@@ -242,12 +241,3 @@ function AcademicScheduleOptionForm(
 		</Form>
 	);
 }
-
-const optionFormSchema = z.object({
-	id: z.string().optional(),
-	idGrade: z.string().min(1, "ID Grade"),
-	name: z.string().min(2, "Nama minimal 2 karakter"),
-	jp: z.number().min(1, "JP minimal 1"),
-});
-
-export type OptionFormValues = z.infer<typeof optionFormSchema>;

@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { nanoid } from "nanoid";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Button } from "@/components/ui/button.tsx";
@@ -9,12 +8,13 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage, } from 
 import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, TableRow, } from "@/components/ui/table.tsx";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card.tsx";
 import { EditIcon, Plus, TrashIcon } from "lucide-react";
-import { useMapelStore } from "@/stores/use-mapel-store.ts";
+import { useMapelClassStore } from "@/stores/use-mapel-class-store.ts";
 import { useTeacherStore } from "@/stores/use-teacher-store.ts";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select.tsx";
 import { toast } from "sonner";
-import { mapelFormSchema, MapelFormValues } from "@/components/page/schedule/academic-schedule-teachers.tsx";
 import { formatToHour } from "@/components/page/academic/components/academic-grade-option.tsx";
+import { mapelFormSchema, MapelFormValues } from "@/schema/mapel-form-schema.tsx";
+import { useOptionGradePerClassStore } from "@/stores/use-option-grade-per-class-store.ts";
 
 type Grouped = {
 	name: string;
@@ -24,7 +24,9 @@ type Grouped = {
 
 export function AcademicGradeTeacher(props: { idGrade: string }) {
 	const [ editing, setEditing ] = useState<MapelFormValues | null>(null);
-	const { removeMapel, addMapel, updateMapel, filterMapelByGrade } = useMapelStore();
+	// const { removeOption, addOption, updateOption, getDataByGrade } = useOptionGradePerClassStore();
+	// const { dataAvailableOnClass, totalJP, totalTime } = getDataByGrade(props.idGrade)
+	const { removeMapelForTeacher, addMapelForTeacher, updateMapelForTeacher, filterMapelByGrade } = useMapelClassStore();
 	const mapels = filterMapelByGrade(props.idGrade)
 
 	const result: Grouped[] = Object.values(
@@ -39,12 +41,12 @@ export function AcademicGradeTeacher(props: { idGrade: string }) {
 	);
 
 	const handleSave = (data: MapelFormValues) => {
-		// console.log(data);
+		// console.log(dataAvailableOnClass);
 		if (editing && editing.id) {
-			updateMapel(editing.id, data);
+			updateMapelForTeacher(editing.id, data);
 			setEditing(null);
 		} else {
-			addMapel({ ...data, id: nanoid() });
+			addMapelForTeacher(data);
 		}
 	};
 
@@ -81,7 +83,7 @@ export function AcademicGradeTeacher(props: { idGrade: string }) {
 							<TableRow>
 								<TableHead className=" text-center">No</TableHead>
 								<TableHead className="text-end">Guru</TableHead>
-								<TableHead>Nama Mata Pelajaran</TableHead>
+								<TableHead>Mata Pelajaran</TableHead>
 								<TableHead className="text-end">Jumlah JP</TableHead>
 								<TableHead className="text-start">Jumlah Jam</TableHead>
 								<TableHead className="text-center w-[160px]">Aksi</TableHead>
@@ -126,7 +128,7 @@ export function AcademicGradeTeacher(props: { idGrade: string }) {
 										<Button
 											size="sm"
 											variant="destructive"
-											onClick={ () => removeMapel(m.id) }
+											onClick={ () => removeMapelForTeacher(m.id) }
 										>
 											<TrashIcon />
 										</Button>
@@ -152,7 +154,7 @@ export function AcademicGradeTeacher(props: { idGrade: string }) {
 						<TableBody>
 							{ result.map((r) => (
 								<TableRow key={ r.name }>
-									<TableCell className="font-medium">{ r.name }</TableCell>
+									<TableCell className="font-medium text-start">{ r.name }</TableCell>
 									<TableCell className="text-end">{ r.totalCount }</TableCell>
 									<TableCell className="text-start">{ r.totalJP }</TableCell>
 								</TableRow>
@@ -178,13 +180,21 @@ function AcademicScheduleOptionForm(
 		onClose?: () => void;
 		idGrade: string;
 	}) {
-
-	const mapels = useMapelStore().filterMapelByGrade(idGrade);
+	const { getDataByGrade } = useOptionGradePerClassStore();
+	const { dataAvailableOnClass } = getDataByGrade(idGrade)
+	console.log("option", dataAvailableOnClass)
+	const mapels = useMapelClassStore().filterMapelByGrade(idGrade);
 	const { teachers } = useTeacherStore();
+	console.log()
+	const teacherFilter = teachers.filter((teacher) => {
+		const availableSubject = dataAvailableOnClass.some((i) => i.nameSubject === teacher.subject);
+		console.log(availableSubject);
+		// console.log("availableSubject",availableSubject);
+		const teacherNotAssigned = !mapels.some((mapel) => mapel.idTeacher === teacher.id);
+		// console.log("teacherNotAssigned",teacherNotAssigned);
+		return availableSubject && teacherNotAssigned;
+	});
 
-	const teacherFilter = teachers.filter((teacher) =>
-		!mapels.some((mapel) => mapel.idTeacher === teacher.id)
-	);
 	const form = useForm<MapelFormValues>({
 		resolver: zodResolver(mapelFormSchema),
 		defaultValues: editing ? editing : {
@@ -209,7 +219,6 @@ function AcademicScheduleOptionForm(
 		});
 		// toast.error(form.formState.errors)
 		onClose?.();
-
 	};
 
 	console.log(form.formState.errors);

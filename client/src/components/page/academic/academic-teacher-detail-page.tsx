@@ -4,6 +4,9 @@ import { TeacherSubjectsTable } from "@/components/page/teacher/components/teach
 
 export default function AcademicTeacherDetailPage() {
 	const params = useParams<{ id: string }>()
+	if (!params.id) {
+		return null
+	}
 	return (
 		<div className="space-y-4">
 			<TeacherProfile idTeacher={ params.id } />

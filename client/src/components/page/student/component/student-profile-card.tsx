@@ -65,7 +65,7 @@ export function StudentProfileCard({ user }: { user: SiswaType }) {
 	)
 }
 
-/* 🔹 Komponen kecil untuk tampilkan data rapih */
+/* 🔹 Komponen kecil untuk tampilkan dataAvailableOnClass rapih */
 export function InfoItem({ icon, label, value }: { icon?: React.ReactNode; label: string; value: string }) {
 	return (
 		<div className="flex items-center justify-between p-3 rounded-lg bg-muted/30">

@@ -1,5 +1,5 @@
-import { subjectSchema, SubjectSchema } from "@/schema/subject-schema.ts";
-import { useSubjectStore } from "@/stores/use-subject-store.ts";
+import { SubjectSchema } from "@/schema/subject-schema.ts";
+import { useSubjectStore_xxx } from "@/stores/use-subject-store_xxx.ts";
 import { useEffect, useState } from "react";
 import { useForm, UseFormReturn } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -11,43 +11,37 @@ import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, D
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form.tsx";
 import { Input } from "@/components/ui/input.tsx";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select.tsx";
+import { baseClasses } from "@/components/page/teacher/components/base-classes.tsx";
+import { useMapelClassStore } from "@/stores/use-mapel-class-store.ts";
+import { mapelFormSchema, MapelFormValues } from "@/schema/mapel-form-schema.tsx";
+import { subjects } from "@/assets/subjects.tsx";
+import { useTeacherStore } from "@/stores/use-teacher-store.ts";
 
 
-export function TeacherSubjectsTable(props: { idTeacher?: string }) {
-	// const { data } = useTeacherSubjects(props.idTeacher);
-	const { subjects } = useSubjectStore()
-	const newSubject = subjects.filter(t => t.idTeacher === props.idTeacher)
-	console.log(subjects)
-	const { deleteSubject } = useSubjectStore();
-	const [ editing, setEditing ] = useState<SubjectSchema | null>(null);
+export function TeacherSubjectsTable(props: { idTeacher: string }) {
+	const [ editing, setEditing ] = useState<MapelFormValues | null>(null);
+	const { getSubjectByIdTeacher, removeMapelForTeacher } = useMapelClassStore()
+	const { getTeacherById } = useTeacherStore()
+	const teacher = getTeacherById(props.idTeacher)
 
-// helper to parse "HH:mm" into minutes
-	function timeToMinutes(time: string) {
-		const [ h, m ] = time.split(":").map(Number);
-		return h * 60 + m;
-	}
+	const { subjectData: newSubject, totalJP, totalSchedule } = getSubjectByIdTeacher(props.idTeacher)
 
-// get duration in minutes
-	function getDuration(start: string, end: string) {
-		return timeToMinutes(end) - timeToMinutes(start);
-	}
-
-// totals
-	const totalSks = subjects.reduce((sum, item) => sum + item.jp, 0);
-
-	const totalMinutes = subjects.reduce(
-		(sum, item) => sum + getDuration(item.startTime, item.endTime),
-		0
-	);
-
-	const hours = Math.floor(totalMinutes / 60);
-	const minutes = totalMinutes % 60;
-	const form = useForm<SubjectSchema>({
-		resolver: zodResolver(subjectSchema),
-		defaultValues: { className: "", subjectName: "", day: "", jp: 2, idTeacher: props.idTeacher },
+	const form = useForm<MapelFormValues>({
+		resolver: zodResolver(mapelFormSchema),
+		defaultValues: {
+			id: "",
+			idGrade: "",
+			idTeacher: props.idTeacher,
+			nameTeacher: teacher?.name,
+			nameSubject: teacher?.subject,
+			jp: 1,
+		},
 	});
 
-	// console.log(form.formState.errors);
+	if (!teacher) {
+		return null;
+	}
+
 	return (
 		<Card>
 			<CardHeader className="flex flex-row items-center justify-between">
@@ -62,25 +56,21 @@ export function TeacherSubjectsTable(props: { idTeacher?: string }) {
 				<Table>
 					<TableHeader>
 						<TableRow>
-							<TableHead>No</TableHead>
-							<TableHead>Class</TableHead>
-							<TableHead>Subject</TableHead>
-							<TableHead>JP</TableHead>
-							<TableHead>Schedule</TableHead>
-							<TableHead className="text-right">Actions</TableHead>
+							<TableHead className={ "text-center" }>No</TableHead>
+							<TableHead className={ "text-center" }>Class</TableHead>
+							<TableHead className={ "text-center" }>Mapel</TableHead>
+							<TableHead className={ "text-center" }>JP</TableHead>
+							<TableHead className={ "text-center" }>Actions</TableHead>
 						</TableRow>
 					</TableHeader>
 					<TableBody>
 						{ newSubject.map((subj, i) => (
 							<TableRow key={ subj.id }>
-								<TableCell>{ i + 1 }</TableCell>
-								<TableCell>{ subj.className }</TableCell>
-								<TableCell>{ subj.subjectName }</TableCell>
-								<TableCell>{ subj.jp }</TableCell>
-								<TableCell>
-									{ subj.day } { subj.startTime }-{ subj.endTime }
-								</TableCell>
-								<TableCell className="flex justify-end gap-2">
+								<TableCell className={ "text-center" }>{ i + 1 }</TableCell>
+								<TableCell className={ "text-center" }>{ subj.idGrade }</TableCell>
+								<TableCell className={ "text-center" }>{ subj.nameSubject }</TableCell>
+								<TableCell className={ "text-center" }>{ subj.jp }</TableCell>
+								<TableCell className=" flex gap-2 justify-center">
 									<Button
 										size="sm"
 										variant="outline"
@@ -94,7 +84,7 @@ export function TeacherSubjectsTable(props: { idTeacher?: string }) {
 									<Button
 										size="sm"
 										variant="destructive"
-										onClick={ () => deleteSubject(subj.id as string) }
+										onClick={ () => removeMapelForTeacher(subj.id as string) }
 									>
 										<TrashIcon size={ 16 } />
 									</Button>
@@ -104,12 +94,10 @@ export function TeacherSubjectsTable(props: { idTeacher?: string }) {
 					</TableBody>
 					<TableFooter>
 						<TableRow>
-							<TableCell></TableCell>
-							<TableCell></TableCell>
-							<TableCell>Total JP</TableCell>
-							<TableCell>{ totalSks }</TableCell>
-							<TableCell>{ hours }h { minutes }m</TableCell>
-							<TableCell></TableCell>
+							<TableCell className={ "text-center" }>Total </TableCell>
+							<TableCell className={ "text-center" }>Min/Max 20/40 </TableCell>
+							<TableCell className={ "text-center" }>JP : { totalJP }</TableCell>
+							<TableCell className={ "text-center" }>Jam : { totalSchedule }</TableCell>
 						</TableRow>
 					</TableFooter>
 				</Table>
@@ -124,17 +112,185 @@ function AcademicTeacherDetailForm(
 		editing,
 		setEditing,
 	}: {
+		form: UseFormReturn<MapelFormValues>,
+		editing: MapelFormValues | null,
+		setEditing: (value: MapelFormValues | null) => void
+	}) {
+
+	const { updateMapelForTeacher, addMapelForTeacher } = useMapelClassStore();
+	const suffixes = Array.from({ length: 26 }, (_, i) => String.fromCharCode(65 + i));
+
+	const [ open, setOpen ] = useState(false)
+	const [ base, setBase ] = useState<string>("");
+	const [ suffix, setSuffix ] = useState<string>("");
+
+	useEffect(() => {
+		if (editing) {
+			form.setValue("idGrade", editing.idGrade)
+			setOpen(true) // auto-open when editing
+		}
+	}, [ editing, form ])
+
+	const updateValue = (newBase: string, newSuffix: string) => {
+		const value = `${ newBase }${ newSuffix }`;
+		form.setValue("idGrade", value);
+	};
+
+	// const [ editing, setEditing ] = useState<SubjectSchema | null>(null);
+
+	const onSubmit = (values: MapelFormValues) => {
+		if (editing) {
+			updateMapelForTeacher(editing.id as string, values)
+			setEditing(null)
+		} else {
+			addMapelForTeacher(values)
+		}
+		form.reset()
+		setBase("")
+		setSuffix("")
+	}
+
+	return (
+		<Dialog open={ open } onOpenChange={ setOpen }>
+			<DialogTrigger asChild>
+				<Button>Add Subject</Button>
+			</DialogTrigger>
+			<DialogContent>
+				<DialogHeader>
+					<DialogTitle>{ editing ? "Edit Subject" : "Add Subject" }</DialogTitle>
+					<DialogDescription>Fill in subject details.</DialogDescription>
+				</DialogHeader>
+
+				<Form { ...form }>
+					<form onSubmit={ form.handleSubmit(onSubmit) } className="space-y-4">
+
+						<FormField
+							control={ form.control }
+							name="idGrade"
+							render={ ({ field }) => (
+								<FormItem>
+									<FormLabel>Class</FormLabel>
+									<div className="flex gap-2 mt-2">
+										{/* The editable input */ }
+										<FormControl>
+											<Input placeholder="e.g. SMA-12A" { ...field } />
+										</FormControl>
+
+										{/* Two selects below input */ }
+
+										{/* Select Base */ }
+										<Select
+											onValueChange={ (val) => {
+												setBase(val);
+												updateValue(val, suffix);
+											} }
+											defaultValue={ base }
+										>
+											<FormControl>
+												<SelectTrigger className="w-[160px]">
+													<SelectValue placeholder="Select level" />
+												</SelectTrigger>
+											</FormControl>
+											<SelectContent>
+												{ baseClasses.map((cls) => (
+													<SelectItem key={ cls } value={ cls }>
+														{ cls }
+													</SelectItem>
+												)) }
+											</SelectContent>
+										</Select>
+
+										{/* Select Suffix */ }
+										<Select
+											onValueChange={ (val) => {
+												setSuffix(val);
+												updateValue(base, val);
+											} }
+											defaultValue={ suffix }
+										>
+											<FormControl>
+												<SelectTrigger className="w-[100px]">
+													<SelectValue placeholder="A-Z" />
+												</SelectTrigger>
+											</FormControl>
+											<SelectContent>
+												{ suffixes.map((sfx) => (
+													<SelectItem key={ sfx } value={ sfx }>
+														{ sfx }
+													</SelectItem>
+												)) }
+											</SelectContent>
+										</Select>
+									</div>
+
+									<FormMessage />
+								</FormItem>
+							) }
+						/>
+
+						<FormField
+							control={ form.control }
+							name="nameSubject"
+							render={ ({ field }) => (
+								<FormItem>
+									<FormLabel>Subject</FormLabel>
+									<Select onValueChange={ field.onChange } defaultValue={ field.value }>
+										<FormControl>
+											<SelectTrigger className="w-full">
+												<SelectValue placeholder="Select subject" />
+											</SelectTrigger>
+										</FormControl>
+										<SelectContent>
+											{ subjects.map((subject) => (
+												<SelectItem key={ subject } value={ subject }>
+													{ subject }
+												</SelectItem>
+											)) }
+										</SelectContent>
+									</Select>
+									<FormMessage />
+								</FormItem>
+							) }
+						/>
+
+						<FormField
+							control={ form.control }
+							name="jp"
+							render={ ({ field }) => (
+								<FormItem>
+									<FormLabel>SKS</FormLabel>
+									<FormControl>
+										<Input type="number"
+										       max={ 6 }
+										       placeholder="2"
+										       defaultValue={ field.value }
+										       onChange={ e => field.onChange(Number(e.target.value)) }
+										/></FormControl>
+									<FormMessage />
+								</FormItem>
+							) }
+						/>
+
+						<DialogFooter>
+							<Button type="submit">{ editing ? "Update" : "Save" }</Button>
+						</DialogFooter>
+					</form>
+				</Form>
+			</DialogContent>
+		</Dialog>
+	);
+}
+
+function AcademicTeacherDetailForm_xx(
+	{
+		form,
+		editing,
+		setEditing,
+	}: {
 		form: UseFormReturn<SubjectSchema>,
 		editing: SubjectSchema | null,
 		setEditing: (value: SubjectSchema | null) => void
 	}) {
-
-	const baseClasses = [
-		"TK",
-		"SD-1", "SD-2", "SD-3", "SD-4", "SD-5", "SD-6",
-		"SMP-7", "SMP-8", "SMP-9",
-		"SMA-10", "SMA-11", "SMA-12",
-	];
 
 	const suffixes = Array.from({ length: 26 }, (_, i) => String.fromCharCode(65 + i));
 
@@ -154,7 +310,7 @@ function AcademicTeacherDetailForm(
 		form.setValue("className", value);
 	};
 
-	const { addSubject, updateSubject } = useSubjectStore();
+	const { addSubject, updateSubject } = useSubjectStore_xxx();
 	// const [ editing, setEditing ] = useState<SubjectSchema | null>(null);
 
 	const onSubmit = (values: SubjectSchema) => {

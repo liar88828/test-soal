@@ -10,7 +10,7 @@ export function SoalCreateModal() {
 	const busy = fetcher.state !== "idle";
 	// console.log(actionData)
 	// console.log(fetcher.formAction)
-	// console.log(fetcher.data)
+	// console.log(fetcher.dataAvailableOnClass)
 	return (
 		<div className="  ">
 			<h1 className="text-2xl font-bold mb-4">Buat Soal Baru</h1>

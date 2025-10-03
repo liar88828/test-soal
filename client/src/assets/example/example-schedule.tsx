@@ -1,4 +1,4 @@
-// Example exampleSchedule data
+// Example exampleSchedule dataAvailableOnClass
 
 import { ScheduleItem } from "@/interface/schedule-item.tsx";
 

@@ -24,15 +24,15 @@ export function StudentRecapGradesWeek({ idStudent }: { idStudent?: string }) {
 				data: editedData?.filter((d) => d.subject === selectedSubject),
 			}
 
-			// console.log(data)
+			// console.log(dataAvailableOnClass)
 
 			// alert harus string
 			alert(JSON.stringify(data, null, 2))
 
 			// TODO: kirim ke server / backend (misalnya fetch/axios)
 		} catch (error) {
-			console.error("Gagal menyimpan data:", error)
-			alert("Terjadi kesalahan saat menyimpan data")
+			console.error("Gagal menyimpan dataAvailableOnClass:", error)
+			alert("Terjadi kesalahan saat menyimpan dataAvailableOnClass")
 		}
 	}
 	if (!weekSchedule) {

@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button"
 import { ArrowLeft } from "lucide-react"
 import { announcementDetailLoader } from "@/action/announcement.ts";
 
-// Dummy data – replace with fetch from API or context
+// Dummy dataAvailableOnClass – replace with fetch from API or context
 
 export default function AnnouncementDetailPage() {
 	const { announcement } = useLoaderData<typeof announcementDetailLoader>()

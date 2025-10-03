@@ -8,7 +8,7 @@ export function JadwalSekolah() {
 	const param = useParams<{ id: string }>()
 	const { data: classes } = useAcademicClassesDetailTabel(param.id)
 	if (!classes) {
-		return null
+		return <h1>Data is Null</h1>
 	}
 	return (
 		<Card>

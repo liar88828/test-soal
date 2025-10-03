@@ -19,7 +19,7 @@ export function AcademicGradeClassesTabel(props: { idGrade: string }) {
 
 	const handleDelete = (row: ClassRow) => {
 		console.log("Delete", row);
-		// remove from data or call API
+		// remove from dataAvailableOnClass or call API
 	};
 
 	return (

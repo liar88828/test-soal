@@ -3,9 +3,10 @@ import { Button } from "@/components/ui/button.tsx";
 import { useTeacherStore } from "@/stores/use-teacher-store.ts";
 
 
-export function TeacherProfile(props: { idTeacher?: string }) {
-	// const { data: teacher } = useTeacherDetails(props.idTeacher)
-	const teacher = useTeacherStore(state => state.teachers.find(i => i.id === props.idTeacher))
+export function TeacherProfile(props: { idTeacher: string }) {
+	const { getTeacherById } = useTeacherStore()
+	const teacher = getTeacherById(props.idTeacher)
+
 	if (!teacher) {
 		return null;
 	}

@@ -10,7 +10,7 @@ import { getSoalAll } from "@/action/soal.ts";
 export function SoalPage() {
 	const soals = useLoaderData() as LoaderProps<typeof getSoalAll>
 	console.log(soals)
-	// console.log(data)
+	// console.log(dataAvailableOnClass)
 	return (
 		<div className="">
 			<div className="flex justify-between">

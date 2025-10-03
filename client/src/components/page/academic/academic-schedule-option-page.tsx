@@ -9,17 +9,11 @@ export default function AcademicScheduleOptionPage() {
 				<TabsList>
 					<TabsTrigger value="Option">Option</TabsTrigger>
 					<TabsTrigger value="Schedule">Schedule</TabsTrigger>
-					<TabsTrigger value="Schedule-2">Schedule</TabsTrigger>
+					<TabsTrigger value="Schedule-2">Schedule-2</TabsTrigger>
 				</TabsList>
-				<TabsContent value="Option">
-					<AcademicScheduleOption />
-				</TabsContent>
-				<TabsContent value="Schedule">
-					<JadwalSekolah />
-				</TabsContent>
-				<TabsContent value="Schedule-2">
-					<JadwalSekolah />
-				</TabsContent>
+				<TabsContent value="Option"><AcademicScheduleOption /></TabsContent>
+				<TabsContent value="Schedule"><JadwalSekolah /></TabsContent>
+				<TabsContent value="Schedule-2"><JadwalSekolah /></TabsContent>
 			</Tabs>
 		</div>
 	);

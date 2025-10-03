@@ -8,7 +8,7 @@ import { loginAction } from "@/action/auth.action.ts";
 export default function LoginPage() {
 	const fetcher = useFetcher<typeof loginAction>()
 	const data = fetcher.data as { error: string } | undefined
-	// console.log(fetcher.data)
+	// console.log(fetcher.dataAvailableOnClass)
 	return (
 		<div className="min-h-screen flex items-center justify-center bg-gray-50">
 			<Card className="w-full max-w-md shadow-lg rounded-2xl">

@@ -2,11 +2,11 @@ import { Button } from "@/components/ui/button.tsx";
 import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, TableRow, } from "@/components/ui/table.tsx";
 import { Card, CardContent, CardHeader } from "@/components/ui/card.tsx";
 import { TrashIcon } from "lucide-react";
-import { useMapelStore } from "@/stores/use-mapel-store.ts";
+import { useMapelClassStore } from "@/stores/use-mapel-class-store.ts";
 
 // ---- Main Component ----
 export function AcademicGradeOption(props: { idGrade: string }) {
-	const { mapels: data, removeMapel, } = useMapelStore();
+	const { mapels: data, removeMapelForTeacher, } = useMapelClassStore();
 	const mapels = data.filter(i => i.idGrade === props.idGrade);
 
 	// console.log(result);
@@ -22,7 +22,7 @@ export function AcademicGradeOption(props: { idGrade: string }) {
 							<TableRow>
 								<TableHead className="w-[50px] text-center">No</TableHead>
 								<TableHead className="text-end">Guru</TableHead>
-								<TableHead>Nama Mata Pelajaran</TableHead>
+								<TableHead>Mata Pelajaran</TableHead>
 								<TableHead className="text-end">Jumlah JP</TableHead>
 								<TableHead>Jumlah Jam</TableHead>
 								<TableHead className="text-center w-[160px]">Aksi</TableHead>
@@ -40,7 +40,7 @@ export function AcademicGradeOption(props: { idGrade: string }) {
 										<Button
 											size="sm"
 											variant="destructive"
-											onClick={ () => removeMapel(m.id) }
+											onClick={ () => removeMapelForTeacher(m.id) }
 										>
 											<TrashIcon />
 										</Button>
