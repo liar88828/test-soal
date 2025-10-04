@@ -3,8 +3,7 @@ import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, Tabl
 import { useParams } from "react-router-dom";
 import { useAcademicClassesDetailTabel } from "@/lib/swr/use-academic.ts";
 
-
-export function JadwalSekolah() {
+export default function JadwalSekolahPage() {
 	const param = useParams<{ id: string }>()
 	const { data: classes } = useAcademicClassesDetailTabel(param.id)
 	if (!classes) {

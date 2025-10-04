@@ -1,5 +1,5 @@
 {
-  "name": ".",
+  "name": "test-soal-sekolah",
   "version": "0.3.1",
   "description": "A monorepo template built with Bun, Hono, Vite, and React",
   "author": "Steve Simkins",
@@ -36,5 +36,7 @@
   "peerDependencies": {
     "typescript": "^5.9.2"
   },
-  "dependencies": {}
+  "dependencies": {
+    "shared": "workspace:*"
+  }
 }

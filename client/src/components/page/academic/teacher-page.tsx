@@ -7,7 +7,6 @@ import { useEffect, useState } from "react";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card.tsx";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage, } from "@/components/ui/form";
-import { TeacherType } from "@/interface/teacher-type.ts";
 import { useTeacherStore } from "@/stores/use-teacher-store.ts";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select.tsx";
 import { Link } from "react-router-dom";
@@ -15,6 +14,7 @@ import { Eye } from "lucide-react";
 import { subjects } from "@/assets/subjects.tsx";
 import { teacherFormData, TeacherFormData } from "@/schema/teacher-form-data.tsx";
 import { useMapelClassStore } from "@/stores/use-mapel-class-store.ts";
+import { TeacherType } from "shared";
 
 
 export function TeacherForm(

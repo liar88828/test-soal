@@ -1,8 +1,8 @@
-import { z } from 'zod';
-import type { AnswerOptionalDefaultsWithRelations, AnswerPartialWithRelations, AnswerWithRelations } from './AnswerSchema'
-import { AnswerOptionalDefaultsWithRelationsSchema, AnswerPartialWithRelationsSchema, AnswerWithRelationsSchema } from './AnswerSchema'
-import type { SoalOptionalDefaultsWithRelations, SoalPartialWithRelations, SoalWithRelations } from './SoalSchema'
-import { SoalOptionalDefaultsWithRelationsSchema, SoalPartialWithRelationsSchema, SoalWithRelationsSchema } from './SoalSchema'
+import { z } from "zod";
+import type { AnswerOptionalDefaultsWithRelations, AnswerPartialWithRelations, AnswerWithRelations } from "./AnswerSchema"
+import { AnswerOptionalDefaultsWithRelationsSchema, AnswerPartialWithRelationsSchema, AnswerWithRelationsSchema } from "./AnswerSchema"
+import type { SoalOptionalDefaultsWithRelations, SoalPartialWithRelations, SoalWithRelations } from "./SoalSchema"
+import { SoalOptionalDefaultsWithRelationsSchema, SoalPartialWithRelationsSchema, SoalWithRelationsSchema } from "./SoalSchema"
 
 /////////////////////////////////////////
 // SOAL TEXT SCHEMA

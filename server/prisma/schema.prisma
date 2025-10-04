@@ -32,13 +32,13 @@ generator zod {
 }
 
 model Soal {
-	id        Int        @id @default(autoincrement())
-	name      String
-	author    String
-	SoalABC   SoalABC[]
-	SoalText  SoalText[]
-	createdAt DateTime   @default(now())
-	updatedAt DateTime   @updatedAt
+	id          Int        @id @default(autoincrement())
+	nameSubject String
+	author      String
+	SoalABC     SoalABC[]
+	SoalText    SoalText[]
+	createdAt   DateTime   @default(now())
+	updatedAt   DateTime   @updatedAt
 }
 
 model SoalABC {
@@ -68,19 +68,29 @@ model SoalText {
 }
 
 model Student {
-	id        Int      @id @default(autoincrement())
-	name      String
-	email     String   @unique
-	answers   Answer[]
-	createdAt DateTime @default(now())
+	id          Int      @id @default(autoincrement())
+	nameSubject String
+	email       String   @unique
+	answers     Answer[]
+	createdAt   DateTime @default(now())
+}
+
+enum TeacherGender {
+	Male
+	Female
 }
 
 model Teacher {
-	id        Int      @id @default(autoincrement())
-	name      String
-	subject   String
-	phone     String   @unique
-	email     String   @unique
+	id          String        @id @default(uuid())
+	nameSubject String
+	subject     String
+	phone       String        @unique
+	email       String        @unique
+	address     String
+	photo       String
+	gender      TeacherGender
+	birthDate   DateTime
+
 	createdAt DateTime @default(now())
 }
 
@@ -100,10 +110,10 @@ model Answer {
 }
 
 model User {
-	id        String   @id @default(cuid())
-	name      String
-	email     String   @unique
-	role      String   @default("USER")
-	password  String
-	createdAt DateTime @default(now())
+	id          String   @id @default(cuid())
+	nameSubject String
+	email       String   @unique
+	role        String   @default("USER")
+	password    String
+	createdAt   DateTime @default(now())
 }

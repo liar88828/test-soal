@@ -1,15 +1,4 @@
-export type TeacherType = {
-	id: string;
-	name: string;
-	subject: string;
-	phone: string;
-	email: string;
-	address?: string;
-	photo?: string;
-	gender?: "Male" | "Female";
-	birthDate?: string;
-	// SubjectSchedule: SubjectSchema
-};
+import type { TeacherType } from "shared";
 
 export const exampleTeacher: TeacherType = {
 	id: "1",

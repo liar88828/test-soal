@@ -2,46 +2,43 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Button } from "@/components/ui/button.tsx";
-import { Input } from "@/components/ui/input.tsx";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger, } from "@/components/ui/dialog.tsx";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage, } from "@/components/ui/form.tsx";
-import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, TableRow, } from "@/components/ui/table.tsx";
+import { Table, TableBody, TableCaption, TableCell, TableFooter, TableHead, TableHeader, TableRow, } from "@/components/ui/table.tsx";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card.tsx";
 import { EditIcon, Plus, TrashIcon } from "lucide-react";
 import { useMapelClassStore } from "@/stores/use-mapel-class-store.ts";
 import { useTeacherStore } from "@/stores/use-teacher-store.ts";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select.tsx";
 import { toast } from "sonner";
-import { formatToHour } from "@/components/page/academic/components/academic-grade-option.tsx";
-import { mapelFormSchema, MapelFormValues } from "@/schema/mapel-form-schema.tsx";
+import { mapelFormSchema, type MapelFormValues } from "@/schema/mapel-form-schema.tsx";
 import { useOptionGradePerClassStore } from "@/stores/use-option-grade-per-class-store.ts";
+import { Input } from "@/components/ui/input.tsx";
+import { formatToHour } from "@/components/page/academic/components/format-to-hour.tsx";
 
-type Grouped = {
-	name: string;
-	totalJP: number;
-	totalCount: number;
-};
+// type Grouped = {
+// 	nameSubject: string;
+// 	totalJP: number;
+// 	totalCount: number;
+// 	totalMaxJP: number;
+// };
 
-export function AcademicGradeTeacher(props: { idGrade: string }) {
-	const [ editing, setEditing ] = useState<MapelFormValues | null>(null);
-	// const { removeOption, addOption, updateOption, getDataByGrade } = useOptionGradePerClassStore();
-	// const { dataAvailableOnClass, totalJP, totalTime } = getDataByGrade(props.idGrade)
-	const { removeMapelForTeacher, addMapelForTeacher, updateMapelForTeacher, filterMapelByGrade } = useMapelClassStore();
-	const mapels = filterMapelByGrade(props.idGrade)
+export default function AcademicGradeTeacher(props: { idGrade: string }) {
 
-	const result: Grouped[] = Object.values(
-		mapels.reduce<Record<string, Grouped>>((acc, item) => {
-			if (!acc[item.nameSubject]) {
-				acc[item.nameSubject] = { name: item.nameSubject, totalJP: 0, totalCount: 0 };
-			}
-			acc[item.nameSubject].totalJP += item.jp;
-			acc[item.nameSubject].totalCount += 1;
-			return acc;
-		}, {})
+	return (
+		<div className={ "space-y-6" }>
+			<DaftarMataPelajaran idGrade={ props.idGrade } />
+			<TotalGuru idGrade={ props.idGrade } />
+		</div>
 	);
+}
+
+function DaftarMataPelajaran(props: { idGrade: string }) {
+	const [ editing, setEditing ] = useState<MapelFormValues | null>(null);
+	const { removeMapelForTeacher, addMapelForTeacher, updateMapelForTeacher, filterMapelByGrade } = useMapelClassStore();
+	const { subjectData, } = filterMapelByGrade(props.idGrade)
 
 	const handleSave = (data: MapelFormValues) => {
-		// console.log(dataAvailableOnClass);
 		if (editing && editing.id) {
 			updateMapelForTeacher(editing.id, data);
 			setEditing(null);
@@ -51,147 +48,175 @@ export function AcademicGradeTeacher(props: { idGrade: string }) {
 	};
 
 	return (
-		<div className={ "space-y-6" }>
-			<Card>
-				<CardHeader>
-					<div className="flex justify-between items-center">
-						<CardTitle>Daftar Mata Pelajaran</CardTitle>
+		<Card>
+			<CardHeader>
+				<div className="flex justify-between items-center">
+					<CardTitle>Daftar Mata Pelajaran</CardTitle>
 
-						<Dialog>
-							<DialogTrigger asChild>
-								<Button><Plus /></Button>
-							</DialogTrigger>
-							<DialogContent>
-								<DialogHeader>
-									<DialogTitle>Tambah Mapel</DialogTitle>
-									<DialogDescription>Isi form untuk menambahkan mata pelajaran baru</DialogDescription>
-								</DialogHeader>
-								<AcademicScheduleOptionForm
-									editing={ null }
-									onSave={ handleSave }
-									idGrade={ props.idGrade }
-								/>
-							</DialogContent>
-						</Dialog>
-					</div>
-				</CardHeader>
+					<Dialog>
+						<DialogTrigger asChild>
+							<Button><Plus /></Button>
+						</DialogTrigger>
+						<DialogContent>
+							<DialogHeader>
+								<DialogTitle>Tambah Mapel</DialogTitle>
+								<DialogDescription>Isi form untuk menambahkan mata pelajaran baru</DialogDescription>
+							</DialogHeader>
+							<AcademicScheduleOptionForm
+								editing={ null }
+								onSave={ handleSave }
+								idGrade={ props.idGrade }
+							/>
+						</DialogContent>
+					</Dialog>
+				</div>
+			</CardHeader>
 
-				<CardContent>
-					<Table>
-						<TableCaption>Daftar Mata Pelajaran & Jumlah JP dfsfvssddf</TableCaption>
-						<TableHeader>
-							<TableRow>
-								<TableHead className=" text-center">No</TableHead>
-								<TableHead className="text-end">Guru</TableHead>
-								<TableHead>Mata Pelajaran</TableHead>
-								<TableHead className="text-end">Jumlah JP</TableHead>
-								<TableHead className="text-start">Jumlah Jam</TableHead>
-								<TableHead className="text-center w-[160px]">Aksi</TableHead>
+			<CardContent>
+				<Table>
+					<TableCaption>Daftar Mata Pelajaran & Jumlah JP dfsfvssddf</TableCaption>
+					<TableHeader>
+						<TableRow>
+							<TableHead className=" text-center">No</TableHead>
+							<TableHead>Guru</TableHead>
+							<TableHead>Mata Pelajaran</TableHead>
+							<TableHead className="text-end">Jumlah JP</TableHead>
+							<TableHead className="text-start">Jumlah Jam</TableHead>
+							<TableHead className="text-center w-[160px]">Aksi</TableHead>
+						</TableRow>
+					</TableHeader>
+					<TableBody>
+						{ subjectData.map((m, i) => (
+							<TableRow key={ m.id }>
+								<TableCell className="text-center">{ i + 1 }</TableCell>
+								<TableCell>{ m.nameTeacher }</TableCell>
+								<TableCell>{ m.nameSubject }</TableCell>
+								<TableCell className="text-end">{ m.jp }</TableCell>
+								<TableCell className="text-start">{ formatToHour(m.jp * 45) }</TableCell>
+								<TableCell className="text-center space-x-2">
+									{/* Edit */ }
+									<Dialog
+										open={ !!editing && editing.id === m.id }
+										onOpenChange={ (isOpen) => {
+											if (!isOpen) setEditing(null);
+										} }
+									>
+										<DialogTrigger asChild>
+											<Button size="sm" onClick={ () => setEditing(m) }
+											>
+												<EditIcon />
+											</Button>
+										</DialogTrigger>
+										<DialogContent>
+											<DialogHeader>
+												<DialogTitle>Edit Mapel</DialogTitle>
+											</DialogHeader>
+											<AcademicScheduleOptionForm
+												editing={ editing }
+												onSave={ handleSave }
+												idGrade={ props.idGrade }
+												onClose={ () => setEditing(null) }
+											/>
+										</DialogContent>
+									</Dialog>
+
+									{/* Delete */ }
+									<Button
+										size="sm"
+										variant="destructive"
+										onClick={ () => removeMapelForTeacher(m.id) }
+									>
+										<TrashIcon />
+									</Button>
+								</TableCell>
 							</TableRow>
-						</TableHeader>
-						<TableBody>
-							{ mapels.map((m, i) => (
-								<TableRow key={ m.id }>
-									<TableCell className="text-center">{ i + 1 }</TableCell>
-									<TableCell className="text-end">{ m.nameTeacher }</TableCell>
-									<TableCell>{ m.nameSubject }</TableCell>
-									<TableCell className="text-end">{ m.jp }</TableCell>
-									<TableCell className="text-start">{ formatToHour(m.jp * 45) }</TableCell>
-									<TableCell className="text-center space-x-2">
-										{/* Edit */ }
-										<Dialog
-											open={ !!editing && editing.id === m.id }
-											onOpenChange={ (isOpen) => {
-												if (!isOpen) setEditing(null);
-											} }
-										>
-											<DialogTrigger asChild>
-												<Button size="sm" onClick={ () => setEditing(m) }
-												>
-													<EditIcon />
-												</Button>
-											</DialogTrigger>
-											<DialogContent>
-												<DialogHeader>
-													<DialogTitle>Edit Mapel</DialogTitle>
-												</DialogHeader>
-												<AcademicScheduleOptionForm
-													editing={ editing }
-													onSave={ handleSave }
-													idGrade={ props.idGrade }
-													onClose={ () => setEditing(null) }
-												/>
-											</DialogContent>
-										</Dialog>
+						)) }
+					</TableBody>
+				</Table>
+			</CardContent>
+		</Card>
+	);
+}
 
-										{/* Delete */ }
-										<Button
-											size="sm"
-											variant="destructive"
-											onClick={ () => removeMapelForTeacher(m.id) }
-										>
-											<TrashIcon />
-										</Button>
-									</TableCell>
-								</TableRow>
-							)) }
-						</TableBody>
-					</Table>
-				</CardContent>
-			</Card>
+function TotalGuru(props: { idGrade: string }) {
+	const { dataAvailableOnClass } = useOptionGradePerClassStore(state => state.getDataByGrade)(props.idGrade)
+	const { count, countTotalTeacher, countTotalJP } = useMapelClassStore(state => state.filterMapelByGrade)(props.idGrade)
 
-			<Card>
-				<CardContent>
-					<Table>
-						<TableCaption>Total JP per Subject</TableCaption>
-						<TableHeader>
-							<TableRow>
-								<TableHead>Subject</TableHead>
-								<TableHead className="text-end">Total Count</TableHead>
-								<TableHead className="text-start">Total JP</TableHead>
+	const combinedData = count.map((c) => {
+		const found = dataAvailableOnClass.find(
+			(d) => d.nameSubject === c.nameSubject
+		);
+
+		return {
+			nameSubject: c.nameSubject,
+			count: c.count,
+			totalJP: c.totalJP,
+			totalMaxJP: found ? found.totalMaxJP : 0,
+		};
+	});
+
+	return (
+		<Card>
+			<CardHeader>
+				<CardTitle>Total Guru</CardTitle>
+			</CardHeader>
+			<CardContent>
+				<Table>
+					<TableCaption>Total JP per Subject adfad</TableCaption>
+					<TableHeader>
+						<TableRow>
+							<TableHead>No.</TableHead>
+							<TableHead>Subject</TableHead>
+							<TableHead className="text-center">Total Teacher</TableHead>
+							<TableHead className="text-center">Total JP</TableHead>
+							<TableHead className="text-center">Max JP</TableHead>
+							<TableHead className="text-center">Need JP</TableHead>
+						</TableRow>
+					</TableHeader>
+					<TableBody>
+						{ combinedData.map((r, i) => (
+							<TableRow key={ r.nameSubject }>
+								<TableCell>{ i + 1 }</TableCell>
+								<TableCell className="font-medium text-start">{ r.nameSubject }</TableCell>
+								<TableCell className="text-center">{ r.count }</TableCell>
+								<TableCell className="text-center">{ r.totalJP }</TableCell>
+								<TableCell className="text-center">{ r.totalMaxJP }</TableCell>
+								<TableCell className="text-center text-red-400">{ r.totalMaxJP - r.totalJP }</TableCell>
 							</TableRow>
-						</TableHeader>
-						<TableBody>
-							{ result.map((r) => (
-								<TableRow key={ r.name }>
-									<TableCell className="font-medium text-start">{ r.name }</TableCell>
-									<TableCell className="text-end">{ r.totalCount }</TableCell>
-									<TableCell className="text-start">{ r.totalJP }</TableCell>
-								</TableRow>
-							)) }
-						</TableBody>
-					</Table>
-				</CardContent>
-			</Card>
-		</div>
-
+						)) }
+					</TableBody>
+					<TableFooter>
+						<TableRow>
+							<TableCell></TableCell>
+							<TableCell>Total</TableCell>
+							<TableCell className={ "text-center" }>{ countTotalTeacher }</TableCell>
+							<TableCell className={ "text-center" }>{ countTotalJP }</TableCell>
+							<TableCell className={ "text-center" }></TableCell>
+						</TableRow>
+					</TableFooter>
+				</Table>
+			</CardContent>
+		</Card>
 	);
 }
 
 function AcademicScheduleOptionForm(
 	{
-		editing,
-		onSave,
-		onClose,
-		idGrade
+		editing, onSave, onClose, idGrade
 	}: {
 		editing: MapelFormValues | null;
 		onSave: (data: MapelFormValues) => void;
 		onClose?: () => void;
 		idGrade: string;
 	}) {
-	const { getDataByGrade } = useOptionGradePerClassStore();
-	const { dataAvailableOnClass } = getDataByGrade(idGrade)
-	console.log("option", dataAvailableOnClass)
-	const mapels = useMapelClassStore().filterMapelByGrade(idGrade);
+	const { dataAvailableOnClass, } = useOptionGradePerClassStore(state => state.getDataByGrade)(idGrade);
+	const { subjectData } = useMapelClassStore(state => state.filterMapelByGrade)(idGrade)
 	const { teachers } = useTeacherStore();
-	console.log()
+
 	const teacherFilter = teachers.filter((teacher) => {
 		const availableSubject = dataAvailableOnClass.some((i) => i.nameSubject === teacher.subject);
-		console.log(availableSubject);
-		// console.log("availableSubject",availableSubject);
-		const teacherNotAssigned = !mapels.some((mapel) => mapel.idTeacher === teacher.id);
-		// console.log("teacherNotAssigned",teacherNotAssigned);
+		const teacherNotAssigned = !subjectData.some((mapel) => mapel.nameTeacher === teacher.name);
+		// console.log(teacher.subject)
 		return availableSubject && teacherNotAssigned;
 	});
 
@@ -199,20 +224,18 @@ function AcademicScheduleOptionForm(
 		resolver: zodResolver(mapelFormSchema),
 		defaultValues: editing ? editing : {
 			nameSubject: "Math",
-			jp: 1,
+			jp: 0,
 			idTeacher: "",
 			nameTeacher: "",
 			idGrade
 		},
 	});
 
-	// useEffect(() => {4+m ]);
-
 	const onSubmit = (values: MapelFormValues) => {
 		onSave(values);
 		form.reset({
 			nameSubject: "Math",
-			jp: 1,
+			jp: 0,
 			idTeacher: "",
 			nameTeacher: "",
 			idGrade
@@ -221,11 +244,6 @@ function AcademicScheduleOptionForm(
 		onClose?.();
 	};
 
-	console.log(form.formState.errors);
-	// if (!editing) {
-	// 	return null
-	// }
-	// ✅ show validation errors when submitting
 	const onError = (errors: typeof form.formState.errors) => {
 		// take first error message
 		const firstError = Object.values(errors)[0]?.message as string | undefined;
@@ -236,11 +254,12 @@ function AcademicScheduleOptionForm(
 		}
 	};
 
+	console.log(form.formState.errors);
+
 	return (
 		<Form { ...form }>
 			<form onSubmit={ form.handleSubmit(onSubmit, onError) } className="space-y-4">
-
-				{/* Jumlah JP */ }
+				{/*Jumlah JP */ }
 				<FormField
 					control={ form.control }
 					name="jp"
@@ -268,11 +287,20 @@ function AcademicScheduleOptionForm(
 						<FormItem>
 							<FormLabel>Teacher</FormLabel>
 							<Select
-								onValueChange={ (value) => {
-									field.onChange(value);
-									const teacher = teacherFilter.find((i) => i.id === value);
-									form.setValue("nameTeacher", teacher?.name ?? "");
-									form.setValue("nameSubject", teacher?.subject ?? "");
+								onValueChange={ (valueIdTeacher) => {
+									const teacher = teacherFilter.find((i) => i.id === valueIdTeacher);
+									if (!teacher) {
+										toast.error("Teacher not found!");
+										return
+									}
+									const option = dataAvailableOnClass.find(i => i.nameSubject === teacher.subject)
+									if (!option) {
+										toast.error("Subject not found!");
+										return;
+									}
+									form.setValue("nameTeacher", teacher.name);
+									form.setValue("nameSubject", teacher.subject);
+									form.setValue("jp", 0);
 								} }
 								defaultValue={ field.value }
 							>

@@ -2,7 +2,7 @@ export type SiswaType = {
 	// Identitas dasar
 	id: string;             // Unique identifier
 	nis: string;            // Nomor Induk SiswaType
-	namaLengkap: string;    // Full name
+	namaLengkap: string;    // Full nameSubject
 	jenisKelamin: "L" | "P"; // L = Laki-laki, P = Perempuan
 	tanggalLahir: string;   // Format: YYYY-MM-DD
 	tempatLahir: string;

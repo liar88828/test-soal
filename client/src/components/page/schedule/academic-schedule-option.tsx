@@ -119,7 +119,7 @@ export function AcademicScheduleOption() {
 
 // ---- Schema ----
 // const formSchema = z.object({
-// 	name: z.string().min(2, "Nama minimal 2 karakter"),
+// 	nameSubject: z.string().min(2, "Nama minimal 2 karakter"),
 // 	nameTeacher: z.string().min(2, "Nama Guru minimal 2 karakter"),
 // 	idTeacher: z.string().min(2, "id Guru minimal 2 karakter"),
 // 	id: z.string().min(2, "ID minimal 2 karakter"),

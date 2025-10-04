@@ -1,6 +1,6 @@
 // const soal = {
 // 	id: 1231231,
-// 	name: 'soal bahasa matematika',
+// 	nameSubject: 'soal bahasa matematika',
 // 	author: 'John Doe',
 // 	created_at: Date.now(),
 // 	list: [

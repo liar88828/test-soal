@@ -13,7 +13,7 @@ export default function ProfilePage() {
 				<CardHeader className="flex flex-col items-center text-center">
 					<Avatar className="w-20 h-20 mb-2">
 						{/* <AvatarFallback>
-							{ user.name
+							{ user.nameSubject
 							.split(" ")
 							.map((word) => word[0])
 							.join("")

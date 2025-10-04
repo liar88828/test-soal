@@ -27,7 +27,7 @@ function AcademicScheduleOptionForm(
 
 	const form = useForm<MapelFormValues>({
 		resolver: zodResolver(mapelFormSchema),
-		// defaultValues: { name: "", jp: 1 },
+		// defaultValues: { nameSubject: "", jp: 1 },
 	});
 
 	useEffect(() => {

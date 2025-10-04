@@ -1,8 +1,8 @@
 // store/useTeacherStore.ts
 import { create } from "zustand";
 import { nanoid } from "nanoid";
-import { TeacherType } from "@/interface/teacher-type.ts";
 import { persist } from "zustand/middleware";
+import { TeacherType } from "shared";
 
 type TeacherState = {
 	teachers: TeacherType[];
@@ -34,5 +34,6 @@ export const useTeacherStore = create<TeacherState>()(
 				set((state) => ( {
 					teachers: state.teachers.filter((t) => t.id !== id),
 				} )),
-		} ), { name: "useTeacherStore" },)
+		} ),
+		{ name: "useTeacherStore" })
 );

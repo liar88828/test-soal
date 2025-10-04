@@ -1,7 +1,8 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
-import { formatToHour } from "@/components/page/academic/components/academic-grade-option.tsx";
 import { OptionFormValues } from "@/schema/option-form-schema.tsx";
+import { useAcademicClassesDetailTabel } from "@/lib/swr/use-academic.ts";
+import { formatToHour } from "@/components/page/academic/components/format-to-hour.tsx";
 
 export type OptionState = {
 	dataOptions: Required<OptionFormValues>[];
@@ -10,24 +11,39 @@ export type OptionState = {
 	removeOption: (id: string) => void;
 	getDataByGrade: (idGrade: string) => {
 		totalJP: number
+		totalJPPerClass: number
 		totalTime: string
-		dataAvailableOnClass: Required<OptionFormValues>[]
+		dataAvailableOnClass: Required<OptionFormValues & { totalMaxJP: number }>[]
 	}
 };
 
 export const useOptionGradePerClassStore = create<OptionState>()(
 	persist(
 		(set, get) => ( {
+
 			getDataByGrade: (idGrade) => {
+				const { data: classes } = useAcademicClassesDetailTabel(idGrade)
 				const data = get().dataOptions
-				const dataAvailableOnClass = data.filter(i => i.idGrade === idGrade)
+
+				const totalClass = ( classes?.length ?? 1 )
+				const dataAvailableOnClass = data
+				.filter(i => i.idGrade === idGrade)
+				.map(i => {
+					return {
+						...i, totalMaxJP: i.jp * totalClass
+					}
+				})
 				const totalJP = dataAvailableOnClass.reduce((sum, item) => sum + item.jp, 0)
+				const totalTime = formatToHour(totalJP * 45)
+
 				return {
+					totalTime,
 					totalJP,
+					totalJPPerClass: totalJP * totalClass,
 					dataAvailableOnClass,
-					totalTime: formatToHour(totalJP * 45),
 				}
 			},
+
 			dataOptions: [],
 
 			addOption: (mapel) =>

@@ -3,6 +3,7 @@ import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, Tabl
 import { Card, CardContent, CardHeader } from "@/components/ui/card.tsx";
 import { TrashIcon } from "lucide-react";
 import { useMapelClassStore } from "@/stores/use-mapel-class-store.ts";
+import { formatToHour } from "@/components/page/academic/components/format-to-hour.tsx";
 
 // ---- Main Component ----
 export function AcademicGradeOption(props: { idGrade: string }) {
@@ -55,12 +56,4 @@ export function AcademicGradeOption(props: { idGrade: string }) {
 		</div>
 
 	);
-}
-
-export function formatToHour(minutes: number): string {
-	const h = Math.floor(minutes / 60);
-	const m = minutes % 60;
-	if (h > 0 && m > 0) return `${ h }h ${ m }m`;
-	if (h > 0) return `${ h }h`;
-	return `${ m }m`;
 }

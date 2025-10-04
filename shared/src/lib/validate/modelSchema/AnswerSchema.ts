@@ -1,10 +1,10 @@
-import { z } from 'zod';
-import type { StudentOptionalDefaultsWithRelations, StudentPartialWithRelations, StudentWithRelations } from './StudentSchema'
-import { StudentOptionalDefaultsWithRelationsSchema, StudentPartialWithRelationsSchema, StudentWithRelationsSchema } from './StudentSchema'
-import type { SoalABCOptionalDefaultsWithRelations, SoalABCPartialWithRelations, SoalABCWithRelations } from './SoalABCSchema'
-import { SoalABCOptionalDefaultsWithRelationsSchema, SoalABCPartialWithRelationsSchema, SoalABCWithRelationsSchema } from './SoalABCSchema'
-import type { SoalTextOptionalDefaultsWithRelations, SoalTextPartialWithRelations, SoalTextWithRelations } from './SoalTextSchema'
-import { SoalTextOptionalDefaultsWithRelationsSchema, SoalTextPartialWithRelationsSchema, SoalTextWithRelationsSchema } from './SoalTextSchema'
+import { z } from "zod";
+import type { StudentOptionalDefaultsWithRelations, StudentPartialWithRelations, StudentWithRelations } from "./StudentSchema"
+import { StudentOptionalDefaultsWithRelationsSchema, StudentPartialWithRelationsSchema, StudentWithRelationsSchema } from "./StudentSchema"
+import type { SoalABCOptionalDefaultsWithRelations, SoalABCPartialWithRelations, SoalABCWithRelations } from "./SoalABCSchema"
+import { SoalABCOptionalDefaultsWithRelationsSchema, SoalABCPartialWithRelationsSchema, SoalABCWithRelationsSchema } from "./SoalABCSchema"
+import type { SoalTextOptionalDefaultsWithRelations, SoalTextPartialWithRelations, SoalTextWithRelations } from "./SoalTextSchema"
+import { SoalTextOptionalDefaultsWithRelationsSchema, SoalTextPartialWithRelationsSchema, SoalTextWithRelationsSchema } from "./SoalTextSchema"
 
 /////////////////////////////////////////
 // ANSWER SCHEMA

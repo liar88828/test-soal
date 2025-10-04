@@ -1,9 +1,8 @@
 import AcademicGradeClassesTabelPage from "@/components/page/academic/components/academic-grade-classes-tabel.tsx";
+import JadwalSekolahPage from "@/components/page/academic/jadwal-sekolah-page.tsx";
+import AcademicGradeTeacher from "@/components/page/academic/components/academic-grade-teacher.tsx";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs.tsx";
-import { JadwalSekolah } from "@/components/page/academic/jadwal-sekolah.tsx";
-import { AcademicGradeTeacher } from "@/components/page/academic/components/academic-grade-teacher.tsx";
 import { useParams } from "react-router-dom";
-import { AcademicGradeOption } from "@/components/page/academic/components/academic-grade-option.tsx";
 
 export default function AcademicGradeClassPage() {
 	const params = useParams<{ id: string }>();
@@ -14,9 +13,9 @@ export default function AcademicGradeClassPage() {
 					<TabsList>
 						<TabsTrigger value="Class">Classes</TabsTrigger>
 						<TabsTrigger value="Teacher">Teachers</TabsTrigger>
-						<TabsTrigger value="Option">Option</TabsTrigger>
+						{/*<TabsTrigger value="Option">Option</TabsTrigger>*/ }
 						<TabsTrigger value="Schedule">Schedule</TabsTrigger>
-						<TabsTrigger value="Schedule-2">Schedule</TabsTrigger>
+						{/*<TabsTrigger value="Schedule-2">Schedule</TabsTrigger>*/ }
 					</TabsList>
 					<TabsContent value="Class">
 						<AcademicGradeClassesTabelPage />
@@ -24,15 +23,15 @@ export default function AcademicGradeClassPage() {
 					<TabsContent value="Teacher">
 						<AcademicGradeTeacher idGrade={ params.id ?? "" } />
 					</TabsContent>
-					<TabsContent value="Option">
-						<AcademicGradeOption idGrade={ params.id ?? "" } />
-					</TabsContent>
+					{/*<TabsContent value="Option">*/ }
+					{/*	<AcademicGradeOption idGrade={ params.id ?? "" } />*/ }
+					{/*</TabsContent>*/ }
 					<TabsContent value="Schedule">
-						<JadwalSekolah />
+						<JadwalSekolahPage />
 					</TabsContent>
-					<TabsContent value="Schedule-2">
-						<JadwalSekolah />
-					</TabsContent>
+					{/*<TabsContent value="Schedule-2">*/ }
+					{/*	<JadwalSekolahPage />*/ }
+					{/*</TabsContent>*/ }
 				</Tabs>
 			</div>
 		</div>

@@ -28,15 +28,17 @@ export const ProtectAppNavbar = () => {
 					<Button
 						className="rounded-full"
 						onClick={ () => {
-							if (session.isValid) {
-								fetcher.submit({}, { method: "post", action: "/auth/logout" })
-							} else {
-								console.log("redirect to login")
-								navigate("/auth/login")
+							if (session) {
+								if (session.isValid) {
+									fetcher.submit({}, { method: "post", action: "/auth/logout" })
+								} else {
+									console.log("redirect to login")
+									navigate("/auth/login")
+								}
 							}
 						} }
 					>
-						{ session.isValid ? (
+						{ ( session && session.isValid ) ? (
 							<><LogOut /> Logout</>
 						) : (
 							<><LogIn /> Login</>

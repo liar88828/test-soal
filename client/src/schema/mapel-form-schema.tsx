@@ -8,7 +8,7 @@ export const mapelFormSchema = z.object({
 	idTeacher: z.string(),
 	nameTeacher: z.string(),
 	nameSubject: z.string(),
-	jp: z.number().min(1, "JP minimal 1"),
+	jp: z.number(),
 
 });
 export type MapelFormValues = z.infer<typeof mapelFormSchema>;

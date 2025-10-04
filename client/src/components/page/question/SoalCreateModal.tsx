@@ -32,7 +32,7 @@ export function SoalCreateModal() {
 
 				{/*<div>*/ }
 				{/*	<Label htmlFor="description" classTitle="block mb-1 font-medium">Deskripsi (opsional)</Label>*/ }
-				{/*	<Textarea name="description" id="description" />*/ }
+				{/*	<Textarea nameSubject="description" id="description" />*/ }
 				{/*</div>*/ }
 
 				<Button type="submit" disabled={ busy }>

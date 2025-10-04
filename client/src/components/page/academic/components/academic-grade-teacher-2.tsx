@@ -13,14 +13,15 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { toast } from "sonner";
 import { useOptionGradePerClassStore } from "@/stores/use-option-grade-per-class-store.ts";
 import { subjects } from "@/assets/subjects.tsx";
-import { formatToHour } from "@/components/page/academic/components/academic-grade-option.tsx";
-import { optionFormSchema, OptionFormValues } from "@/schema/option-form-schema.tsx";
+import { optionFormSchema, type OptionFormValues } from "@/schema/option-form-schema.tsx";
+import { formatToHour } from "@/components/page/academic/components/format-to-hour.tsx";
 
 
 export function AcademicGradeOptionTable(props: { idGrade: string }) {
 	const [ editing, setEditing ] = useState<OptionFormValues | null>(null);
-	const { removeOption, addOption, updateOption, getDataByGrade } = useOptionGradePerClassStore();
-	const { dataAvailableOnClass, totalJP, totalTime } = getDataByGrade(props.idGrade)
+	const { removeOption, addOption, updateOption, getDataByGrade } = useOptionGradePerClassStore();//table
+	const { dataAvailableOnClass, totalJP, totalTime, totalJPPerClass } = getDataByGrade(props.idGrade)
+	// const { data: classes } = useAcademicClassesDetailTabel(props.idGrade)
 
 	const handleSave = (data: OptionFormValues) => {
 		if (editing && editing.id) {
@@ -61,12 +62,13 @@ export function AcademicGradeOptionTable(props: { idGrade: string }) {
 
 			<CardContent>
 				<Table className={ "text-center" }>
-					<TableCaption>Daftar Mata Pelajaran & Jumlah JP ddsd</TableCaption>
+					<TableCaption>Daftar Mata Pelajaran & Jumlah JP dds dasdad</TableCaption>
 					<TableHeader>
 						<TableRow>
 							<TableHead className="w-[50px] text-center">No</TableHead>
 							<TableHead>Mata Pelajaran</TableHead>
-							<TableHead className="text-end">Jumlah JP</TableHead>
+							{/*<TableHead className="text-end">Jumlah JP</TableHead>*/ }
+							<TableHead className="text-end">Jumlah JP/Class</TableHead>
 							<TableHead className="text-start">Jumlah Jam</TableHead>
 							<TableHead className="text-center ">Aksi</TableHead>
 						</TableRow>
@@ -76,7 +78,8 @@ export function AcademicGradeOptionTable(props: { idGrade: string }) {
 							<TableRow key={ m.id }>
 								<TableCell className="text-center">{ i + 1 }</TableCell>
 								<TableCell>{ m.nameSubject }</TableCell>
-								<TableCell className="text-end">{ m.jp }</TableCell>
+								<TableCell className="text-end">{ m.jp }/{ m.totalMaxJP }</TableCell>
+								{/*<TableCell className="text-end">{ m.jp * classes?.length }</TableCell>*/ }
 								<TableCell className="text-start">{ formatToHour(m.jp * 45) }</TableCell>
 								<TableCell className="text-center space-x-2">
 									{/* Edit */ }
@@ -121,7 +124,7 @@ export function AcademicGradeOptionTable(props: { idGrade: string }) {
 						<TableRow>
 							<TableCell></TableCell>
 							<TableCell></TableCell>
-							<TableCell className={ "text-end" }>{ totalJP }</TableCell>
+							<TableCell className={ "text-end" }>{ totalJP }/{ totalJPPerClass }</TableCell>
 							<TableCell className={ "text-start" }>{ totalTime }</TableCell>
 						</TableRow>
 					</TableFooter>
@@ -145,7 +148,7 @@ function AcademicScheduleOptionForm(
 		idGrade: string;
 	}) {
 
-	const { dataOptions } = useOptionGradePerClassStore();
+	const { dataOptions } = useOptionGradePerClassStore();//form
 
 	const newSubject = subjects.filter((i) =>
 		!dataOptions.some((j) => {
