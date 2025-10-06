@@ -1,16 +1,38 @@
 import { z } from 'zod';
-import { AnswerWithRelationsSchema, AnswerPartialWithRelationsSchema, AnswerOptionalDefaultsWithRelationsSchema } from './AnswerSchema'
-import type { AnswerWithRelations, AnswerPartialWithRelations, AnswerOptionalDefaultsWithRelations } from './AnswerSchema'
+import { GenderSchema } from '../inputTypeSchemas/GenderSchema'
+import { StatusSiswaSchema } from '../inputTypeSchemas/StatusSiswaSchema'
+import { ClassesWithRelationsSchema, ClassesPartialWithRelationsSchema, ClassesOptionalDefaultsWithRelationsSchema } from './ClassesSchema'
+import type { ClassesWithRelations, ClassesPartialWithRelations, ClassesOptionalDefaultsWithRelations } from './ClassesSchema'
 
 /////////////////////////////////////////
 // STUDENT SCHEMA
 /////////////////////////////////////////
 
 export const StudentSchema = z.object({
-  id: z.number().int(),
-  name: z.string(),
-  email: z.string(),
+  jenisKelamin: GenderSchema,
+  status: StatusSiswaSchema,
+  id: z.uuid(),
+  nis: z.string(),
+  namaLengkap: z.string(),
+  tanggalLahir: z.date(),
+  tempatLahir: z.string(),
+  kelas: z.string(),
+  jurusan: z.string(),
+  tahunMasuk: z.number().int(),
+  tahunKeluar: z.number().int().nullish(),
+  alamat: z.string(),
+  noHp: z.string().nullish(),
+  email: z.string().nullish(),
+  namaAyah: z.string().nullish(),
+  pekerjaanAyah: z.string().nullish(),
+  namaIbu: z.string().nullish(),
+  pekerjaanIbu: z.string().nullish(),
+  namaWali: z.string().nullish(),
+  pekerjaanWali: z.string().nullish(),
+  noHpWali: z.string().nullish(),
   createdAt: z.date(),
+  updatedAt: z.date(),
+  idClass: z.string().nullish(),
 })
 
 export type Student = z.infer<typeof StudentSchema>
@@ -28,8 +50,9 @@ export type StudentPartial = z.infer<typeof StudentPartialSchema>
 /////////////////////////////////////////
 
 export const StudentOptionalDefaultsSchema = StudentSchema.merge(z.object({
-  id: z.number().int().optional(),
+  id: z.uuid().optional(),
   createdAt: z.date().optional(),
+  updatedAt: z.date().optional(),
 }))
 
 export type StudentOptionalDefaults = z.infer<typeof StudentOptionalDefaultsSchema>
@@ -39,13 +62,13 @@ export type StudentOptionalDefaults = z.infer<typeof StudentOptionalDefaultsSche
 /////////////////////////////////////////
 
 export type StudentRelations = {
-  answers: AnswerWithRelations[];
+  Classes?: ClassesWithRelations | null;
 };
 
 export type StudentWithRelations = z.infer<typeof StudentSchema> & StudentRelations
 
 export const StudentWithRelationsSchema: z.ZodType<StudentWithRelations> = StudentSchema.merge(z.object({
-  answers: z.lazy(() => AnswerWithRelationsSchema).array(),
+  Classes: z.lazy(() => ClassesWithRelationsSchema).nullish(),
 }))
 
 /////////////////////////////////////////
@@ -53,13 +76,13 @@ export const StudentWithRelationsSchema: z.ZodType<StudentWithRelations> = Stude
 /////////////////////////////////////////
 
 export type StudentOptionalDefaultsRelations = {
-  answers: AnswerOptionalDefaultsWithRelations[];
+  Classes?: ClassesOptionalDefaultsWithRelations | null;
 };
 
 export type StudentOptionalDefaultsWithRelations = z.infer<typeof StudentOptionalDefaultsSchema> & StudentOptionalDefaultsRelations
 
 export const StudentOptionalDefaultsWithRelationsSchema: z.ZodType<StudentOptionalDefaultsWithRelations> = StudentOptionalDefaultsSchema.merge(z.object({
-  answers: z.lazy(() => AnswerOptionalDefaultsWithRelationsSchema).array(),
+  Classes: z.lazy(() => ClassesOptionalDefaultsWithRelationsSchema).nullish(),
 }))
 
 /////////////////////////////////////////
@@ -67,25 +90,25 @@ export const StudentOptionalDefaultsWithRelationsSchema: z.ZodType<StudentOption
 /////////////////////////////////////////
 
 export type StudentPartialRelations = {
-  answers?: AnswerPartialWithRelations[];
+  Classes?: ClassesPartialWithRelations | null;
 };
 
 export type StudentPartialWithRelations = z.infer<typeof StudentPartialSchema> & StudentPartialRelations
 
 export const StudentPartialWithRelationsSchema: z.ZodType<StudentPartialWithRelations> = StudentPartialSchema.merge(z.object({
-  answers: z.lazy(() => AnswerPartialWithRelationsSchema).array(),
+  Classes: z.lazy(() => ClassesPartialWithRelationsSchema).nullish(),
 })).partial()
 
 export type StudentOptionalDefaultsWithPartialRelations = z.infer<typeof StudentOptionalDefaultsSchema> & StudentPartialRelations
 
 export const StudentOptionalDefaultsWithPartialRelationsSchema: z.ZodType<StudentOptionalDefaultsWithPartialRelations> = StudentOptionalDefaultsSchema.merge(z.object({
-  answers: z.lazy(() => AnswerPartialWithRelationsSchema).array(),
+  Classes: z.lazy(() => ClassesPartialWithRelationsSchema).nullish(),
 }).partial())
 
 export type StudentWithPartialRelations = z.infer<typeof StudentSchema> & StudentPartialRelations
 
 export const StudentWithPartialRelationsSchema: z.ZodType<StudentWithPartialRelations> = StudentSchema.merge(z.object({
-  answers: z.lazy(() => AnswerPartialWithRelationsSchema).array(),
+  Classes: z.lazy(() => ClassesPartialWithRelationsSchema).nullish(),
 }).partial())
 
 export default StudentSchema;

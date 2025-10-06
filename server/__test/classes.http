@@ -1,0 +1,15 @@
+GET http://localhost:3000/api/class
+
+###
+POST http://localhost:3000/api/class
+Content-Type: application/json
+
+{
+  "section": "PAUD-Nu-0",
+  "room": "Gedung Administrasi - 7",
+  "idTeacher": "fF37yhDTMzcAmMuSEUpIo",
+  "nameTeacher": "Orla Cain",
+  "idGrade": "PAUD"
+}
+
+#############

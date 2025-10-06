@@ -1,9 +1,14 @@
 import { Hono } from "hono"
 import { prisma } from "../lib/db/prisma";
-import { type AnswerOptionalDefaults, SoalABCOptionalDefaultsSchema, SoalOptionalDefaultsSchema, SoalTextOptionalDefaultsSchema } from "@shared/lib/validate";
+import { SoalABCOptionalDefaultsSchema, SoalOptionalDefaultsSchema, SoalTextOptionalDefaultsSchema } from "@shared/lib/validate";
 import { z } from "zod";
 import type { SoalAll, SoalDetail } from "@shared/types/soal-type";
-import { validator } from "hono/validator"
+import { zValidator } from "@hono/zod-validator"
+import { SoalSchemaABC } from "@shared/schema/soal-schema-shared";
+
+const soalList = SoalOptionalDefaultsSchema.extend({
+	list: z.array(SoalABCOptionalDefaultsSchema)
+})
 
 const userRouter = new Hono()
 userRouter
@@ -18,11 +23,7 @@ userRouter
 	}
 )
 .post(
-	validator("form", (value, c) => {
-		const valid = SoalOptionalDefaultsSchema.safeParse(value)
-		if (!valid.success) return c.text("Data Not Valid", 401)
-		return valid.data
-	}),
+	zValidator("form", SoalOptionalDefaultsSchema),
 	async (c) => {
 		const data = c.req.valid("form")
 		return c.json(await prisma.soal.create({ data }))
@@ -47,16 +48,15 @@ userRouter
 	})
 
 .put(":soalId",
+	zValidator("form", soalList),
 	async (c) => {
 		const id = parseInt(c.req.param("soalId"))
-		const body = await c.req.json()
-
-		// Update soal and replace all list items
+		const body = c.req.valid("form")
 		const soal = await prisma.soal.update({
 			// include: { SoalABC: true },
 			where: { id },
 			data: {
-				name: body.name,
+				nameSubject: body.nameSubject,
 				author: body.author,
 				SoalABC: {
 					deleteMany: {}, // delete old items
@@ -100,7 +100,7 @@ userRouter
 			return c.json({ error: "Data tidak valid", details: z.prettifyError(parsed.error) }, 400)
 		}
 
-		const soal = await prisma.soal.findUnique({ where: { id: parsed.data.soalId } })
+		const soal = await prisma.soal.findUnique({ where: { id: parsed.data.idSoal } })
 		if (!soal) {
 			return c.json({ error: "SoalItem tidak ditemukan" }, 404)
 		}
@@ -124,7 +124,7 @@ userRouter
 			return c.json({ error: "Data tidak valid", details: z.prettifyError(parsed.error) }, 400)
 		}
 
-		const soal = await prisma.soal.findUnique({ where: { id: parsed.data.soalId } })
+		const soal = await prisma.soal.findUnique({ where: { id: parsed.data.idSoal } })
 		if (!soal) {
 			return c.json({ error: "SoalItem tidak ditemukan" }, 404)
 		}
@@ -200,56 +200,38 @@ userRouter
 )
 
 .post(":soalId/answer",
+	zValidator("json", SoalSchemaABC),
 	async (c) => {
-		console.log("execute awnser")
+		// console.log("execute awnser")
 		const soalId = Number(c.req.param("id"));
-		const body = await c.req.json();
+		const { studentAnswer, answers } = c.req.valid("json");
 
-		const answerSchema = z.object({
-			student: z.object({
-				name: z.string(),
-				email: z.email(),
-			}),
-			answers: z.array(
-				z.object({
-					soalItemId: z.number(),
-					selected: z.enum([ "A", "B", "C", "D", "E" ]),
-				})
-			),
-		});
-
-		const parsed = answerSchema.safeParse(body);
-		if (!parsed.success) {
-			return c.json({ error: z.prettifyError(parsed.error) }, 400);
-		}
-
-		const { student, answers } = parsed.data;
 		// Cari atau buat student
-		let dbStudent = await prisma.student.findFirst({
-			where: { email: student.email },
+		let dbStudent = await prisma.studentAnswer.findFirst({
+			where: { email: studentAnswer.email },
 		});
 
 		if (!dbStudent) {
-			dbStudent = await prisma.student.create({
+			dbStudent = await prisma.studentAnswer.create({
 				data: {
-					name: student.name,
-					email: student.email,
+					name: studentAnswer.name,
+					email: studentAnswer.email,
 				},
 			});
 		}
 
-		const dataAnswers = answers.map((a) => ( {
-				soalId,
-				studentId: dbStudent?.id ?? 0,
-				selected: a.selected,
-				soalABCId: a.soalItemId,
-			} satisfies AnswerOptionalDefaults
-		))
+		// const dataAnswers = answers.map((a) => ( {
+		// 		soalId,
+		// 		studentId: dbStudent?.id ?? 0,
+		// 		selected: a.selected,
+		// 		soalABCId: a.idSoal,
+		// 	} satisfies AnswerOptionalDefaults
+		// ))
 
 		// Simpan semua jawaban
-		await prisma.answer.createMany({
-			data: dataAnswers,
-		});
+		// await prisma.answer.createMany({
+		// 	data: dataAnswers,
+		// });
 
 		return c.json({ message: "Jawaban berhasil disimpan" });
 	})
@@ -271,13 +253,15 @@ userRouter
 		}
 
 		// Cek jawaban siswa untuk soal ini
-		const studentDB = await prisma.student.findFirst()
-		console.log("studentDB", studentDB)
-
+		const studentDB = await prisma.studentAnswer.findFirst()
+		// console.log("studentDB", studentDB)
+		if (!studentDB) {
+			return c.json({ error: "Student Is not Found " }, 404)
+		}
 		const answers = await prisma.answer.findMany({
 			where: {
 				soalId,
-				studentId: studentDB?.id ?? 0,
+				studentId: studentDB.id,
 			},
 			select: {
 				soalABCId: true,

@@ -3,7 +3,8 @@ import { persist } from "zustand/middleware";
 import { type MapelFormValues } from "@/schema/mapel-form-schema.tsx";
 import { nanoid } from "nanoid";
 import { toast } from "sonner";
-import { formatToHour } from "@/components/page/academic/components/format-to-hour.tsx";
+import { formatToHour } from "@/lib/format-to-hour.tsx";
+import { useOptionGradePerClassStore } from "@/stores/use-option-grade-per-class-store.ts";
 
 type CountSubject = {
 	nameSubject: string;
@@ -16,6 +17,7 @@ type Grouped = {
 	totalJP: number;
 	totalCount: number;
 };
+
 export type MapelState = {
 	mapels: Required<MapelFormValues>[];
 	// Class
@@ -28,13 +30,24 @@ export type MapelState = {
 	removeMapelForTeacher: (idTeacher: string) => void;
 	//
 	filterMapelByGrade: (idGrade: string) => {
-		totalJP: number
-		totalSchedule: string
 		subjectData: Required<MapelFormValues>[]
 		group: Grouped[]
 		count: CountSubject[]
 		countTotalTeacher: number
 		countTotalJP: number
+		//
+		totalJP: number
+		totalMaxJP: number
+		totalNeedJP: number
+		totalSchedule: string
+		//
+		combinedData: {
+			nameSubject: string
+			count: number
+			totalJP: number
+			totalMaxJP: number
+			totalNeedJP: number
+		}[]
 
 	}
 	getSubjectByIdTeacher: (idTeacher: string) => {
@@ -98,6 +111,7 @@ export const useMapelClassStore = create<MapelState>()(
 
 			filterMapelByGrade: (idGrade) => {
 				// const { data: classes } = useAcademicClassesDetailTabel(idGrade)
+				const { dataAvailableOnClass } = useOptionGradePerClassStore(state => state.getDataByGrade)(idGrade)
 
 				const data = get().mapels;
 				const filterMapel = data.filter(i => i.idGrade === idGrade)
@@ -110,11 +124,8 @@ export const useMapelClassStore = create<MapelState>()(
 						acc[item.nameSubject].totalJP += item.jp;
 						acc[item.nameSubject].totalCount += 1;
 						return acc;
-					}, {})
+					}, {} as Record<string, Grouped>)
 				);
-
-				const totalJP = filterMapel.reduce((sum, item) => sum + item.jp, 0);
-				const totalSchedule = formatToHour(totalJP * 45)
 
 				const countSubject: CountSubject[] = Object.values(
 					filterMapel.reduce((acc, item) => {
@@ -130,14 +141,35 @@ export const useMapelClassStore = create<MapelState>()(
 				const totalTeacher = countSubject.reduce((sum, item) => sum + item.count, 0)
 				const totalCountJP = countSubject.reduce((sum, item) => sum + item.totalJP, 0)
 
+				const combinedData = countSubject.map((c) => {
+					const found = dataAvailableOnClass.find(
+						(d) => d.nameSubject === c.nameSubject
+					);
+					const totalMaxJP = found ? found.totalMaxJP : 0
+					return {
+						nameSubject: c.nameSubject,
+						count: c.count,
+						totalJP: c.totalJP,
+						totalMaxJP,
+						totalNeedJP: totalMaxJP - c.totalJP
+					};
+				});
+				const totalJP = combinedData.reduce((sum, item) => sum + item.totalJP, 0)
+				const TotalMaxJP = combinedData.reduce((sum, item) => sum + item.totalMaxJP, 0)
+				const totalSchedule = formatToHour(totalJP * 45)
+				const TotalNeedJP= combinedData.reduce((sum, item) => sum + item.totalNeedJP, 0)
+
 				return {
 					subjectData: filterMapel,
-					totalJP,
 					totalSchedule,
 					group,
 					count: countSubject,
 					countTotalTeacher: totalTeacher,
 					countTotalJP: totalCountJP,
+					combinedData,
+					totalJP,
+					totalMaxJP: TotalMaxJP,
+					totalNeedJP: TotalNeedJP
 				}
 			},
 

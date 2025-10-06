@@ -1,12 +1,12 @@
 import useSWR from "swr";
-import { exampleTeacher, TeacherType } from "@/interface/teacher-type.ts";
 import { exampleTeacherSubject } from "@/assets/example/example-teacher-subject.tsx";
-import { SubjectSchema } from "@/schema/subject-schema.ts";
+import { type TeacherType } from "shared";
+import { fetcher } from "@/lib/swr/config.ts";
 
 export const useTeacherDetails = (id?: string) => {
-	return useSWR<TeacherType>(`/api/teacher/${ id }`, () => exampleTeacher)
+	return useSWR<TeacherType>(`/api/teacher/${ id }`, fetcher)
 }
 
 export const useTeacherSubjects = (idTeacher?: string) => {
-	return useSWR<SubjectSchema>(!idTeacher ? null : `/api/teacher/subjects/${ idTeacher }`, () => exampleTeacherSubject)
+	return useSWR(!idTeacher ? null : `/api/teacher/subjects/${ idTeacher }`, () => exampleTeacherSubject)
 }

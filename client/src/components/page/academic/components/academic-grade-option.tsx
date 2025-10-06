@@ -3,7 +3,7 @@ import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, Tabl
 import { Card, CardContent, CardHeader } from "@/components/ui/card.tsx";
 import { TrashIcon } from "lucide-react";
 import { useMapelClassStore } from "@/stores/use-mapel-class-store.ts";
-import { formatToHour } from "@/components/page/academic/components/format-to-hour.tsx";
+import { formatToHour } from "@/lib/format-to-hour.tsx";
 
 // ---- Main Component ----
 export function AcademicGradeOption(props: { idGrade: string }) {

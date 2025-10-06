@@ -1,25 +1,11 @@
-import type { SoalABC, SoalText } from "@shared/lib/validate";
+import type { Soal, SoalABC, SoalText } from "@shared/lib/validate";
 
 export type SoalAll = (
 	{
-		_count: {
-			SoalABC: number
-		}
-	} & {
-	id: number
-	name: string
-	author: string
-	createdAt: Date
-	updatedAt: Date
-} )
+		_count: { SoalABC: number }
+	} & Soal )
 
 export type SoalDetail = ( {
 	SoalABC: SoalABC[]
 	SoalText: SoalText[]
-} & {
-	id: number
-	name: string
-	author: string
-	createdAt: Date
-	updatedAt: Date
-} )
+} & Soal )

@@ -1,11 +1,13 @@
 import { Card, CardContent } from "@/components/ui/card.tsx";
 import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table.tsx";
 import { useParams } from "react-router-dom";
-import { useAcademicClassesDetailTabel } from "@/lib/swr/use-academic.ts";
+import { useClassStore } from "@/stores/use-class-store.ts";
 
-export default function JadwalSekolahPage() {
-	const param = useParams<{ id: string }>()
-	const { data: classes } = useAcademicClassesDetailTabel(param.id)
+
+function JadwalSekolah(props: { idGrade: string }) {
+	// const { data: classes } = useAcademicClassesDetailTabel(param.id)
+	const classes = useClassStore(state => state.getClassByIdGrade)(props.idGrade)
+
 	if (!classes) {
 		return <h1>Data is Null</h1>
 	}
@@ -14,12 +16,12 @@ export default function JadwalSekolahPage() {
 			<CardContent className="space-y-4">
 				{ classes.map((kelas) => (
 					<div
-						key={ kelas.titleName }
+						key={ kelas.nameTeacher }
 						className="rounded-xl border shadow bg-white p-4"
 					>
-						<h2 className="text-xl font-bold mb-4">{ kelas.level } { kelas.titleName } Room { kelas.room } </h2>
+						<h2 className="text-xl font-bold mb-4">{ props.idGrade } { kelas.section } Room { kelas.room } </h2>
 						<Table>
-							<TableCaption>Jadwal pelajaran { kelas.titleName }</TableCaption>
+							<TableCaption>Jadwal pelajaran { kelas.idGrade }</TableCaption>
 							<TableHeader>
 								<TableRow>
 									<TableHead>Hari</TableHead>
@@ -71,5 +73,17 @@ export default function JadwalSekolahPage() {
 				)) }
 			</CardContent>
 		</Card>
+	);
+}
+
+export default function JadwalSekolahPage() {
+	const param = useParams<{ id: string }>()
+	// if (!param) {
+	// 	redirect("/login")
+	// }
+	return (
+		<div>
+			<JadwalSekolah idGrade={ param.id as string } />
+		</div>
 	);
 }

@@ -1,8 +1,8 @@
-import { z } from "zod";
-import type { SoalABCOptionalDefaultsWithRelations, SoalABCPartialWithRelations, SoalABCWithRelations } from "./SoalABCSchema"
-import { SoalABCOptionalDefaultsWithRelationsSchema, SoalABCPartialWithRelationsSchema, SoalABCWithRelationsSchema } from "./SoalABCSchema"
-import type { SoalTextOptionalDefaultsWithRelations, SoalTextPartialWithRelations, SoalTextWithRelations } from "./SoalTextSchema"
-import { SoalTextOptionalDefaultsWithRelationsSchema, SoalTextPartialWithRelationsSchema, SoalTextWithRelationsSchema } from "./SoalTextSchema"
+import { z } from 'zod';
+import { SoalABCWithRelationsSchema, SoalABCPartialWithRelationsSchema, SoalABCOptionalDefaultsWithRelationsSchema } from './SoalABCSchema'
+import type { SoalABCWithRelations, SoalABCPartialWithRelations, SoalABCOptionalDefaultsWithRelations } from './SoalABCSchema'
+import { SoalTextWithRelationsSchema, SoalTextPartialWithRelationsSchema, SoalTextOptionalDefaultsWithRelationsSchema } from './SoalTextSchema'
+import type { SoalTextWithRelations, SoalTextPartialWithRelations, SoalTextOptionalDefaultsWithRelations } from './SoalTextSchema'
 
 /////////////////////////////////////////
 // SOAL SCHEMA
@@ -10,7 +10,7 @@ import { SoalTextOptionalDefaultsWithRelationsSchema, SoalTextPartialWithRelatio
 
 export const SoalSchema = z.object({
   id: z.number().int(),
-  name: z.string(),
+  nameSubject: z.string(),
   author: z.string(),
   createdAt: z.date(),
   updatedAt: z.date(),

@@ -2,7 +2,7 @@ import { create } from "zustand";
 import { persist } from "zustand/middleware";
 import { OptionFormValues } from "@/schema/option-form-schema.tsx";
 import { useAcademicClassesDetailTabel } from "@/lib/swr/use-academic.ts";
-import { formatToHour } from "@/components/page/academic/components/format-to-hour.tsx";
+import { formatToHour } from "@/lib/format-to-hour.tsx";
 
 export type OptionState = {
 	dataOptions: Required<OptionFormValues>[];

@@ -1,10 +1,10 @@
-import { z } from "zod";
-import type { StudentOptionalDefaultsWithRelations, StudentPartialWithRelations, StudentWithRelations } from "./StudentSchema"
-import { StudentOptionalDefaultsWithRelationsSchema, StudentPartialWithRelationsSchema, StudentWithRelationsSchema } from "./StudentSchema"
-import type { SoalABCOptionalDefaultsWithRelations, SoalABCPartialWithRelations, SoalABCWithRelations } from "./SoalABCSchema"
-import { SoalABCOptionalDefaultsWithRelationsSchema, SoalABCPartialWithRelationsSchema, SoalABCWithRelationsSchema } from "./SoalABCSchema"
-import type { SoalTextOptionalDefaultsWithRelations, SoalTextPartialWithRelations, SoalTextWithRelations } from "./SoalTextSchema"
-import { SoalTextOptionalDefaultsWithRelationsSchema, SoalTextPartialWithRelationsSchema, SoalTextWithRelationsSchema } from "./SoalTextSchema"
+import { z } from 'zod';
+import { StudentAnswerWithRelationsSchema, StudentAnswerPartialWithRelationsSchema, StudentAnswerOptionalDefaultsWithRelationsSchema } from './StudentAnswerSchema'
+import type { StudentAnswerWithRelations, StudentAnswerPartialWithRelations, StudentAnswerOptionalDefaultsWithRelations } from './StudentAnswerSchema'
+import { SoalABCWithRelationsSchema, SoalABCPartialWithRelationsSchema, SoalABCOptionalDefaultsWithRelationsSchema } from './SoalABCSchema'
+import type { SoalABCWithRelations, SoalABCPartialWithRelations, SoalABCOptionalDefaultsWithRelations } from './SoalABCSchema'
+import { SoalTextWithRelationsSchema, SoalTextPartialWithRelationsSchema, SoalTextOptionalDefaultsWithRelationsSchema } from './SoalTextSchema'
+import type { SoalTextWithRelations, SoalTextPartialWithRelations, SoalTextOptionalDefaultsWithRelations } from './SoalTextSchema'
 
 /////////////////////////////////////////
 // ANSWER SCHEMA
@@ -46,7 +46,7 @@ export type AnswerOptionalDefaults = z.infer<typeof AnswerOptionalDefaultsSchema
 /////////////////////////////////////////
 
 export type AnswerRelations = {
-  student: StudentWithRelations;
+  student: StudentAnswerWithRelations;
   SoalABC?: SoalABCWithRelations | null;
   SoalText?: SoalTextWithRelations | null;
 };
@@ -54,7 +54,7 @@ export type AnswerRelations = {
 export type AnswerWithRelations = z.infer<typeof AnswerSchema> & AnswerRelations
 
 export const AnswerWithRelationsSchema: z.ZodType<AnswerWithRelations> = AnswerSchema.merge(z.object({
-  student: z.lazy(() => StudentWithRelationsSchema),
+  student: z.lazy(() => StudentAnswerWithRelationsSchema),
   SoalABC: z.lazy(() => SoalABCWithRelationsSchema).nullish(),
   SoalText: z.lazy(() => SoalTextWithRelationsSchema).nullish(),
 }))
@@ -64,7 +64,7 @@ export const AnswerWithRelationsSchema: z.ZodType<AnswerWithRelations> = AnswerS
 /////////////////////////////////////////
 
 export type AnswerOptionalDefaultsRelations = {
-  student: StudentOptionalDefaultsWithRelations;
+  student: StudentAnswerOptionalDefaultsWithRelations;
   SoalABC?: SoalABCOptionalDefaultsWithRelations | null;
   SoalText?: SoalTextOptionalDefaultsWithRelations | null;
 };
@@ -72,7 +72,7 @@ export type AnswerOptionalDefaultsRelations = {
 export type AnswerOptionalDefaultsWithRelations = z.infer<typeof AnswerOptionalDefaultsSchema> & AnswerOptionalDefaultsRelations
 
 export const AnswerOptionalDefaultsWithRelationsSchema: z.ZodType<AnswerOptionalDefaultsWithRelations> = AnswerOptionalDefaultsSchema.merge(z.object({
-  student: z.lazy(() => StudentOptionalDefaultsWithRelationsSchema),
+  student: z.lazy(() => StudentAnswerOptionalDefaultsWithRelationsSchema),
   SoalABC: z.lazy(() => SoalABCOptionalDefaultsWithRelationsSchema).nullish(),
   SoalText: z.lazy(() => SoalTextOptionalDefaultsWithRelationsSchema).nullish(),
 }))
@@ -82,7 +82,7 @@ export const AnswerOptionalDefaultsWithRelationsSchema: z.ZodType<AnswerOptional
 /////////////////////////////////////////
 
 export type AnswerPartialRelations = {
-  student?: StudentPartialWithRelations;
+  student?: StudentAnswerPartialWithRelations;
   SoalABC?: SoalABCPartialWithRelations | null;
   SoalText?: SoalTextPartialWithRelations | null;
 };
@@ -90,7 +90,7 @@ export type AnswerPartialRelations = {
 export type AnswerPartialWithRelations = z.infer<typeof AnswerPartialSchema> & AnswerPartialRelations
 
 export const AnswerPartialWithRelationsSchema: z.ZodType<AnswerPartialWithRelations> = AnswerPartialSchema.merge(z.object({
-  student: z.lazy(() => StudentPartialWithRelationsSchema),
+  student: z.lazy(() => StudentAnswerPartialWithRelationsSchema),
   SoalABC: z.lazy(() => SoalABCPartialWithRelationsSchema).nullish(),
   SoalText: z.lazy(() => SoalTextPartialWithRelationsSchema).nullish(),
 })).partial()
@@ -98,7 +98,7 @@ export const AnswerPartialWithRelationsSchema: z.ZodType<AnswerPartialWithRelati
 export type AnswerOptionalDefaultsWithPartialRelations = z.infer<typeof AnswerOptionalDefaultsSchema> & AnswerPartialRelations
 
 export const AnswerOptionalDefaultsWithPartialRelationsSchema: z.ZodType<AnswerOptionalDefaultsWithPartialRelations> = AnswerOptionalDefaultsSchema.merge(z.object({
-  student: z.lazy(() => StudentPartialWithRelationsSchema),
+  student: z.lazy(() => StudentAnswerPartialWithRelationsSchema),
   SoalABC: z.lazy(() => SoalABCPartialWithRelationsSchema).nullish(),
   SoalText: z.lazy(() => SoalTextPartialWithRelationsSchema).nullish(),
 }).partial())
@@ -106,7 +106,7 @@ export const AnswerOptionalDefaultsWithPartialRelationsSchema: z.ZodType<AnswerO
 export type AnswerWithPartialRelations = z.infer<typeof AnswerSchema> & AnswerPartialRelations
 
 export const AnswerWithPartialRelationsSchema: z.ZodType<AnswerWithPartialRelations> = AnswerSchema.merge(z.object({
-  student: z.lazy(() => StudentPartialWithRelationsSchema),
+  student: z.lazy(() => StudentAnswerPartialWithRelationsSchema),
   SoalABC: z.lazy(() => SoalABCPartialWithRelationsSchema).nullish(),
   SoalText: z.lazy(() => SoalTextPartialWithRelationsSchema).nullish(),
 }).partial())

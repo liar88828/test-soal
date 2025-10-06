@@ -3,7 +3,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { Button } from "@/components/ui/button.tsx";
 import { Link } from "react-router-dom";
 import { Eye } from "lucide-react";
-import { TeacherType } from "@/interface/teacher-type.ts";
+import { TeacherType } from "shared";
 
 type Teacher = Pick<TeacherType,
 	"name" |

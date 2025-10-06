@@ -1,11 +1,11 @@
-import { z } from "zod";
+import { z } from 'zod';
 
 /////////////////////////////////////////
 // USER SCHEMA
 /////////////////////////////////////////
 
 export const UserSchema = z.object({
-	id: z.cuid(),
+  id: z.cuid(),
   name: z.string(),
   email: z.string(),
   role: z.string(),
@@ -28,7 +28,7 @@ export type UserPartial = z.infer<typeof UserPartialSchema>
 /////////////////////////////////////////
 
 export const UserOptionalDefaultsSchema = UserSchema.merge(z.object({
-	id: z.cuid().optional(),
+  id: z.cuid().optional(),
   role: z.string().optional(),
   createdAt: z.date().optional(),
 }))

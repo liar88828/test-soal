@@ -126,7 +126,7 @@ export function AcademicScheduleOption() {
 // 	jp: z.number().min(1, "JP minimal 1"),
 // });
 //
-// type FormValues = z.infer<typeof formSchema>;
+// type TeacherFormValues = z.infer<typeof formSchema>;
 
 // ---- Form Reusable ----
 function AcademicScheduleOptionForm(

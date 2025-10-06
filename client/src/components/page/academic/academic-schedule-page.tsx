@@ -1,4 +1,5 @@
-import { AcademicScheduleTable, exampleSchedules } from "@/components/page/schedule/academic-schedule-table.tsx";
+import { AcademicScheduleTable } from "@/components/page/schedule/academic-schedule-table.tsx";
+import { exampleSchedules } from "@/assets/example-schedules.tsx";
 
 
 export function AcademicSchedulePage() {

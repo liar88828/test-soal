@@ -2,118 +2,216 @@
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
 generator client {
-	provider = "prisma-client-js"
-	output   = "../generated/prisma"
+  provider = "prisma-client-js"
+  output   = "../generated/prisma"
 }
 
 datasource db {
-	provider = "sqlite"
-	url      = env("DATABASE_URL")
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
 }
 
 generator zod {
-	provider = "zod-prisma-types"
+  provider = "zod-prisma-types"
 
-	output                           = "../../shared/src/lib/validate" // default is ./generated/zod
-	useMultipleFiles                 = true // default is false
-	// writeBarrelFiles                 = false // default is true
-	createInputTypes                 = false // default is true
-	// createModelTypes                 = false // default is true
-	addInputTypeValidation           = false // default is true
-	addIncludeType                   = false // default is true
-	addSelectType                    = false // default is true
-	validateWhereUniqueInput         = false // default is true
-	createOptionalDefaultValuesTypes = true // default is false
-	createRelationValuesTypes        = true // default is false
-	createPartialTypes               = true // default is false
-	// useDefaultValidators             = false // default is true
-	coerceDate                       = false // default is true
-	writeNullishInModelTypes         = true // default is false
+  output                           = "../../shared/src/lib/validate" // default is ./generated/zod
+  useMultipleFiles                 = true // default is false
+  // writeBarrelFiles                 = false // default is true
+  createInputTypes                 = false // default is true
+  // createModelTypes                 = false // default is true
+  addInputTypeValidation           = false // default is true
+  addIncludeType                   = false // default is true
+  addSelectType                    = false // default is true
+  validateWhereUniqueInput         = false // default is true
+  createOptionalDefaultValuesTypes = true // default is false
+  createRelationValuesTypes        = true // default is false
+  createPartialTypes               = true // default is false
+  // useDefaultValidators             = false // default is true
+  coerceDate                       = false // default is true
+  writeNullishInModelTypes         = true // default is false
 }
 
 model Soal {
-	id          Int        @id @default(autoincrement())
-	nameSubject String
-	author      String
-	SoalABC     SoalABC[]
-	SoalText    SoalText[]
-	createdAt   DateTime   @default(now())
-	updatedAt   DateTime   @updatedAt
+  id          Int        @id @default(autoincrement())
+  nameSubject String
+  author      String
+  SoalABC     SoalABC[]
+  SoalText    SoalText[]
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
 }
 
 model SoalABC {
-	id       Int    @id @default(autoincrement())
-	question String
-	A        String
-	B        String
-	C        String
-	D        String
-	E        String
-	answer   String
+  id       Int    @id @default(autoincrement())
+  question String
+  A        String
+  B        String
+  C        String
+  D        String
+  E        String
+  answer   String
 
-	Answer Answer[]
-	soalId Int
-	Soal   Soal     @relation(fields: [soalId], references: [id], onDelete: Cascade)
+  Answer Answer[]
+  idSoal Int
+  Soal   Soal     @relation(fields: [idSoal], references: [id], onDelete: Cascade)
 }
 
 model SoalText {
-	id       Int    @id @default(autoincrement())
-	question String
-	text     String
-	answer   String
+  id       Int    @id @default(autoincrement())
+  question String
+  text     String
+  answer   String
 
-	Answer Answer[]
-	soalId Int
-	Soal   Soal     @relation(fields: [soalId], references: [id], onDelete: Cascade)
+  Answer Answer[]
+  soalId Int
+  Soal   Soal     @relation(fields: [soalId], references: [id], onDelete: Cascade)
 }
 
-model Student {
-	id          Int      @id @default(autoincrement())
-	nameSubject String
-	email       String   @unique
-	answers     Answer[]
-	createdAt   DateTime @default(now())
+model StudentAnswer {
+  id        Int      @id @default(autoincrement())
+  name      String
+  email     String   @unique
+  answers   Answer[]
+  createdAt DateTime @default(now())
 }
 
-enum TeacherGender {
-	Male
-	Female
+model Grade {
+  id                  String                @id @default(uuid())
+  name                String
+  level               Level
+  grade               Int?
+  Classes             Classes[]
+  Mapel               Mapel[]
+  OptionClassSchedule OptionClassSchedule[]
+}
+
+enum Gender {
+  Male
+  Female
 }
 
 model Teacher {
-	id          String        @id @default(uuid())
-	nameSubject String
-	subject     String
-	phone       String        @unique
-	email       String        @unique
-	address     String
-	photo       String
-	gender      TeacherGender
-	birthDate   DateTime
+  id        String    @id @default(uuid())
+  name      String
+  subject   String
+  phone     String    @unique
+  email     String    @unique
+  address   String
+  photo     String
+  gender    Gender
+  birthDate DateTime
+  createdAt DateTime  @default(now())
+  Mapel     Mapel[]
+  Classes   Classes[]
+}
 
-	createdAt DateTime @default(now())
+model Mapel {
+  id          String  @id @default(uuid())
+  idGrade     String
+  Grade       Grade   @relation(fields: [idGrade], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  idTeacher   String
+  Teacher     Teacher @relation(fields: [idTeacher], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  nameTeacher String
+  name        String
+  jp          String
+}
+
+enum Level {
+  PAUD
+  TK
+  SD
+  SMP
+  SMK
+}
+
+model Classes {
+  id          String    @id @default(uuid())
+  section     String
+  room        String
+  //
+  idTeacher   String
+  nameTeacher String
+  Teacher     Teacher   @relation(fields: [idTeacher], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  //
+  idGrade     String
+  Grade       Grade     @relation(fields: [idGrade], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  //
+  Student     Student[]
+  // countStudents Int
+}
+
+model OptionClassSchedule {
+  id          String @id @default(uuid())
+  idGrade     String
+  Grade       Grade  @relation(fields: [idGrade], references: [id])
+  nameSubject String
+  jp          Int
 }
 
 model Answer {
-	id        Int      @id @default(autoincrement())
-	soalId    Int
-	selected  String // A, B, C, D, E
-	createdAt DateTime @default(now())
+  id        Int      @id @default(autoincrement())
+  soalId    Int
+  selected  String // A, B, C, D, E
+  createdAt DateTime @default(now())
 
-	studentId Int
-	student   Student @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  studentId Int
+  student   StudentAnswer @relation(fields: [studentId], references: [id], onDelete: Cascade)
 
-	soalABCId  Int?
-	SoalABC    SoalABC?  @relation(fields: [soalABCId], references: [id], onDelete: Cascade)
-	soalTextId Int?
-	SoalText   SoalText? @relation(fields: [soalTextId], references: [id], onDelete: Cascade)
+  soalABCId  Int?
+  SoalABC    SoalABC?  @relation(fields: [soalABCId], references: [id], onDelete: Cascade)
+  soalTextId Int?
+  SoalText   SoalText? @relation(fields: [soalTextId], references: [id], onDelete: Cascade)
 }
 
 model User {
-	id          String   @id @default(cuid())
-	nameSubject String
-	email       String   @unique
-	role        String   @default("USER")
-	password    String
-	createdAt   DateTime @default(now())
+  id        String   @id @default(cuid())
+  name      String
+  email     String   @unique
+  role      String   @default("USER")
+  password  String
+  createdAt DateTime @default(now())
+}
+
+model Student {
+  // Identitas dasar
+  id           String   @id @default(uuid())
+  nis          String   @unique
+  namaLengkap  String
+  jenisKelamin Gender
+  tanggalLahir DateTime
+  tempatLahir  String
+
+  // Data akademik
+  kelas       String
+  jurusan     String
+  tahunMasuk  Int
+  tahunKeluar Int?
+
+  // Data kontak
+  alamat String
+  noHp   String?
+  email  String?
+
+  // Data orang tua / wali
+  namaAyah      String?
+  pekerjaanAyah String?
+  namaIbu       String?
+  pekerjaanIbu  String?
+  namaWali      String?
+  pekerjaanWali String?
+  noHpWali      String?
+
+  // Metadata
+  status    StatusSiswa
+  createdAt DateTime    @default(now())
+  updatedAt DateTime    @updatedAt
+  Classes   Classes?    @relation(fields: [idClass], references: [id])
+  idClass   String?
+}
+
+// Enum untuk status siswa
+enum StatusSiswa {
+  aktif
+  lulus
+  keluar
 }

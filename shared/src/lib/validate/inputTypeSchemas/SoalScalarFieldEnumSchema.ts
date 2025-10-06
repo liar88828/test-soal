@@ -1,5 +1,5 @@
 import { z } from 'zod';
 
-export const SoalScalarFieldEnumSchema = z.enum(['id','name','author','createdAt','updatedAt']);
+export const SoalScalarFieldEnumSchema = z.enum(['id','nameSubject','author','createdAt','updatedAt']);
 
 export default SoalScalarFieldEnumSchema;

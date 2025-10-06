@@ -1,15 +1,14 @@
 // store/useTeacherStore.ts
 import { create } from "zustand";
-import { nanoid } from "nanoid";
 import { persist } from "zustand/middleware";
-import { TeacherType } from "shared";
+import { Teacher, TeacherOptionalDefaults } from "shared/dist/lib/validate";
 
 type TeacherState = {
-	teachers: TeacherType[];
-	addTeacher: (teacher: Omit<TeacherType, "id">) => void;
-	updateTeacher: (id: string, teacher: Partial<TeacherType>) => void;
+	teachers: Teacher[];
+	addTeacher: (teacher: Omit<TeacherOptionalDefaults, "id">) => void;
+	updateTeacher: (id: string, teacher: Partial<TeacherOptionalDefaults>) => void;
 	deleteTeacher: (id: string) => void;
-	getTeacherById: (id: string) => TeacherType | undefined;
+	getTeacherById: (id: string) => TeacherOptionalDefaults | undefined;
 };
 
 export const useTeacherStore = create<TeacherState>()(
@@ -20,16 +19,18 @@ export const useTeacherStore = create<TeacherState>()(
 				const teachers = get().teachers
 				return teachers.find(i => i.id === id)
 			},
-			addTeacher: (teacher) =>
-				set((state) => ( {
-					teachers: [ ...state.teachers, { id: nanoid(), ...teacher } ],
-				} )),
-			updateTeacher: (id, updated) =>
-				set((state) => ( {
-					teachers: state.teachers.map((t) =>
-						t.id === id ? { ...t, ...updated } : t
-					),
-				} )),
+			addTeacher: (teacher) => {
+				// set((state) => ( {
+				// 	teachers: [ ...state.teachers, { id: nanoid(), ...teacher } ],
+				// } ))
+			},
+			updateTeacher: (id, updated) => {
+				// set((state) => ( {
+				// 	teachers: state.teachers.map((t) =>
+				// 		t.id === id ? { ...t, ...updated } : t
+				// 	),
+				// } ))
+			},
 			deleteTeacher: (id) =>
 				set((state) => ( {
 					teachers: state.teachers.filter((t) => t.id !== id),

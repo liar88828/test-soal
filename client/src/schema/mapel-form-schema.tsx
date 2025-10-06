@@ -9,6 +9,5 @@ export const mapelFormSchema = z.object({
 	nameTeacher: z.string(),
 	nameSubject: z.string(),
 	jp: z.number(),
-
 });
 export type MapelFormValues = z.infer<typeof mapelFormSchema>;

@@ -14,7 +14,7 @@ import { toast } from "sonner";
 import { mapelFormSchema, type MapelFormValues } from "@/schema/mapel-form-schema.tsx";
 import { useOptionGradePerClassStore } from "@/stores/use-option-grade-per-class-store.ts";
 import { Input } from "@/components/ui/input.tsx";
-import { formatToHour } from "@/components/page/academic/components/format-to-hour.tsx";
+import { formatToHour } from "@/lib/format-to-hour.tsx";
 
 // type Grouped = {
 // 	nameSubject: string;
@@ -139,21 +139,7 @@ function DaftarMataPelajaran(props: { idGrade: string }) {
 }
 
 function TotalGuru(props: { idGrade: string }) {
-	const { dataAvailableOnClass } = useOptionGradePerClassStore(state => state.getDataByGrade)(props.idGrade)
-	const { count, countTotalTeacher, countTotalJP } = useMapelClassStore(state => state.filterMapelByGrade)(props.idGrade)
-
-	const combinedData = count.map((c) => {
-		const found = dataAvailableOnClass.find(
-			(d) => d.nameSubject === c.nameSubject
-		);
-
-		return {
-			nameSubject: c.nameSubject,
-			count: c.count,
-			totalJP: c.totalJP,
-			totalMaxJP: found ? found.totalMaxJP : 0,
-		};
-	});
+	const { countTotalTeacher, countTotalJP, combinedData, totalMaxJP,totalNeedJP } = useMapelClassStore(state => state.filterMapelByGrade)(props.idGrade)
 
 	return (
 		<Card>
@@ -181,7 +167,7 @@ function TotalGuru(props: { idGrade: string }) {
 								<TableCell className="text-center">{ r.count }</TableCell>
 								<TableCell className="text-center">{ r.totalJP }</TableCell>
 								<TableCell className="text-center">{ r.totalMaxJP }</TableCell>
-								<TableCell className="text-center text-red-400">{ r.totalMaxJP - r.totalJP }</TableCell>
+								<TableCell className="text-center text-red-400">{ r.totalNeedJP }</TableCell>
 							</TableRow>
 						)) }
 					</TableBody>
@@ -191,7 +177,8 @@ function TotalGuru(props: { idGrade: string }) {
 							<TableCell>Total</TableCell>
 							<TableCell className={ "text-center" }>{ countTotalTeacher }</TableCell>
 							<TableCell className={ "text-center" }>{ countTotalJP }</TableCell>
-							<TableCell className={ "text-center" }></TableCell>
+							<TableCell className={ "text-center" }>{ totalMaxJP }</TableCell>
+							<TableCell className={ "text-center text-red-400" }>{ totalNeedJP }</TableCell>
 						</TableRow>
 					</TableFooter>
 				</Table>
