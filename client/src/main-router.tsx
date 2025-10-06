@@ -114,10 +114,7 @@ export const mainRouter = createBrowserRouter(
 									index: true,
 									Component: AcademicSchedulePage,
 								},
-								{
-									path: "schedule",
-									Component: AcademicScheduleOptionPage,
-								},
+
 								{
 									path: "classes",
 									Component: AcademicGradePage,
@@ -138,6 +135,10 @@ export const mainRouter = createBrowserRouter(
 								{
 									path: "teacher/:id",
 									Component: AcademicTeacherDetailPage,
+								},
+								{
+									path: "schedule",
+									Component: AcademicScheduleOptionPage,
 								},
 							]
 						},

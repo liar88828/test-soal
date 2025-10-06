@@ -1,7 +1,7 @@
-import { StudentTabel } from "@/components/page/student/component/student-tabel.tsx";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { ClassAttendanceTable } from "@/components/page/teacher/ClassAttendanceTable.tsx";
 import { useParams } from "react-router-dom";
+import { StudentTabel } from "@/components/page/teacher/components/StudentTabel.tsx";
 
 export default function TeacherClassDetailPage() {
 	const params = useParams<{ id: string }>()

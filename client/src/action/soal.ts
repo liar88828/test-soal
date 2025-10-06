@@ -8,7 +8,7 @@ import { toastError, toastSuccess } from "@/components/mini/toast";
 
 
 export async function getSoalAll() {
-	return fetch(`${ SERVER_URL }/soal`)
+	return fetch(`${ SERVER_URL }/api/soal`)
 	.then((res) => res.json())
 	.then((data) => data as SoalAll[])
 }

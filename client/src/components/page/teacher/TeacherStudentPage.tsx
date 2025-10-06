@@ -1,5 +1,4 @@
-import { exampleSiswaList } from "@/assets/example/siswaList.ts";
-import { StudentTabel } from "@/components/page/student/component/student-tabel.tsx";
+import { StudentTabel } from "@/components/page/teacher/components/StudentTabel.tsx";
 
 export default function TeacherStudentPage() {
 	return (
@@ -10,7 +9,7 @@ export default function TeacherStudentPage() {
 					Berikut adalah daftar siswa yang Anda ajar.
 				</p>
 			</div>
-			<StudentTabel siswas={ exampleSiswaList } />
+			<StudentTabel />
 		</div>
 	)
 }

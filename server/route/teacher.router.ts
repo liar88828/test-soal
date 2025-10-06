@@ -9,31 +9,54 @@ export const newTeacherOptionalDefaultsSchema = TeacherOptionalDefaultsSchema.ex
 });
 const teacherRouter = new Hono()
 
-//
-// ✅ GET ALL TEACHERS
-//
-teacherRouter.get("/", async (c) => {
-	const teachers = await prisma.teacher.findMany();
-	return c.json(teachers);
-});
+teacherRouter.get("/",
+	async (c) => {
+		const teachers = await prisma.teacher.findMany();
+		return c.json(teachers);
+	})
+.get(`/not-class/:idGrade`,
+	async (c) => {
+		const idClass = c.req.param("idClass")
+		// const grades = await prisma.optionClassSchedule.findMany({ where: { idGrade } });
 
-//
-// ✅ GET TEACHER BY ID
-//
-teacherRouter.get("/:id", async (c) => {
-	const id = c.req.param("id");
-	const teacher = await prisma.teacher.findUnique({ where: { id } });
-	if (!teacher) return c.json({ message: "Teacher not found" }, 404);
-	return c.json(teacher);
-});
+		const teachers = await prisma.teacher.findMany({
+			where: {
+				NOT: {
+					Classes: {
+						some: { id: idClass }
+					}
+				}
+			}
+		});
+		return c.json(teachers);
+	});
+teacherRouter.get("/grade/:idGrade",
+	async (c) => {
+		const idGrade = c.req.param("idGrade")
+		const teachers = await prisma.teacher.findMany({
+			where: {
+				NOT: {
+					Classes: {
+						some: { idGrade }
+					}
+				}
+			}
+		});
+		return c.json(teachers);
+	})
+teacherRouter.get("/:id",
+	async (c) => {
+		const id = c.req.param("id");
+		const teacher = await prisma.teacher.findUnique({ where: { id } });
+		if (!teacher) return c.json({ message: "Teacher not found" }, 404);
+		return c.json(teacher);
+	});
 
-//
-// ✅ CREATE TEACHER
-//
 teacherRouter.post("/",
 	zValidator("json", newTeacherOptionalDefaultsSchema),
 	async (c) => {
 		const data = c.req.valid("json")
+
 		data.birthDate = new Date(data.birthDate)
 
 		const newTeacher = await prisma.teacher.create({
@@ -42,9 +65,6 @@ teacherRouter.post("/",
 		return c.json(newTeacher, 201);
 	});
 
-//
-// ✅ UPDATE TEACHER
-//
 teacherRouter.put("/:id",
 	zValidator("json", newTeacherOptionalDefaultsSchema),
 	async (c) => {
@@ -62,9 +82,6 @@ teacherRouter.put("/:id",
 		return c.json(updated);
 	});
 
-//
-// ✅ DELETE TEACHER
-//
 teacherRouter.delete("/:id", async (c) => {
 	const id = c.req.param("id");
 	const exist = await prisma.teacher.findUnique({ where: { id } });

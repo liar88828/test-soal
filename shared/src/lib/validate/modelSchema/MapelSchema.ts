@@ -1,8 +1,8 @@
-import { z } from 'zod';
-import { GradeWithRelationsSchema, GradePartialWithRelationsSchema, GradeOptionalDefaultsWithRelationsSchema } from './GradeSchema'
-import type { GradeWithRelations, GradePartialWithRelations, GradeOptionalDefaultsWithRelations } from './GradeSchema'
-import { TeacherWithRelationsSchema, TeacherPartialWithRelationsSchema, TeacherOptionalDefaultsWithRelationsSchema } from './TeacherSchema'
-import type { TeacherWithRelations, TeacherPartialWithRelations, TeacherOptionalDefaultsWithRelations } from './TeacherSchema'
+import { z } from "zod";
+import type { GradeOptionalDefaultsWithRelations, GradePartialWithRelations, GradeWithRelations } from "./GradeSchema"
+import { GradeOptionalDefaultsWithRelationsSchema, GradePartialWithRelationsSchema, GradeWithRelationsSchema } from "./GradeSchema"
+import type { TeacherOptionalDefaultsWithRelations, TeacherPartialWithRelations, TeacherWithRelations } from "./TeacherSchema"
+import { TeacherOptionalDefaultsWithRelationsSchema, TeacherPartialWithRelationsSchema, TeacherWithRelationsSchema } from "./TeacherSchema"
 
 /////////////////////////////////////////
 // MAPEL SCHEMA
@@ -10,11 +10,11 @@ import type { TeacherWithRelations, TeacherPartialWithRelations, TeacherOptional
 
 export const MapelSchema = z.object({
   id: z.uuid(),
+	name: z.string(),
+	jp: z.number().int(),
   idGrade: z.string(),
   idTeacher: z.string(),
   nameTeacher: z.string(),
-  name: z.string(),
-  jp: z.string(),
 })
 
 export type Mapel = z.infer<typeof MapelSchema>

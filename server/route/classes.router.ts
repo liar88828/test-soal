@@ -9,7 +9,7 @@ classesRouter.get("/", async (c) => {
 	const classResponse = await prisma.classes.findMany();
 	return c.json(classResponse);
 })
-.post('/',
+.post("/",
 	zValidator("json", ClassesOptionalDefaultsSchema),
 	async (c) => {
 		const data = c.req.valid("json")
@@ -38,7 +38,7 @@ classesRouter
 		const classDB = await prisma.classes.create({ data });
 		return c.json(classDB, 201);
 		// return c.json({message:"test"});
-	});
+	})
 
 classesRouter.get("/:id", async (c) => {
 	const id = c.req.param("id");

@@ -137,10 +137,6 @@ export const useMapelClassStore = create<MapelState>()(
 						return acc;
 					}, {} as Record<string, CountSubject>)
 				);
-
-				const totalTeacher = countSubject.reduce((sum, item) => sum + item.count, 0)
-				const totalCountJP = countSubject.reduce((sum, item) => sum + item.totalJP, 0)
-
 				const combinedData = countSubject.map((c) => {
 					const found = dataAvailableOnClass.find(
 						(d) => d.nameSubject === c.nameSubject
@@ -154,22 +150,25 @@ export const useMapelClassStore = create<MapelState>()(
 						totalNeedJP: totalMaxJP - c.totalJP
 					};
 				});
+
 				const totalJP = combinedData.reduce((sum, item) => sum + item.totalJP, 0)
-				const TotalMaxJP = combinedData.reduce((sum, item) => sum + item.totalMaxJP, 0)
 				const totalSchedule = formatToHour(totalJP * 45)
-				const TotalNeedJP= combinedData.reduce((sum, item) => sum + item.totalNeedJP, 0)
+				const countTotalTeacher = countSubject.reduce((sum, item) => sum + item.count, 0)
+				const countTotalJP = countSubject.reduce((sum, item) => sum + item.totalJP, 0)
+				const countTotalMaxJP = combinedData.reduce((sum, item) => sum + item.totalMaxJP, 0)
+				const totalNeedJP = combinedData.reduce((sum, item) => sum + item.totalNeedJP, 0)
 
 				return {
 					subjectData: filterMapel,
 					totalSchedule,
 					group,
 					count: countSubject,
-					countTotalTeacher: totalTeacher,
-					countTotalJP: totalCountJP,
 					combinedData,
 					totalJP,
-					totalMaxJP: TotalMaxJP,
-					totalNeedJP: TotalNeedJP
+					countTotalTeacher,
+					countTotalJP,
+					totalMaxJP: countTotalMaxJP,
+					totalNeedJP
 				}
 			},
 

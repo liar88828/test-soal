@@ -1,9 +1,9 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card.tsx";
 import { Button } from "@/components/ui/button.tsx";
 import { useTeacherStore } from "@/stores/use-teacher-store.ts";
+import { formatDate } from "@/lib/format-date.tsx";
 
-
-export function TeacherProfile(props: { idTeacher: string }) {
+export default function TeacherProfile(props: { idTeacher: string }) {
 	const { getTeacherById } = useTeacherStore()
 	const teacher = getTeacherById(props.idTeacher)
 
@@ -30,7 +30,7 @@ export function TeacherProfile(props: { idTeacher: string }) {
 					<p><strong>Email:</strong> { teacher.email }</p>
 					{ teacher.address && <p><strong>Address:</strong> { teacher.address }</p> }
 					{ teacher.gender && <p><strong>Gender:</strong> { teacher.gender }</p> }
-					{ teacher.birthDate && <p><strong>Birth Date:</strong> { teacher.birthDate }</p> }
+					{ teacher.birthDate && <p><strong>Birth Date:</strong> { formatDate(teacher.birthDate) }</p> }
 				</div>
 				<Button className="mt-2 w-full">Edit Teacher</Button>
 			</CardContent>

@@ -9,15 +9,12 @@ import { getSoalAll } from "@/action/soal.ts";
 
 export function SoalPage() {
 	const soals = useLoaderData() as LoaderProps<typeof getSoalAll>
-	console.log(soals)
 	// console.log(dataAvailableOnClass)
 	return (
 		<div className="">
 			<div className="flex justify-between">
-
 				<h1 className="text-2xl font-bold mb-4">Daftar SoalItem</h1>
 				<div className="mb-6">
-
 					<DrawerDialog title="Tambah SoalItem" triggerLabel="Tambah SoalItem">
 						<SoalCreateModal />
 					</DrawerDialog>

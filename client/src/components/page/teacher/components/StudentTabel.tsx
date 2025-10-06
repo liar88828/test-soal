@@ -1,12 +1,12 @@
+import { useStudent } from "@/lib/swr/use-student.tsx";
 import { useState } from "react";
 import { Card, CardContent, CardHeader } from "@/components/ui/card.tsx";
 import { Input } from "@/components/ui/input.tsx";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table.tsx";
+import { TableLoading } from "@/components/mini/TableComponent.tsx";
 import { Button } from "@/components/ui/button.tsx";
 import { Link } from "react-router-dom";
 import { Eye } from "lucide-react";
-import { useStudent } from "@/lib/swr/use-student.tsx";
-import { TableLoading } from "@/components/mini/TableComponent.tsx";
 
 
 export function StudentTabel(props: { idClass?: string }) {

@@ -2,37 +2,35 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card.t
 import { Table, TableBody, TableCaption, TableCell, TableFooter, TableHead, TableHeader, TableRow } from "@/components/ui/table.tsx";
 import { Button } from "@/components/ui/button.tsx";
 import { Link, useParams } from "react-router-dom";
-import { EditIcon, Eye, Plus, TrashIcon } from "lucide-react";
+import { EditIcon, Eye, PlusIcon, TrashIcon } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Input } from "@/components/ui/input.tsx";
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger, } from "@/components/ui/dialog.tsx";
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, } from "@/components/ui/dialog.tsx";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage, } from "@/components/ui/form.tsx";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select.tsx";
-import { toast } from "sonner";
 import { subjects } from "@/assets/subjects.tsx";
 import { formatToHour } from "@/lib/format-to-hour.tsx";
-import { useClassStore } from "@/stores/use-class-store.ts";
 import { buildings } from "@/assets/buildings.tsx";
 import { EmptyComponent } from "@/components/mini/empty-component.tsx";
 import { Spinner } from "@/components/ui/spinner.tsx";
-import { classCreate, classGet, classUpdate } from "@/lib/swr/classes.ts";
+import { classCreate, classDelete, classGet, classUpdate } from "@/lib/swr/classes-swr.ts";
 import {
-	Classes,
-	ClassesOptionalDefaults,
+	type Classes,
+	type ClassesOptionalDefaults,
 	ClassesOptionalDefaultsSchema,
 	type OptionClassSchedule,
-	OptionClassScheduleOptionalDefaults,
+	type OptionClassScheduleOptionalDefaults,
 	OptionClassScheduleOptionalDefaultsSchema
 } from "shared/dist/lib/validate";
-import { teacherGet } from "@/lib/swr/teacher.ts";
-import { optionCreate, optionDelete, optionGet, optionUpdate } from "@/lib/swr/option.tsx";
+import { teacherGet } from "@/lib/swr/teacher-swr.ts";
+import { optionCreate, optionDelete, optionGet, optionUpdate } from "@/lib/swr/option-swt.tsx";
+import { type FormDialog } from "@/interface/form-dialog.tsx";
+import { onError } from "@/lib/on-error.tsx";
 
 
 function AcademicGradeClassesTable(props: { idGrade: string }) {
-	// useAcademicClassesDetailTabel(props.idGrade);
-	// const classes = useClassStore(state => state.getClassByIdGrade)(props.idGrade)
 	const classes = classGet(props.idGrade)
 	const [ open, setOpen ] = useState(false);
 	const [ editData, setEditData ] = useState<Classes | null>(null);
@@ -41,6 +39,16 @@ function AcademicGradeClassesTable(props: { idGrade: string }) {
 	const handleEdit = (row: Classes) => {
 		setEditData(row);
 		setOpen(true);
+	};
+
+	const onSubmit = async (values: ClassesOptionalDefaults) => {
+		if (editData && editData.id) {
+			await classUpdate(props.idGrade, editData.id, values)
+		} else {
+			await classCreate(props.idGrade, values)
+		}
+		await classes.mutate()
+		setOpen(false);
 	};
 
 	if (classes.isLoading) {
@@ -107,14 +115,16 @@ function AcademicGradeClassesTable(props: { idGrade: string }) {
 											variant="outline"
 											onClick={ () => handleEdit(row) }
 										>
-											Edit
+											<EditIcon />
+											{/*Edit*/ }
 										</Button>
 										<Button
 											size="sm"
 											variant="destructive"
 											onClick={ () => setDeleteId(row.id as string) }
 										>
-											Delete
+											<TrashIcon />
+											{/*Delete*/ }
 										</Button>
 									</TableCell>
 								</TableRow>
@@ -129,26 +139,25 @@ function AcademicGradeClassesTable(props: { idGrade: string }) {
 				section={ classes.data.length ?? 1 }
 				idGrade={ props.idGrade }
 				open={ open }
-				setOpen={ setOpen }
 				editData={ editData }
+				setOpen={ setOpen }
+				onSubmit={ onSubmit }
 			/>
-			<ClassDeleteDialog deleteId={ deleteId } setDeleteId={ setDeleteId } />
+			<ClassDeleteDialog
+				deleteId={ deleteId }
+				setDeleteId={ setDeleteId }
+			/>
 		</Card>
 	);
 }
 
-type ClassFormDialog = {
+export type ClassFormDialog = {
 	section: number;
 	idGrade: string;
-	open: boolean;
-	setOpen: (v: boolean) => void;
-	editData?: Classes | null;
-};
+} & FormDialog<ClassesOptionalDefaults>
 
 function ClassDialogForm(props: ClassFormDialog) {
-	const { section, idGrade, open, setOpen, editData } = props
-
-	const classes = classGet(idGrade)
+	const { section, idGrade, open, editData, setOpen, onSubmit } = props
 	const teachers = teacherGet()
 
 	// const teachers = useTeacherStore(state => state.teachers)
@@ -185,18 +194,6 @@ function ClassDialogForm(props: ClassFormDialog) {
 		}
 	}, [ editData, form, idGrade ]);
 
-	const onSubmit = async (values: ClassesOptionalDefaults) => {
-		if (editData && editData.id) {
-			// updateClass(editData.id, values);
-			await classUpdate(idGrade, editData.id, values)
-		} else {
-			await classCreate(idGrade, values)
-
-			// addClass(values);
-		}
-		await classes.mutate()
-		setOpen(false);
-	};
 	console.log(form.formState.errors);
 	if (!teachers.data || teachers.isLoading) {
 		return <Spinner />
@@ -212,7 +209,7 @@ function ClassDialogForm(props: ClassFormDialog) {
 				</DialogHeader>
 
 				<Form { ...form }>
-					<form onSubmit={ form.handleSubmit(onSubmit) } className="space-y-3 mt-2">
+					<form onSubmit={ form.handleSubmit(onSubmit, onError) } className="space-y-3 mt-2">
 
 						<FormField
 							control={ form.control }
@@ -380,11 +377,11 @@ function ClassDialogForm(props: ClassFormDialog) {
 }
 
 function ClassDeleteDialog({ deleteId, setDeleteId, }: { deleteId: string | null; setDeleteId: (v: string | null) => void; }) {
-	const { deleteClass } = useClassStore();
 
-	const handleDelete = () => {
+	const handleDelete = async () => {
 		if (deleteId) {
-			deleteClass(deleteId);
+			await classDelete(deleteId);
+			// deleteClass(deleteId);
 			setDeleteId(null);
 		}
 	};
@@ -411,20 +408,16 @@ function ClassDeleteDialog({ deleteId, setDeleteId, }: { deleteId: string | null
 function AcademicGradeOptionTable(props: { idGrade: string }) {
 	const option = optionGet(props.idGrade);
 	const [ editing, setEditing ] = useState<OptionClassSchedule | null>(null);
-	// const { removeOption, addOption, updateOption, } = useOptionGradePerClassStore();//table
-	// const { dataAvailableOnClass, totalJP, totalTime, totalJPPerClass } = getDataByGrade(props.idGrade)
-	// const { data: classes } = useAcademicClassesDetailTabel(props.idGrade)
+	const [ open, setOpen ] = useState(false);
 
-	const handleSave = async (data: OptionClassScheduleOptionalDefaults) => {
-		if (editing && editing.id) {
-			// updateOption(editing.id, data);
+	const onSubmit = async (data: OptionClassScheduleOptionalDefaults) => {
+		if (data && editing && editing.id) {
 			await optionUpdate(props.idGrade, editing.id, data)
-			setEditing(null);
 		} else {
 			await optionCreate(props.idGrade, data)
-			// addOption({ ...data, id: nanoid() });
 		}
 		await option.mutate()
+		setOpen(false);
 	};
 
 	if (option.isLoading) {
@@ -439,26 +432,13 @@ function AcademicGradeOptionTable(props: { idGrade: string }) {
 			<CardHeader>
 				<div className="flex justify-between items-center">
 					<CardTitle>Option Mata Pelajaran { props.idGrade }</CardTitle>
-
-					{/* Tombol Add */ }
-					<Dialog>
-						<DialogTrigger asChild>
-							<Button><Plus /></Button>
-						</DialogTrigger>
-						<DialogContent>
-							<DialogHeader>
-								<DialogTitle>Tambah Mapel</DialogTitle>
-								<DialogDescription>
-									Isi form untuk menambahkan option mata pelajaran baru
-								</DialogDescription>
-							</DialogHeader>
-							<AcademicScheduleOptionForm
-								editing={ null }
-								onSave={ handleSave }
-								idGrade={ props.idGrade }
-							/>
-						</DialogContent>
-					</Dialog>
+					<Button onClick={ () => {
+						setEditing(null);
+						setOpen(true);
+					} }
+					>
+						<PlusIcon /> Add Teacher
+					</Button>
 				</div>
 			</CardHeader>
 
@@ -487,30 +467,35 @@ function AcademicGradeOptionTable(props: { idGrade: string }) {
 								<TableCell className="text-start">{ formatToHour(m.jp * 45) }</TableCell>
 								<TableCell className="text-center space-x-2">
 									{/* Edit */ }
-									<Dialog
-										open={ !!editing && editing.id === m.id }
-										onOpenChange={ (isOpen) => {
-											if (!isOpen) setEditing(null);
-										} }
+									{/*<Dialog*/ }
+									{/*	open={ !!editing && editing.id === m.id }*/ }
+									{/*	onOpenChange={ (isOpen) => {*/ }
+									{/*		if (!isOpen) setEditing(null);*/ }
+									{/*	} }*/ }
+									{/*>*/ }
+									{/*	<DialogTrigger asChild>*/ }
+									{/*		<Button size="sm" onClick={ () => setEditing(m) }*/ }
+									{/*		>*/ }
+									{/*			<EditIcon />*/ }
+									{/*		</Button>*/ }
+									{/*	</DialogTrigger>*/ }
+									{/*	<DialogContent>*/ }
+									{/*		<DialogHeader>*/ }
+									{/*			<DialogTitle>Edit Mapel</DialogTitle>*/ }
+									{/*		</DialogHeader>*/ }
+									{/*	</DialogContent>*/ }
+									{/*</Dialog>*/ }
+
+									<Button size="sm"
+									        variant={ "outline" }
+									        onClick={ () => {
+										        setEditing(m);
+										        setOpen(true);
+									        } }
 									>
-										<DialogTrigger asChild>
-											<Button size="sm" onClick={ () => setEditing(m) }
-											>
-												<EditIcon />
-											</Button>
-										</DialogTrigger>
-										<DialogContent>
-											<DialogHeader>
-												<DialogTitle>Edit Mapel</DialogTitle>
-											</DialogHeader>
-											<AcademicScheduleOptionForm
-												editing={ editing }
-												onSave={ handleSave }
-												idGrade={ props.idGrade }
-												onClose={ () => setEditing(null) }
-											/>
-										</DialogContent>
-									</Dialog>
+										<EditIcon />
+										{/*Edit*/ }
+									</Button>
 
 									{/* Delete */ }
 									<Button
@@ -538,56 +523,51 @@ function AcademicGradeOptionTable(props: { idGrade: string }) {
 
 				</Table>
 			</CardContent>
+			<AcademicScheduleOptionFormDialog
+				setOpen={ setOpen }
+				onSubmit={ onSubmit }
+				open={ open }
+				editData={ editing }
+				idGrade={ props.idGrade }
+			/>
 		</Card>
 	);
 }
 
 type AcademicScheduleOptionFormProps = {
-	editing: OptionClassSchedule | null;
-	onSave: (data: OptionClassScheduleOptionalDefaults) => void;
-	onClose?: () => void; idGrade: string;
-}
+	idGrade: string;
+} & FormDialog<OptionClassScheduleOptionalDefaults>
 
-function AcademicScheduleOptionForm(props: AcademicScheduleOptionFormProps) {
-	const { editing, onSave, onClose, idGrade } = props
+function AcademicScheduleOptionFormDialog(props: AcademicScheduleOptionFormProps) {
+	const { editData, setOpen, idGrade, open, onSubmit } = props
 	const option = optionGet(idGrade);
-	// const { dataOptions } = useOptionGradePerClassStore();//form
 
 	const form = useForm<OptionClassScheduleOptionalDefaults>({
 		resolver: zodResolver(OptionClassScheduleOptionalDefaultsSchema),
-		defaultValues: editing ? editing : {
+		defaultValues: editData ? editData : {
 			nameSubject: "Math",
 			jp: 1,
 			idGrade,
 		},
 	});
 
-	const onSubmit = (values: OptionClassScheduleOptionalDefaults) => {
-		onSave(values);
-		form.reset({
-			nameSubject: "Math",
-			jp: 1,
-			idGrade,
-
-		});
-		onClose?.();
-
-	};
-
-	const onError = (errors: typeof form.formState.errors) => {
-		const firstError = Object.values(errors)[0]?.message as string | undefined;
-		if (firstError) {
-			toast.error(`Error Values: ${ firstError }`);
+	useEffect(() => {
+		if (editData) {
+			form.reset(editData);
 		} else {
-			toast.error("Please fix the errors in the form");
+			form.reset({
+				nameSubject: "Math",
+				jp: 1,
+				idGrade,
+			});
 		}
-	};
+	}, [ editData, form ]);
 
 	console.log(form.formState.errors);
 
 	const newSubject = subjects.filter((i) => {
 			return !option.data?.some((j) => {
-				if (editing && editing.nameSubject === i) return false;
+				if (editData && editData.nameSubject === i) return false;
 				const name = j.nameSubject === i;
 				const grande = j.idGrade === idGrade
 				return name && grande;
@@ -596,60 +576,75 @@ function AcademicScheduleOptionForm(props: AcademicScheduleOptionFormProps) {
 	);
 
 	return (
-		<Form { ...form }>
-			<form onSubmit={ form.handleSubmit(onSubmit, onError) } className="space-y-4">
-				{/* Subject */ }
+		<Dialog
+			onOpenChange={ setOpen } open={ open }
+		>
+			{/*<DialogTrigger asChild>*/ }
+			{/*	<Button><Plus /></Button>*/ }
+			{/*</DialogTrigger>*/ }
+			<DialogContent>
+				<DialogHeader>
+					<DialogTitle>Tambah Mapel</DialogTitle>
+					<DialogDescription>
+						Isi form untuk menambahkan option mata pelajaran baru
+					</DialogDescription>
+				</DialogHeader>
+				<Form { ...form }>
+					<form onSubmit={ form.handleSubmit(onSubmit, onError) } className="space-y-4">
+						{/* Subject */ }
 
-				<FormField
-					control={ form.control }
-					name="nameSubject"
-					render={ ({ field }) => (
-						<FormItem>
-							<FormLabel>Subject</FormLabel>
-							<Select onValueChange={ field.onChange } defaultValue={ field.value }>
-								<FormControl>
-									<SelectTrigger className="w-full">
-										<SelectValue placeholder="Select subject" />
-									</SelectTrigger>
-								</FormControl>
-								<SelectContent>
-									{ newSubject.map((subject) => (
-										<SelectItem key={ subject } value={ subject }>
-											{ subject }
-										</SelectItem>
-									)) }
-								</SelectContent>
-							</Select>
-							<FormMessage />
-						</FormItem>
-					) }
-				/>
+						<FormField
+							control={ form.control }
+							name="nameSubject"
+							render={ ({ field }) => (
+								<FormItem>
+									<FormLabel>Subject</FormLabel>
+									<Select onValueChange={ field.onChange } defaultValue={ field.value }>
+										<FormControl>
+											<SelectTrigger className="w-full">
+												<SelectValue placeholder="Select subject" />
+											</SelectTrigger>
+										</FormControl>
+										<SelectContent>
+											{ newSubject.map((subject) => (
+												<SelectItem key={ subject } value={ subject }>
+													{ subject }
+												</SelectItem>
+											)) }
+										</SelectContent>
+									</Select>
+									<FormMessage />
+								</FormItem>
+							) }
+						/>
 
-				{/* Jumlah JP */ }
-				<FormField
-					control={ form.control }
-					name="jp"
-					render={ ({ field }) => (
-						<FormItem>
-							<FormLabel>Jumlah JP</FormLabel>
-							<FormControl>
-								<Input
-									max={ 8 }
-									type="number"
-									{ ...field }
-									onChange={ (e) => field.onChange(e.target.valueAsNumber) }
-								/>
-							</FormControl>
-							<FormMessage />
-						</FormItem>
-					) }
-				/>
+						{/* Jumlah JP */ }
+						<FormField
+							control={ form.control }
+							name="jp"
+							render={ ({ field }) => (
+								<FormItem>
+									<FormLabel>Jumlah JP</FormLabel>
+									<FormControl>
+										<Input
+											max={ 8 }
+											type="number"
+											{ ...field }
+											onChange={ (e) => field.onChange(e.target.valueAsNumber) }
+										/>
+									</FormControl>
+									<FormMessage />
+								</FormItem>
+							) }
+						/>
 
-				<Button type="submit" className="w-full">
-					{ editing ? "Update Option" : "Tambah Option" }
-				</Button>
-			</form>
-		</Form>
+						<Button type="submit" className="w-full">
+							{ editData ? "Update Option" : "Tambah Option" }
+						</Button>
+					</form>
+				</Form>
+			</DialogContent>
+		</Dialog>
 	);
 }
 

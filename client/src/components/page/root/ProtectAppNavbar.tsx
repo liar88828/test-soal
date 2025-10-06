@@ -4,6 +4,7 @@ import { LogIn, LogOut } from "lucide-react";
 import { NavigationMenuProps } from "@radix-ui/react-navigation-menu";
 import { NavigationMenu, NavigationMenuItem, NavigationMenuLink, NavigationMenuList } from "@/components/ui/navigation-menu.tsx";
 import { sessionLoader } from "@/action/auth.action.ts";
+import { ModeToggle } from "@/components/mini/dark-mode.tsx";
 
 export const ProtectAppNavbar = () => {
 	const session = useLoaderData<typeof sessionLoader>()
@@ -15,9 +16,9 @@ export const ProtectAppNavbar = () => {
 			<div className="h-full flex items-center justify-between mx-auto px-4 max-w-screen-xl">
 				{/*{ isValid ? <SidebarTrigger /> : null }*/ }
 
+				<ModeToggle />
 				{/* Desktop Menu */ }
 				<NavMenu className="hidden md:block" />
-
 				<div className="flex items-center gap-3">
 					{/*<Button*/ }
 					{/*	variant="outline"*/ }

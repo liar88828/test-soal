@@ -105,25 +105,6 @@ model Teacher {
   Classes   Classes[]
 }
 
-model Mapel {
-  id          String  @id @default(uuid())
-  idGrade     String
-  Grade       Grade   @relation(fields: [idGrade], references: [id], onDelete: Cascade, onUpdate: Cascade)
-  idTeacher   String
-  Teacher     Teacher @relation(fields: [idTeacher], references: [id], onDelete: Cascade, onUpdate: Cascade)
-  nameTeacher String
-  name        String
-  jp          String
-}
-
-enum Level {
-  PAUD
-  TK
-  SD
-  SMP
-  SMK
-}
-
 model Classes {
   id          String    @id @default(uuid())
   section     String
@@ -138,6 +119,28 @@ model Classes {
   //
   Student     Student[]
   // countStudents Int
+}
+
+model Mapel {
+  id          String  @id @default(uuid())
+  name        String
+  jp          Int
+  //
+  idGrade     String
+  Grade       Grade   @relation(fields: [idGrade], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  //
+  idTeacher   String
+  nameTeacher String
+  Teacher     Teacher @relation(fields: [idTeacher], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  //
+}
+
+enum Level {
+  PAUD
+  TK
+  SD
+  SMP
+  SMK
 }
 
 model OptionClassSchedule {

@@ -1,79 +1,98 @@
-import { Card, CardContent } from "@/components/ui/card.tsx";
-import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table.tsx";
+import { Card, CardContent, CardHeader } from "@/components/ui/card.tsx";
 import { useParams } from "react-router-dom";
-import { useClassStore } from "@/stores/use-class-store.ts";
+import { EmptyComponent } from "@/components/mini/empty-component.tsx";
+import { Spinner } from "@/components/ui/spinner.tsx";
+import { gradeGetSchedule } from "@/lib/swr/grade-swr.ts";
+import { generatedScheduleShorted, LEVELGRADE } from "@/components/page/academic/gen-scedules.ts";
+import { CardDescription, CardTitle } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import ScheduleViewer from "@/components/page/academic/gen-jadwal-sekolah-page.tsx";
 
+const getLevelColor = (level: LEVELGRADE) => {
+	const colors = {
+		PAUD: "bg-pink-100 text-pink-800",
+		TK: "bg-purple-100 text-purple-800",
+		SD: "bg-blue-100 text-blue-800",
+		SMP: "bg-green-100 text-green-800",
+		SMK: "bg-orange-100 text-orange-800",
+	};
+	return colors[level] || "bg-gray-100 text-gray-800";
+};
+const days = [ "Senin", "Selasa", "Rabu", "Kamis", "Jumat" ];
 
 function JadwalSekolah(props: { idGrade: string }) {
-	// const { data: classes } = useAcademicClassesDetailTabel(param.id)
-	const classes = useClassStore(state => state.getClassByIdGrade)(props.idGrade)
+	const schedules = gradeGetSchedule(props.idGrade)
+	const scheduleGen = generatedScheduleShorted(schedules.data, 4, 8)
 
-	if (!classes) {
-		return <h1>Data is Null</h1>
+	if (schedules.isLoading) {
+		return <Spinner />
 	}
-	return (
-		<Card>
-			<CardContent className="space-y-4">
-				{ classes.map((kelas) => (
-					<div
-						key={ kelas.nameTeacher }
-						className="rounded-xl border shadow bg-white p-4"
-					>
-						<h2 className="text-xl font-bold mb-4">{ props.idGrade } { kelas.section } Room { kelas.room } </h2>
-						<Table>
-							<TableCaption>Jadwal pelajaran { kelas.idGrade }</TableCaption>
-							<TableHeader>
-								<TableRow>
-									<TableHead>Hari</TableHead>
-									<TableHead>Jam 1</TableHead>
-									<TableHead>Jam 2</TableHead>
-									<TableHead className="text-center">Istirahat</TableHead>
-									<TableHead>Jam 3</TableHead>
-									<TableHead>Jam 4</TableHead>
-									<TableHead>Total JP</TableHead>
-									<TableHead>Total Waktu</TableHead>
-								</TableRow>
-							</TableHeader>
-							<TableBody>
-								{ [ 1 ].map(() => {
 
-									return (
-										<TableRow>
-											<TableCell className="font-semibold">
-												{/*{ hari.day }*/ }
-											</TableCell>
-											<TableCell>
-												{/*{ lessons[0] ? `${ lessons[0].start } - ${ lessons[0].mapel }` : "-" }*/ }
-											</TableCell>
-											<TableCell>
-												{/*{ lessons[1] ? `${ lessons[1].start } - ${ lessons[1].mapel }` : "-" }*/ }
-											</TableCell>
-											<TableCell className="text-center bg-yellow-100 font-medium">
-												🍱 Istirahat
-											</TableCell>
-											<TableCell>
-												{/*{ lessons[2] ? `${ lessons[2].start } - ${ lessons[2].mapel }` : "-" }*/ }
-											</TableCell>
-											<TableCell>
-												{/*{ lessons[3] ? `${ lessons[3].start } - ${ lessons[3].mapel }` : "-" }*/ }
-											</TableCell>
-											<TableCell className="font-semibold text-blue-600">
-												{/*{ totalJP }*/ }
-											</TableCell>
-											<TableCell className="font-semibold text-green-600">
-												{/*{ hours } jam { minutes } mnt*/ }
-											</TableCell>
-										</TableRow>
-									);
-								}) }
-							</TableBody>
+	if (!schedules.data) {
+		return <EmptyComponent />
+	}
 
-						</Table>
-					</div>
-				)) }
-			</CardContent>
-		</Card>
-	);
+	console.log(scheduleGen)
+	return ( <div className={ "" }>
+			{ scheduleGen.map((classSchedule) => (
+				<Card key={ classSchedule.gradeId }>
+					<CardHeader>
+						<div className="flex items-center justify-between">
+							<div>
+								<CardTitle>{ classSchedule.gradeName }</CardTitle>
+								<CardDescription>
+									Tingkat { classSchedule.level } - Kelas { classSchedule.grade }
+								</CardDescription>
+							</div>
+							<Badge className={ getLevelColor(classSchedule.level) }>
+								{ classSchedule.level }
+							</Badge>
+						</div>
+					</CardHeader>
+					<CardContent>
+						<div className="grid grid-cols-3  gap-4">
+							{ days.map((day) => {
+								const daySchedule = classSchedule.schedule.filter(s => s.day === day);
+								return (
+									<Card key={ day } className="bg-background/50">
+										<CardHeader className="pb-3">
+											<CardTitle className="text-lg">{ day }</CardTitle>
+										</CardHeader>
+										<CardContent className="space-y-2">
+											{ daySchedule.length > 0 ? (
+												daySchedule.map((slot, idx) => (
+													<div
+														key={ `${ slot.day }-${ slot.period }-${ idx }` }
+														className="bg-background p-3 rounded-lg shadow-sm border "
+													>
+														<div className="flex items-center justify-between mb-1">
+															<Badge variant="outline" className="text-xs">
+																Jam { slot.period }
+															</Badge>
+														</div>
+														<div className="font-semibold text-sm ">
+															{ slot.mapelName }
+														</div>
+														<div className="text-xs  mt-1">
+															{ slot.teacherName }
+														</div>
+													</div>
+												))
+											) : (
+												<div className="text-center text-gray-400 text-sm py-4">
+													Tidak ada jadwal
+												</div>
+											) }
+										</CardContent>
+									</Card>
+								);
+							}) }
+						</div>
+					</CardContent>
+				</Card>
+			)) }
+		</div>
+	)
 }
 
 export default function JadwalSekolahPage() {
@@ -83,7 +102,7 @@ export default function JadwalSekolahPage() {
 	// }
 	return (
 		<div>
-			<JadwalSekolah idGrade={ param.id as string } />
+			<ScheduleViewer idGrade={ param.id } />
 		</div>
 	);
 }

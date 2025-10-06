@@ -1,11 +1,12 @@
 import useSWR from "swr";
-import { exampleSiswaList } from "@/assets/example/siswaList.ts";
 import { exampleNilai } from "@/assets/example/example-nilai.tsx";
 import { exampleReports } from "@/assets/example/exampleReports.ts";
 import { exampleTableWeek } from "@/assets/example/example-table-week.tsx";
+import { fetcher } from "@/lib/swr/config.ts";
+import { Student } from "shared/dist/lib/validate";
 
 export const useStudent = (idClass?: string) => {
-	return useSWR(!idClass ? null : `/api/student/${ idClass }`, () => exampleSiswaList)
+	return useSWR<Student[]>(!idClass ? null : `/api/student/${ idClass }`, fetcher)
 }
 
 export const useStudentNilai = (idStudent?: string) => {

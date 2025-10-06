@@ -9,7 +9,8 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { subjects } from "@/assets/subjects.tsx";
 import { type Teacher, TeacherOptionalDefaultsSchema } from "shared/dist/lib/validate";
 import { type TeacherOptionalDefaults } from "shared/src/lib/validate/modelSchema/TeacherSchema.ts";
-import { teacherCreate, teacherGet, teacherUpdate } from "@/lib/swr/teacher.ts";
+import { type FormDialog } from "@/interface/form-dialog.tsx";
+import { teacherCreate, teacherGet, teacherUpdate } from "@/lib/swr/teacher-swr.ts";
 import { useTeacherStore } from "@/stores/use-teacher-store.ts";
 import { useMapelClassStore } from "@/stores/use-mapel-class-store.ts";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card.tsx";
@@ -20,22 +21,13 @@ import { Link } from "react-router-dom";
 import { EyeIcon } from "lucide-react";
 
 
-export function TeacherForm(
-	{
-		open,
-		onClose,
-		editing,
-	}: {
-		open: boolean;
-		onClose: () => void;
-		editing?: TeacherOptionalDefaults | null;
-	}) {
-	// const { addTeacher, updateTeacher } = useTeacherStore();
-	const teachers = teacherGet()
+function TeacherForm(props: FormDialog<TeacherOptionalDefaults>) {
+	const { open, setOpen, editData, onSubmit } = props
+	// const teachers = teacherGet()
 
 	const form = useForm<TeacherOptionalDefaults>({
 		resolver: zodResolver(TeacherOptionalDefaultsSchema),
-		defaultValues: editing ?? {
+		defaultValues: editData ?? {
 			name: "",
 			subject: "",
 			phone: "",
@@ -48,10 +40,9 @@ export function TeacherForm(
 		},
 	});
 
-// 🔄 Update form when editing changes
 	useEffect(() => {
-		if (editing) {
-			form.reset(editing);
+		if (editData) {
+			form.reset(editData);
 		} else {
 			form.reset({
 				name: "",
@@ -64,27 +55,16 @@ export function TeacherForm(
 				birthDate: new Date(),
 			});
 		}
-	}, [ editing, form ]);
+	}, [ editData, form ]);
 
-	const onSubmit = async (values: TeacherOptionalDefaults) => {
-		if (editing && editing.id) {
-			const response = await teacherUpdate(editing.id, values)
-			console.log(response);
-		} else {
-			const response = await teacherCreate(values)
-			console.log(response);
-		}
-		await teachers.mutate()
-		onClose();
-	}
 
 	console.log(form.formState.errors);
 	return (
-		<Dialog open={ open } onOpenChange={ onClose }>
+		<Dialog open={ open } onOpenChange={ setOpen }>
 			<DialogContent className="max-w-lg">
 				<DialogHeader>
 					<DialogTitle>
-						{ editing ? "Edit Teacher" : "Add Teacher" }
+						{ editData ? "Edit Teacher" : "Add Teacher" }
 					</DialogTitle>
 				</DialogHeader>
 
@@ -234,7 +214,7 @@ export function TeacherForm(
 						/>
 
 						<Button type="submit" className="w-full">
-							{ editing ? "Update" : "Add" }
+							{ editData ? "Update" : "Add" }
 						</Button>
 					</form>
 				</Form>
@@ -243,12 +223,23 @@ export function TeacherForm(
 	);
 }
 
-export function TeacherTable() {
+function TeacherTable() {
 	const teachers = teacherGet()
 	const [ open, setOpen ] = useState(false);
 	const { deleteTeacher } = useTeacherStore();
 	const { getSubjectByIdTeacher } = useMapelClassStore()
 	const [ editing, setEditing ] = useState<Teacher | null>(null);
+
+	const onSubmit = async (values: TeacherOptionalDefaults) => {
+		if (editing && editing.id) {
+			await teacherUpdate(editing.id, values)
+		} else {
+			await teacherCreate(values)
+		}
+		await teachers.mutate()
+		setOpen(false);
+	}
+
 
 	if (teachers.isLoading) {
 		return <Spinner />;
@@ -301,7 +292,9 @@ export function TeacherTable() {
 										        setEditing(t);
 										        setOpen(true);
 									        } }
-									>Edit</Button>
+									>
+										Edit
+									</Button>
 
 									<Button size="sm" variant="destructive" onClick={ () => deleteTeacher(t.id) }>
 										Delete
@@ -312,9 +305,11 @@ export function TeacherTable() {
 					</TableBody>
 				</Table>
 			</CardContent>
-			<TeacherForm open={ open }
-			             editing={ editing }
-			             onClose={ () => setOpen(false) }
+			<TeacherForm
+				onSubmit={ onSubmit }
+				open={ open }
+				editData={ editing }
+				setOpen={ setOpen }
 			/>
 		</Card>
 	);

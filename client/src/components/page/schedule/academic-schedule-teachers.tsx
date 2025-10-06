@@ -1,8 +1,6 @@
 import { useEffect, useState } from "react";
-import { nanoid } from "nanoid";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger, } from "@/components/ui/dialog";
@@ -10,8 +8,7 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage, } from 
 import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, TableRow, } from "@/components/ui/table";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { EditIcon, Plus, TrashIcon } from "lucide-react";
-import { useMapelClassStore } from "@/stores/use-mapel-class-store.ts";
-import { mapelFormSchema, MapelFormValues } from "@/schema/mapel-form-schema.tsx";
+import { type MapelOptionalDefaults, MapelSchema } from "shared/dist/lib/validate";
 
 
 function AcademicScheduleOptionForm(
@@ -20,31 +17,31 @@ function AcademicScheduleOptionForm(
 		onSave,
 		onClose,
 	}: {
-		editing: MapelFormValues | null;
-		onSave: (data: MapelFormValues) => void;
+		editing: MapelOptionalDefaults | null;
+		onSave: (data: MapelOptionalDefaults) => void;
 		onClose?: () => void;
 	}) {
 
-	const form = useForm<MapelFormValues>({
-		resolver: zodResolver(mapelFormSchema),
+	const form = useForm<MapelOptionalDefaults>({
+		resolver: zodResolver(MapelSchema),
 		// defaultValues: { nameSubject: "", jp: 1 },
 	});
 
 	useEffect(() => {
 		if (editing) {
 			form.reset({
-				nameSubject: editing.nameSubject,
+				name: editing.name,
 				jp: editing.jp,
 				nameTeacher: editing.nameTeacher,
 				idTeacher: editing.idTeacher,
 				idGrade: editing.idGrade,
 			});
 		} else {
-			form.reset({ nameSubject: "", jp: 1, nameTeacher: "", idTeacher: "", idGrade: "" });
+			form.reset({ name: "", jp: 1, nameTeacher: "", idTeacher: "", idGrade: "" });
 		}
 	}, [ editing, form ]);
 
-	const onSubmit = (values: MapelFormValues) => {
+	const onSubmit = (values: MapelOptionalDefaults) => {
 		onSave(values);
 		form.reset();
 		onClose?.();
@@ -55,7 +52,7 @@ function AcademicScheduleOptionForm(
 			<form onSubmit={ form.handleSubmit(onSubmit) } className="space-y-4">
 				<FormField
 					control={ form.control }
-					name="nameSubject"
+					name="name"
 					render={ ({ field }) => (
 						<FormItem>
 							<FormLabel>Nama Mapel</FormLabel>
@@ -90,21 +87,20 @@ function AcademicScheduleOptionForm(
 	);
 }
 
-
 export function AcademicScheduleOption() {
-	const [ editing, setEditing ] = useState<Required<MapelFormValues> | null>(null);
-	const { mapels, removeMapelForTeacher, addMapelForTeacher, updateMapelForTeacher } = useMapelClassStore();
+	const [ editing, setEditing ] = useState<MapelOptionalDefaults | null>(null);
+	// const { mapels, removeMapelForTeacher, addMapelForTeacher, updateMapelForTeacher } = useMapelClassStore();
 
-	const handleSave = (data: MapelFormValues) => {
+	const handleSave = (data: MapelOptionalDefaults) => {
 		if (editing) {
-			updateMapelForTeacher(editing.id, data);
+			// updateMapelForTeacher(editing.id, data);
 			setEditing(null);
 		} else {
-			addMapelForTeacher({
-				...data,
-				id: nanoid(),
-
-			});
+			// addMapelForTeacher({
+			// 	...data,
+			// 	id: nanoid(),
+			//
+			// });
 		}
 	};
 // console.log(editing,'test')

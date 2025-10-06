@@ -9,6 +9,7 @@ export const fetcher = async (url: string) => {
 		console.error(error.message);
 	})
 };
+
 export const fetcherMutation = async (
 	url: string,
 	method: "POST" | "PUT" | "DELETE",
@@ -27,7 +28,7 @@ export const fetcherMutation = async (
 			options.body = JSON.stringify(data);
 		}
 
-		const res = await fetch(`${SERVER_URL}${url}`, options);
+		const res = await fetch(`${ SERVER_URL }${ url }`, options);
 
 		if (!res.ok) {
 			const errText = await res.text();
@@ -35,9 +36,15 @@ export const fetcherMutation = async (
 		}
 
 		return await res.json();
-	} catch (error: any) {
+	} catch (error: unknown) {
+		if (error instanceof Error) {
+			toast.error(error.message);
+			console.error(error);
+			return null;
+		}
+		// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+		// @ts-expect-error
 		toast.error(error.message);
-		console.error(error);
-		return null;
+		return null
 	}
 };

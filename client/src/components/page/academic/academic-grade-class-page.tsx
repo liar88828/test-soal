@@ -13,9 +13,7 @@ export default function AcademicGradeClassPage() {
 					<TabsList>
 						<TabsTrigger value="Class">Classes</TabsTrigger>
 						<TabsTrigger value="Teacher">Teachers</TabsTrigger>
-						{/*<TabsTrigger value="Option">Option</TabsTrigger>*/ }
 						<TabsTrigger value="Schedule">Schedule</TabsTrigger>
-						{/*<TabsTrigger value="Schedule-2">Schedule</TabsTrigger>*/ }
 					</TabsList>
 					<TabsContent value="Class">
 						<AcademicGradeClassesTabelPage />
@@ -23,15 +21,9 @@ export default function AcademicGradeClassPage() {
 					<TabsContent value="Teacher">
 						<AcademicGradeTeacher idGrade={ params.id ?? "" } />
 					</TabsContent>
-					{/*<TabsContent value="Option">*/ }
-					{/*	<AcademicGradeOption idGrade={ params.id ?? "" } />*/ }
-					{/*</TabsContent>*/ }
 					<TabsContent value="Schedule">
 						<JadwalSekolahPage />
 					</TabsContent>
-					{/*<TabsContent value="Schedule-2">*/ }
-					{/*	<JadwalSekolahPage />*/ }
-					{/*</TabsContent>*/ }
 				</Tabs>
 			</div>
 		</div>

@@ -7,6 +7,8 @@ import AppTransition from "@/components/page/root/AppTransition.tsx";
 import { sessionLoader } from "@/action/auth.action.ts";
 import { Button } from "@/components/ui/button.tsx";
 import { mainSidebar } from "@/main-sidebar.tsx";
+import { ThemeProvider } from "@/components/mini/dark-mode.tsx";
+import { SWRConfig } from "swr";
 
 
 export function AppSidebar() {
@@ -49,28 +51,38 @@ export function ProtectLayout() {
 	const session = useLoaderData<typeof sessionLoader>();
 	const navigation = useNavigation();
 	const isLoading = navigation.state === "loading"
-	;
 	return (
-		<SidebarProvider open={ !!session }>
-			<AppSidebar />
-			<main className="w-full relative">
-				<ProtectAppNavbar />
+		<ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
+			<SWRConfig
+				value={ {
+					revalidateOnFocus: false,
+					// refreshInterval: 3000,
+					dedupingInterval: 1000 * 60,
+					// fetcher: (resource, init) => fetch(resource, init).then(res => res.json())
+				} }
+			>
+				<SidebarProvider open={ !!session }>
+					<AppSidebar />
+					<main className="w-full relative">
+						<ProtectAppNavbar />
 
-				{/* Loading overlay for route changes */ }
-				{ isLoading && (
-					<div className="absolute inset-0 z-50 flex items-center justify-center bg-white/70 backdrop-blur-sm">
-						<Loader2 className="h-10 w-10 animate-spin text-primary" />
-					</div>
-				) }
+						{/* Loading overlay for route changes */ }
+						{ isLoading && (
+							<div className="absolute inset-0 z-50 flex items-center justify-center bg-white/70 backdrop-blur-sm">
+								<Loader2 className="h-10 w-10 animate-spin text-primary" />
+							</div>
+						) }
 
-				<div className="mx-auto flex flex-col ga min-h-screen p-6 bg-muted">
-					<AppTransition>
-						<Outlet />
-					</AppTransition>
-				</div>
-			</main>
-			<Toaster position="top-right" />
-		</SidebarProvider>
+						<div className="mx-auto flex flex-col ga min-h-screen p-6 bg-muted">
+							<AppTransition>
+								<Outlet />
+							</AppTransition>
+						</div>
+					</main>
+					<Toaster position="top-right" />
+				</SidebarProvider>
+			</SWRConfig>
+		</ThemeProvider>
 	);
 }
 
@@ -81,38 +93,40 @@ export function PublicLayout() {
 	// console.log(session);
 	// console.log(use(userContext))
 	return (
-		<main className="w-full relative">
-			<nav className=" to inset-x-4 h-16 bg-background border border-b-2   mx-auto ">
-				<div className="h-full flex items-center justify-between mx-auto px-4 max-w-screen-xl">
-					<NavMenu className="hidden md:block" />
-					<div className="flex items-center gap-3">
-						<Button className="rounded-full" asChild>
+		<ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
+			<main className="w-full relative">
+				<nav className=" to inset-x-4 h-16 bg-background border border-b-2   mx-auto ">
+					<div className="h-full flex items-center justify-between mx-auto px-4 max-w-screen-xl">
+						<NavMenu className="hidden md:block" />
+						<div className="flex items-center gap-3">
+							<Button className="rounded-full" asChild>
 
-							{ ( !session || !session.isValid ) ?
-								<Link to={ "/auth/login" }>
-									<LogInIcon /> Login
-								</Link>
-								: <Link to={ "/auth/logout" }>
-									<LogOutIcon /> Logout
-								</Link>
-							}
-						</Button>
+								{ ( !session || !session.isValid ) ?
+									<Link to={ "/auth/login" }>
+										<LogInIcon /> Login
+									</Link>
+									: <Link to={ "/auth/logout" }>
+										<LogOutIcon /> Logout
+									</Link>
+								}
+							</Button>
+						</div>
 					</div>
-				</div>
-			</nav>
+				</nav>
 
-			{/* Loading overlay for route changes */ }
-			{ isLoading && (
-				<div className="absolute inset-0 z-50 flex items-center justify-center bg-white/70 backdrop-blur-sm">
-					<Loader2 className="h-10 w-10 animate-spin text-primary" />
-				</div>
-			) }
+				{/* Loading overlay for route changes */ }
+				{ isLoading && (
+					<div className="absolute inset-0 z-50 flex items-center justify-center bg-white/70 backdrop-blur-sm">
+						<Loader2 className="h-10 w-10 animate-spin text-primary" />
+					</div>
+				) }
 
-			<div className="mx-auto flex flex-col ga min-h-screen  bg-muted">
-				<AppTransition>
-					<Outlet />
-				</AppTransition>
-			</div>
-		</main>
+				<div className="mx-auto flex flex-col ga min-h-screen  bg-muted">
+					<AppTransition>
+						<Outlet />
+					</AppTransition>
+				</div>
+			</main>
+		</ThemeProvider>
 	);
 }

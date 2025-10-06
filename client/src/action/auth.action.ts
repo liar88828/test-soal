@@ -42,7 +42,7 @@ export async function loginAction({ request, context }: ActionFunctionArgs) {
 	const password = formData.get("password") as string
 
 	try {
-		const res = await fetch(`${ SERVER_URL }/auth/login`, {
+		const res = await fetch(`${ SERVER_URL }/api/auth/login`, {
 			method: "POST",
 			headers: { "Content-Type": "application/json" },
 			body: JSON.stringify({ email, password }),
@@ -103,7 +103,7 @@ export async function profileLoader() {
 	}
 
 	try {
-		const res = await fetch(`${ SERVER_URL }/auth/profile`, {
+		const res = await fetch(`${ SERVER_URL }/api/auth/profile`, {
 			headers: {
 				Authorization: `Bearer ${ session.token }`,
 			},

@@ -8,6 +8,7 @@ import gradeRouter from "../route/grade.router";
 import seedRouter from "../route/seed.router";
 import classesRouter from "../route/classes.router";
 import optionRouter from "../route/option.router";
+import mapelRouter from "../route/mapel.router";
 
 const app = new Hono()
 app.use(cors())
@@ -22,12 +23,13 @@ app.get("/hello", async (c) => {
 	return c.json(data, { status: 200 })
 })
 
-app.route("/soal", soalRouter)
-app.route("/auth", authRouter)
+app.route("/api/soal", soalRouter)
+app.route("/api/auth", authRouter)
 app.route("/api/grade", gradeRouter)
 app.route("/api/class", classesRouter)
 app.route("/api/option", optionRouter)
 app.route("/api/teacher", teacherRouter)
+app.route("/api/mapel", mapelRouter)
 //
 app.route("/api/seed", seedRouter)
 

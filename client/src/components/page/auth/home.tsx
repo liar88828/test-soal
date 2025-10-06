@@ -9,9 +9,9 @@ export default function Home() {
 	const session = useLoaderData<typeof sessionLoader>()
 	// console.log(dataAvailableOnClass)
 	return (
-		<div className="min-h-screen  text-gray-900">
+		<div className="min-h-screen   text-primary">
 			{/* Hero Section */ }
-			<section className="px-6 py-20 text-center bg-gradient-to-b from-blue-50 to-white">
+			<section className="px-6 py-20 text-center  ">
 				<h1 className="text-4xl md:text-5xl font-bold mb-4">
 					Platform Latihan Ujian & Tes Online
 				</h1>
@@ -34,7 +34,7 @@ export default function Home() {
 			</section>
 
 			{/* Fitur */ }
-			<section className="px-6 py-16 bg-gray-50">
+			<section className="px-6 py-16 bg-background">
 				<h2 className="text-3xl font-semibold text-center mb-10">
 					Kenapa memilih kami?
 				</h2>
@@ -66,8 +66,8 @@ export default function Home() {
 			</section>
 
 			{/* Testimoni */ }
-			<section className="px-6 py-16">
-				<h2 className="text-3xl font-semibold text-center mb-10">
+			<section className="px-6 py-16 text-primary">
+				<h2 className="text-3xl font-semibold text-center mb-10 ">
 					Apa kata mereka?
 				</h2>
 				<div className="max-w-4xl mx-auto text-center">
@@ -80,7 +80,7 @@ export default function Home() {
 			</section>
 
 			{/* Footer */ }
-			<footer className="px-6 py-10 bg-gray-100 text-center text-sm text-gray-500">
+			<footer className="px-6 py-10 bg-background text-center text-sm text-primary">
 				© { new Date().getFullYear() } LatihanUjian.id — Dibuat dengan ❤️ untuk pelajar Indonesia.
 			</footer>
 		</div>

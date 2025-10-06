@@ -9,7 +9,7 @@ gradeRouter.get("/",
 	async (c) => {
 		const grades = await prisma.grade.findMany();
 		return c.json(grades);
-	});
+	})
 
 // gradeRouter.get(`/class/:idGrade`, async (c) => {
 // 	const idGrade = c.req.param("idGrade")
@@ -17,14 +17,25 @@ gradeRouter.get("/",
 // 	return c.json(classesDB);
 // });
 
-gradeRouter.get("/:id",
+gradeRouter
+.get("/:id",
 	async (c) => {
 		const id = c.req.param("id");
 		const gradeDB = await prisma.grade.findUnique({ where: { id } });
 		if (!gradeDB) return c.json({ message: "Grades not found" }, 404);
 
 		return c.json(gradeDB);
-	});
+	})
+.get(`/:id/schedule`,
+	async (c) => {
+		const id = c.req.param("id")
+		const grades = await prisma.grade.findMany({
+			where: { id },
+			include: { Mapel: true },
+		});
+
+		return c.json(grades);
+	})
 
 gradeRouter.post("/",
 	zValidator("json", GradeSchema),
@@ -33,17 +44,18 @@ gradeRouter.post("/",
 		return c.json(gradeDB, 201);
 	});
 
-gradeRouter.put("/:id", zValidator("json", GradeSchema), async (c) => {
-	const id = c.req.param("id");
-	const exist = await prisma.grade.findUnique({ where: { id } });
-	if (!exist) return c.json({ message: "Teacher not found" }, 404);
+gradeRouter.put("/:id",
+	zValidator("json", GradeSchema), async (c) => {
+		const id = c.req.param("id");
+		const exist = await prisma.grade.findUnique({ where: { id } });
+		if (!exist) return c.json({ message: "Teacher not found" }, 404);
 
-	const gradeDB = await prisma.grade.update({
-		where: { id },
-		data: c.req.valid("json"),
+		const gradeDB = await prisma.grade.update({
+			where: { id },
+			data: c.req.valid("json"),
+		});
+		return c.json(gradeDB);
 	});
-	return c.json(gradeDB);
-});
 
 gradeRouter.delete("/:id", async (c) => {
 	const id = c.req.param("id");

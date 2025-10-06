@@ -10,16 +10,14 @@ export default function LoginPage() {
 	const data = fetcher.data as { error: string } | undefined
 	// console.log(fetcher.dataAvailableOnClass)
 	return (
-		<div className="min-h-screen flex items-center justify-center bg-gray-50">
+		<div className="min-h-screen flex items-center justify-center bg-background">
 			<Card className="w-full max-w-md shadow-lg rounded-2xl">
 				<CardHeader>
 					<CardTitle className="text-2xl text-center">Login ke Akunmu</CardTitle>
 				</CardHeader>
 				<CardContent>
 					<fetcher.Form method="post" className="space-y-4 max-w-md w-full ">
-
 						<h1 className="text-2xl font-bold text-center mb-4">Login</h1>
-
 						{ data?.error && <p className="text-red-500">{ data.error }</p> }
 
 						<div>
