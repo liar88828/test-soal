@@ -8,8 +8,8 @@ import { Button } from "@/components/ui/button.tsx";
 export default function ProfilePage() {
 	const user = useLoaderData() as LoaderProps<typeof profileLoader>;
 	return (
-		<div className=" max-w-md mx-auto">
-			<Card>
+	<div className="min-h-screen flex items-center justify-center bg-gray-50">
+			<Card className="w-full max-w-md shadow-lg rounded-2xl">
 				<CardHeader className="flex flex-col items-center text-center">
 					<Avatar className="w-20 h-20 mb-2">
 						{/* <AvatarFallback>

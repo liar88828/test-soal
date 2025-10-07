@@ -1,7 +1,17 @@
-import { type ActionFunctionArgs, LoaderFunctionArgs, redirect } from "react-router-dom"
+import {
+	type ActionFunctionArgs,
+	LoaderFunctionArgs,
+	redirect,
+} from "react-router-dom"
 import { SERVER_URL } from "@/lib/constants"
-import { deleteSession, getSession, isLogin, loginSession, SessionContext } from "./session"
-import { userContext } from "@/hooks/context.ts";
+import {
+	deleteSession,
+	getSession,
+	isLogin,
+	loginSession,
+	SessionContext,
+} from "./session"
+import { userContext } from "@/hooks/context.ts"
 
 const exampleUser = {
 	id: 1,
@@ -42,7 +52,7 @@ export async function loginAction({ request, context }: ActionFunctionArgs) {
 	const password = formData.get("password") as string
 
 	try {
-		const res = await fetch(`${ SERVER_URL }/auth/login`, {
+		const res = await fetch(`${SERVER_URL}/auth/login`, {
 			method: "POST",
 			headers: { "Content-Type": "application/json" },
 			body: JSON.stringify({ email, password }),
@@ -53,10 +63,10 @@ export async function loginAction({ request, context }: ActionFunctionArgs) {
 			return { error: errorData.error || "Gagal login" }
 		}
 
-		const { token } = await res.json()
-		const session = loginSession(token) // Simpan token
+		const data = await res.json()
+		const session = loginSession(data.token) // Simpan token
 		console.log("session", session)
-		context.set(userContext, session);
+		context.set(userContext, session)
 		return redirect("/")
 	} catch {
 		return { error: "Terjadi kesalahan pada server" }
@@ -70,7 +80,7 @@ export async function registerAction({ request }: ActionFunctionArgs) {
 	const password = formData.get("password") as string
 
 	try {
-		const res = await fetch(`${ SERVER_URL }/auth/register`, {
+		const res = await fetch(`${SERVER_URL}/auth/register`, {
 			method: "POST",
 			headers: { "Content-Type": "application/json" },
 			body: JSON.stringify({ name, email, password }),
@@ -81,8 +91,11 @@ export async function registerAction({ request }: ActionFunctionArgs) {
 			return { error: errorData.error || "Gagal register" }
 		}
 
-		const { token } = await res.json()
-		await loginAction(token)
+		const data = await res.json()
+		console.log(data)
+		const responseLogin = loginSession(data.token)
+		console.log(responseLogin)
+
 		return redirect("/auth/login")
 	} catch {
 		return { error: "Terjadi kesalahan saat mendaftar" }
@@ -103,9 +116,9 @@ export async function profileLoader() {
 	}
 
 	try {
-		const res = await fetch(`${ SERVER_URL }/auth/profile`, {
+		const res = await fetch(`${SERVER_URL}/auth/profile`, {
 			headers: {
-				Authorization: `Bearer ${ session.token }`,
+				Authorization: `Bearer ${session.token}`,
 			},
 		})
 
