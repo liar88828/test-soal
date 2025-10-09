@@ -1,16 +1,21 @@
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card.tsx"
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow, } from "@/components/ui/table.tsx"
+import { EmptyComponent } from "@/components/mini/empty-component.tsx";
+import { type VariantCSS } from "@/components/page/finance/VariantCSS.tsx";
 import { Badge } from "@/components/ui/badge.tsx"
-import { VariantCSS } from "@/components/page/finance/VariantCSS.tsx";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card.tsx"
+import { Spinner } from "@/components/ui/spinner.tsx";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow, } from "@/components/ui/table.tsx"
+import { fetcher } from "@/lib/swr/config.ts";
+import { type FinanceClass } from "shared";
+import useSWR from "swr";
 
-const dummyFinanceClass = [
-	{ id: 1, className: "X IPA 1", studentCount: 32, totalPaid: 12000000 },
-	{ id: 2, className: "X IPA 2", studentCount: 30, totalPaid: 11000000 },
-	{ id: 3, className: "XI IPS 1", studentCount: 28, totalPaid: 9500000 },
-	{ id: 4, className: "XII IPA 1", studentCount: 29, totalPaid: 14500000 },
-]
 
-export default function FinanceClasses() {
+export default function FinanceClassesPage() {
+	const financeClass = useSWR<FinanceClass[]>("/api/finance-bill-student/class", fetcher)
+
+
+	if (financeClass.isLoading) return <Spinner />
+	if (!financeClass.data) return <EmptyComponent />
+
 	return (
 		<div className=" space-y-6">
 			<Card>
@@ -28,8 +33,8 @@ export default function FinanceClasses() {
 							</TableRow>
 						</TableHeader>
 						<TableBody>
-							{ dummyFinanceClass.map((cls) => (
-								<TableRow key={ cls.id }>
+							{ financeClass.data.map((cls) => (
+								<TableRow key={ cls.className }>
 									<TableCell>{ cls.className }</TableCell>
 									<TableCell>{ cls.studentCount }</TableCell>
 									<TableCell>

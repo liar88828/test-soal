@@ -1,42 +1,26 @@
+import { EmptyComponent } from "@/components/mini/empty-component.tsx";
+import { type VariantCSS } from "@/components/page/finance/VariantCSS.tsx";
 import { Badge } from "@/components/ui/badge.tsx"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card.tsx"
+import { Spinner } from "@/components/ui/spinner.tsx";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow, } from "@/components/ui/table.tsx"
-import { VariantCSS } from "@/components/page/finance/VariantCSS.tsx";
+import { fetcher } from "@/lib/swr/config.ts";
+import { type FinanceBillStudent } from "shared/dist/lib/validate";
+import useSWR from "swr";
 
-const dummyReports = [
-	{
-		id: 1,
-		name: "Ahmad Fauzi",
-		kelas: "X IPA 1",
-		bulan: "Agustus",
-		nominal: 200000,
-		status: "Lunas",
-	},
-	{
-		id: 2,
-		name: "Dina Mulyani",
-		kelas: "X IPS 2",
-		bulan: "Agustus",
-		nominal: 200000,
-		status: "Belum",
-	},
-	{
-		id: 3,
-		name: "Bayu Pratama",
-		kelas: "XI IPA 3",
-		bulan: "Agustus",
-		nominal: 200000,
-		status: "Lunas",
-	},
-]
 
-export default function FinanceReports() {
-	const totalLunas = dummyReports
-	.filter((r) => r.status === "Lunas")
+export default function FinanceReportsPage() {
+
+	const financeBillStudent = useSWR<FinanceBillStudent[]>("/api/finance-bill-student", fetcher)
+	if (financeBillStudent.isLoading) return <Spinner />
+	if (!financeBillStudent.data) return <EmptyComponent />
+
+	const totalLunas = financeBillStudent.data
+	.filter((r) => r.status === "LUNAS")
 	.reduce((sum, r) => sum + r.nominal, 0)
 
-	const totalBelum = dummyReports
-	.filter((r) => r.status === "Belum")
+	const totalBelum = financeBillStudent.data
+	.filter((r) => r.status === "BELUM")
 	.reduce((sum, r) => sum + r.nominal, 0)
 
 	return (
@@ -63,7 +47,7 @@ export default function FinanceReports() {
 						<CardTitle>Total Siswa</CardTitle>
 					</CardHeader>
 					<CardContent className="text-xl font-semibold">
-						{ dummyReports.length }
+						{ financeBillStudent.data.length }
 					</CardContent>
 				</Card>
 			</div>
@@ -84,7 +68,7 @@ export default function FinanceReports() {
 							</TableRow>
 						</TableHeader>
 						<TableBody>
-							{ dummyReports.map((r) => (
+							{ financeBillStudent.data.map((r) => (
 								<TableRow key={ r.id }>
 									<TableCell>{ r.name }</TableCell>
 									<TableCell>{ r.kelas }</TableCell>
@@ -93,7 +77,7 @@ export default function FinanceReports() {
 									<TableCell>
 										<Badge
 											variant={
-												( r.status === "Lunas" ? "success" : "destructive" ) as VariantCSS
+												( r.status === "LUNAS" ? "success" : "destructive" ) as VariantCSS
 											}
 										>
 											{ r.status }

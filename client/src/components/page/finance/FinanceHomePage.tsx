@@ -2,6 +2,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card.t
 import { CreditCard, DollarSign, Receipt, Wallet } from "lucide-react"
 import { Link } from "react-router-dom"
 
+
 const financeMenus = [
 	{
 		title: "Pembayaran SiswaType",
@@ -29,7 +30,7 @@ const financeMenus = [
 	},
 ]
 
-export default function FinanceHome() {
+export default function FinanceHomePage() {
 	return (
 		<div className="">
 			<h1 className="text-2xl font-bold mb-6">Administrasi Keuangan</h1>

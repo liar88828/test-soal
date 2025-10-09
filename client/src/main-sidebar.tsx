@@ -17,6 +17,7 @@ import {
 	Warehouse
 } from "lucide-react";
 
+
 export const mainSidebar = [
 	{
 		title: "AnnouncementType",
@@ -166,11 +167,11 @@ export const mainSidebar = [
 				icon: DollarSign,
 			},
 
-			{
-				title: "Arus Kas",
-				url: "/finance/cashflow",
-				icon: Users,
-			},
+			// {
+			// 	title: "Arus Kas",
+			// 	url: "/finance/cashflow",
+			// 	icon: Users,
+			// },
 			{
 				title: "Data Kelas",
 				url: "/finance/classes",

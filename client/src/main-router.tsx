@@ -1,53 +1,54 @@
-import { createBrowserRouter } from "react-router"
-import { SoalPage } from "@/components/page/question/SoalPage.tsx"
-import { SoalCreateList } from "@/components/page/question/SoalCreateList.tsx"
-import { SoalCreateModal } from "@/components/page/question/SoalCreateModal.tsx"
-import { Loading } from "./components/mini/loading.tsx"
-import { createSoalABCAction, createSoalAction, createSoalTextAction, getSoalAll, soalListAnswer, soalListCheckLoader, soalListLoader, } from "./action/soal.ts"
-import { AuthLoader, loginAction, logoutAction, profileLoader, registerAction, sessionLoader, } from "@/action/auth.action.ts"
-import { studentDetailProfileLoader, studentHomeLoader, studentProfileLoader } from "./action/student.ts"
-import Home from "@/components/page/auth/home.tsx"
-import AnswerCheck from "@/components/page/question/soalCheck.tsx"
-import SoalAnswer from "@/components/page/question/soalAnswer.tsx"
-import RegisterPage from "@/components/page/auth/registerPage.tsx"
-import LoginPage from "@/components/page/auth/loginPage.tsx"
-import ProfilePage from "@/components/page/auth/ProfilePage.tsx"
-import StudentHome from "@/components/page/student/StudentHome.tsx"
-import { ProtectLayout, PublicLayout } from "./components/page/root/AppLayout.tsx"
-import StudentAnnouncementsPage from "@/components/page/student/StudentAnnouncementsPage.tsx"
-import TeacherHome from "@/components/page/teacher/TeacherHome.tsx"
-import TeacherClassesPage from "@/components/page/teacher/TeacherClassesPage.tsx"
-import TeacherClassDetailPage from "@/components/page/teacher/TeacherClassDetailPage.tsx"
-import TeacherGrades from "@/components/page/teacher/TeacherGrades.tsx"
-import AnnouncementPage from "@/components/page/announcements/announcement-page.tsx"
-import TeacherScheduleCard from "@/components/page/schedule/teacher-schedule-card.tsx"
-import TeacherStudentPage from "@/components/page/teacher/TeacherStudentPage.tsx"
-import TeacherAbsencePage from "@/components/page/absence/teacher-absence-page.tsx"
-import FinanceHome from "@/components/page/finance/FinanceHome.tsx"
-import FinancePayments from "@/components/page/finance/FinancePayments.tsx"
-import FinanceReports from "@/components/page/finance/FinanceReports.tsx"
-import FinanceBills from "@/components/page/finance/FinanceBills.tsx"
-import FinanceCash from "@/components/page/finance/FinanceCash.tsx"
-import FinanceClasses from "@/components/page/finance/FinanceClasses.tsx"
-import FinanceSubjects from "@/components/page/finance/FinanceSubjects.tsx"
-import FinanceRoom from "@/components/page/finance/FinanceRoom.tsx"
-import LogoutPage from "@/components/page/auth/logoutPage.tsx";
-import { SoalABCComponent } from "@/components/page/question/SoalABCComponent.tsx";
-import { SoalTextComponent } from "@/components/page/question/SoalTextComponent.tsx";
-import { ErrorBoundary } from "@/components/page/root/ErrorBoundary.tsx";
 import { announcementDetailAction, announcementDetailLoader, announcementPageAction, announcementPageLoader } from "@/action/announcement.ts";
-import AcademicGradeClassPage from "@/components/page/academic/academic-grade-class-page.tsx";
-import AcademicGradeClassDetailPage from "@/components/page/academic/academic-grade-class-detail-page.tsx";
-import AcademicTeacherPage from "@/components/page/academic/academic-teacher-page.tsx";
-import AcademicTeacherDetailPage from "@/components/page/academic/academic-teacher-detail-page.tsx";
+import { AuthLoader, loginAction, logoutAction, profileLoader, registerAction, sessionLoader, } from "@/action/auth.action.ts"
 import { publicMiddleware, testMiddleware, validMiddleware } from "@/action/session.middleware.ts";
-import { AcademicSchedulePage } from "@/components/page/academic/academic-schedule-page.tsx";
+import TeacherAbsencePage from "@/components/page/absence/teacher-absence-page.tsx"
+import AcademicGradeClassDetailPage from "@/components/page/academic/academic-grade-class-detail-page.tsx";
+import AcademicGradeClassPage from "@/components/page/academic/academic-grade-class-page.tsx";
 import AcademicGradePage from "@/components/page/academic/academic-grade-page.tsx";
 import AcademicScheduleOptionPage from "@/components/page/academic/academic-schedule-option-page.tsx";
-import StudentProfile from "@/components/page/student/component/student-profile-page.tsx";
-import StudentProfilePage from "@/components/page/student/component/student-profile-page.tsx";
+import { AcademicSchedulePage } from "@/components/page/academic/academic-schedule-page.tsx";
+import AcademicTeacherDetailPage from "@/components/page/academic/academic-teacher-detail-page.tsx";
+import AcademicTeacherPage from "@/components/page/academic/academic-teacher-page.tsx";
 import AnnouncementDetailPage from "@/components/page/announcements/announcement-detail-page.tsx";
 import { AnnouncementIndex } from "@/components/page/announcements/announcement-index.tsx";
+import AnnouncementPage from "@/components/page/announcements/announcement-page.tsx"
+import Home from "@/components/page/auth/home.tsx"
+import LoginPage from "@/components/page/auth/loginPage.tsx"
+import LogoutPage from "@/components/page/auth/logoutPage.tsx";
+import ProfilePage from "@/components/page/auth/ProfilePage.tsx"
+import RegisterPage from "@/components/page/auth/registerPage.tsx"
+import FinanceBillsPage from "@/components/page/finance/FinanceBillsPage.tsx"
+import FinanceCashPage from "@/components/page/finance/FinanceCashPage.tsx"
+import FinanceClassesPage from "@/components/page/finance/FinanceClassesPage.tsx"
+import FinanceHomePage from "@/components/page/finance/FinanceHomePage.tsx"
+import FinancePaymentsPage from "@/components/page/finance/FinancePaymentsPage.tsx"
+import FinanceReportsPage from "@/components/page/finance/FinanceReportsPage.tsx"
+import FinanceRoomPage from "@/components/page/finance/FinanceRoomPage.tsx";
+import FinanceRoom from "@/components/page/finance/FinanceRoomPage.tsx";
+import FinanceSubjectsPage from "@/components/page/finance/FinanceSubjectsPage.tsx"
+import { SoalABCComponent } from "@/components/page/question/SoalABCComponent.tsx";
+import SoalAnswer from "@/components/page/question/soalAnswer.tsx"
+import AnswerCheck from "@/components/page/question/soalCheck.tsx"
+import { SoalCreateList } from "@/components/page/question/SoalCreateList.tsx"
+import { SoalCreateModal } from "@/components/page/question/SoalCreateModal.tsx"
+import { SoalPage } from "@/components/page/question/SoalPage.tsx"
+import { SoalTextComponent } from "@/components/page/question/SoalTextComponent.tsx";
+import { ErrorBoundary } from "@/components/page/root/ErrorBoundary.tsx";
+import TeacherScheduleCard from "@/components/page/schedule/teacher-schedule-card.tsx"
+import StudentProfile from "@/components/page/student/component/student-profile-page.tsx";
+import StudentProfilePage from "@/components/page/student/component/student-profile-page.tsx";
+import StudentAnnouncementsPage from "@/components/page/student/StudentAnnouncementsPage.tsx"
+import StudentHome from "@/components/page/student/StudentHome.tsx"
+import TeacherClassDetailPage from "@/components/page/teacher/TeacherClassDetailPage.tsx"
+import TeacherClassesPage from "@/components/page/teacher/TeacherClassesPage.tsx"
+import TeacherGrades from "@/components/page/teacher/TeacherGrades.tsx"
+import TeacherHome from "@/components/page/teacher/TeacherHome.tsx"
+import TeacherStudentPage from "@/components/page/teacher/TeacherStudentPage.tsx"
+import { createBrowserRouter } from "react-router"
+import { createSoalABCAction, createSoalAction, createSoalTextAction, getSoalAll, soalListAnswer, soalListCheckLoader, soalListLoader, } from "./action/soal.ts"
+import { studentDetailProfileLoader, studentHomeLoader, studentProfileLoader } from "./action/student.ts"
+import { Loading } from "./components/mini/loading.tsx"
+import { ProtectLayout, PublicLayout } from "./components/page/root/AppLayout.tsx"
 // main-router
 export const mainRouter = createBrowserRouter(
 	[
@@ -252,31 +253,35 @@ export const mainRouter = createBrowserRouter(
 							children: [
 								{
 									index: true,
-									Component: FinanceHome,
+									Component: FinanceHomePage,
 								},
 								{
 									path: "payments",
-									Component: FinancePayments,
+									Component: FinancePaymentsPage,
 								},
 								{
 									path: "report",
-									Component: FinanceReports,
+									Component: FinanceReportsPage,
 								},
 								{
 									path: "bills",
-									Component: FinanceBills,
+									Component: FinanceBillsPage,
 								},
 								{
 									path: "cash",
-									Component: FinanceCash,
+									Component: FinanceCashPage,
 								},
 								{
 									path: "classes",
-									Component: FinanceClasses,
+									Component: FinanceClassesPage,
 								},
 								{
 									path: "subjects",
-									Component: FinanceSubjects,
+									Component: FinanceSubjectsPage,
+								},
+								{
+									path: "subjects/:id",
+									Component: () => <h1>hello</h1>,
 								},
 								{
 									path: "room",
@@ -303,27 +308,27 @@ export const mainRouter = createBrowserRouter(
 								},
 								{
 									path: "report",
-									Component: FinanceReports,
+									Component: FinanceReportsPage,
 								},
 								{
 									path: "bills",
-									Component: FinanceBills,
+									Component: FinanceBillsPage,
 								},
 								{
 									path: "cash",
-									Component: FinanceCash,
+									Component: FinanceCashPage,
 								},
 								{
 									path: "classes",
-									Component: FinanceClasses,
+									Component: FinanceClassesPage,
 								},
 								{
 									path: "subjects",
-									Component: FinanceSubjects,
+									Component: FinanceSubjectsPage,
 								},
 								{
 									path: "room",
-									Component: FinanceRoom,
+									Component: FinanceRoomPage,
 								},
 							],
 						},

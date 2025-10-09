@@ -1,23 +1,21 @@
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card.tsx";
-import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table.tsx";
-import { Button } from "@/components/ui/button.tsx";
-import { Link } from "react-router-dom";
-import { Eye } from "lucide-react";
-import useSWR from "swr";
-import { Spinner } from "@/components/ui/spinner.tsx";
-import { fetcher } from "@/lib/swr/config.ts";
-import { Grade } from "shared/dist/lib/validate";
 import { EmptyComponent } from "@/components/mini/empty-component.tsx";
+import { Button } from "@/components/ui/button.tsx";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card.tsx";
+import { Spinner } from "@/components/ui/spinner.tsx";
+import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table.tsx";
+import { fetcher } from "@/lib/swr/config.ts";
+import { Eye } from "lucide-react";
+import { Link } from "react-router-dom";
+import { Grade } from "shared/dist/lib/validate";
+import useSWR from "swr";
 
 
 export function AcademicGradeTable() {
 	const grade = useSWR<Grade[]>("/api/grade", fetcher)
-	if (grade.isLoading ) {
-		return <Spinner />
-	}
-	if (!grade.data) {
-		return <EmptyComponent />
-	}
+
+
+	if (grade.isLoading) return <Spinner />
+	if (!grade.data) return <EmptyComponent />
 	return (
 		<Card>
 			<CardHeader>

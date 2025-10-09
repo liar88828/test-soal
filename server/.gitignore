@@ -1,5 +1,6 @@
 # deps
 node_modules/
+generated/
 
 /../generated/prisma
 /generated/prisma/query_engine-windows.dll.node.tmp6984

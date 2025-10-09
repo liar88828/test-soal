@@ -1,41 +1,22 @@
+import { EmptyComponent } from "@/components/mini/empty-component.tsx";
+import { type  VariantCSS } from "@/components/page/finance/VariantCSS.tsx";
 import { Badge } from "@/components/ui/badge.tsx"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card.tsx"
+import { Spinner } from "@/components/ui/spinner.tsx";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow, } from "@/components/ui/table.tsx"
-import { VariantCSS } from "@/components/page/finance/VariantCSS.tsx";
+import { formatDate } from "@/lib/format-date.tsx";
+import { fetcher } from "@/lib/swr/config.ts";
+import { type  FinanceCashFlow } from "shared/dist/lib/validate";
+import useSWR from "swr";
 
-const dummyCashFlow = [
-	{
-		id: 1,
-		type: "Masuk",
-		description: "SPP Bulan September",
-		amount: 500000,
-		date: "2025-09-01",
-	},
-	{
-		id: 2,
-		type: "Keluar",
-		description: "Pembelian Buku",
-		amount: 200000,
-		date: "2025-09-02",
-	},
-	{
-		id: 3,
-		type: "Masuk",
-		description: "Donasi Alumni",
-		amount: 1000000,
-		date: "2025-09-05",
-	},
-	{
-		id: 4,
-		type: "Keluar",
-		description: "Perbaikan AC",
-		amount: 350000,
-		date: "2025-09-08",
-	},
-]
 
-export default function FinanceCash() {
-	const totalCash = dummyCashFlow.reduce((sum, item) => {
+export default function FinanceCashPage() {
+	const financeCashFlow = useSWR<FinanceCashFlow[]>("/api/finance-cash-flow", fetcher)
+
+	if (financeCashFlow.isLoading) return <Spinner />
+	if (!financeCashFlow.data) return <EmptyComponent />
+
+	const totalCash = financeCashFlow.data.reduce((sum, item) => {
 		return item.type === "Masuk" ? sum + item.amount : sum - item.amount
 	}, 0)
 
@@ -56,9 +37,9 @@ export default function FinanceCash() {
 							</TableRow>
 						</TableHeader>
 						<TableBody>
-							{ dummyCashFlow.map((cash) => (
+							{ financeCashFlow.data.map((cash) => (
 								<TableRow key={ cash.id }>
-									<TableCell>{ cash.date }</TableCell>
+									<TableCell>{ formatDate(cash.date) }</TableCell>
 									<TableCell>{ cash.description }</TableCell>
 									<TableCell>
 										<Badge

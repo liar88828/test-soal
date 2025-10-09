@@ -1,14 +1,22 @@
 import { Empty, EmptyContent, EmptyDescription, EmptyHeader, EmptyTitle } from "@/components/ui/empty.tsx";
 
 
-export function EmptyComponent() {
+export function EmptyComponent(
+	{
+		code = "404",
+		title = "Not Found",
+		description = "The page you&apos;re looking for doesn&apos;t exist. Try searching for what you need below."
+	}: {
+		code?: string,
+		title?: string,
+		description?: string
+	}) {
 	return (
 		<Empty>
 			<EmptyHeader>
-				<EmptyTitle>404 - Not Found</EmptyTitle>
+				<EmptyTitle>{ code } - { title }</EmptyTitle>
 				<EmptyDescription>
-					The page you&apos;re looking for doesn&apos;t exist. Try searching for
-					what you need below.
+					{ description }
 				</EmptyDescription>
 			</EmptyHeader>
 			<EmptyContent>

@@ -218,3 +218,67 @@ enum StatusSiswa {
   lulus
   keluar
 }
+
+model FinanceSubject {
+  id          String   @id @default(uuid())
+  name        String
+  code        String   @unique
+  category    String
+  cost        Int // stored as integer (rupiah)
+  description String?
+  semester    Int
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // relation
+  costList CostItem[]
+}
+
+model CostItem {
+  id          String         @id @default(uuid())
+  subject     FinanceSubject @relation(fields: [subjectId], references: [id], onDelete: Cascade)
+  subjectId   String
+  name        String
+  amount      Int // integer rupiah
+  description String?
+  createdAt   DateTime       @default(now())
+}
+
+model FinanceBillStudent {
+  id        String     @id @default(uuid())
+  name      String // nama siswa
+  kelas     String // kelas siswa
+  bulan     String // bulan tagihan
+  nominal   Int // jumlah tagihan (rupiah)
+  status    BillStatus @default(BELUM)
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+}
+
+enum BillStatus {
+  LUNAS
+  BELUM
+}
+
+model FinanceRoom {
+  id        String   @id @default(uuid())
+  room      String
+  cost      Int
+  note      String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+enum TypeCashFlow {
+  Masuk
+  Keluar
+}
+
+model FinanceCashFlow {
+  id          String   @id @default(uuid())
+  type        String // "Masuk" or "Keluar"
+  description String
+  amount      Int
+  date        DateTime
+}

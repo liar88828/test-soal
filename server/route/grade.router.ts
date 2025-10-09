@@ -1,7 +1,8 @@
-import { Hono } from "hono"
-import { prisma } from "../lib/db/prisma";
 import { zValidator } from "@hono/zod-validator";
 import { GradeSchema } from "@shared/lib/validate";
+import { Hono } from "hono"
+import { prisma } from "../lib/db/prisma";
+
 
 const gradeRouter = new Hono()
 
@@ -11,7 +12,7 @@ gradeRouter.get("/",
 		return c.json(grades);
 	})
 
-// gradeRouter.get(`/class/:idGrade`, async (c) => {
+// roomFinanceRouter.get(`/class/:idGrade`, async (c) => {
 // 	const idGrade = c.req.param("idGrade")
 // 	const classesDB = await prisma.classes.findMany({ where: { idGrade } });
 // 	return c.json(classesDB);

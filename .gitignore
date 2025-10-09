@@ -61,4 +61,8 @@ bun.lockb
 /server/generated/prisma/query_engine-windows.dll.node
 /server/generated/prisma/schema.prisma
 /server/generated/prisma/wasm.d.ts
-/server/generated/prisma/wasm.js
+/server/generated/prisma
+server/generated/prisma/query_engine_bg.wasm
+server/generated/prisma/query_engine_bg.js
+server/generated/prisma/query_engine_bg.js
+server/generated/prisma/query_engine_bg.wasm

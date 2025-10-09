@@ -1,6 +1,7 @@
 import { SERVER_URL } from "@/lib/constants.ts";
 import { toast } from "sonner";
 
+
 export const fetcher = async (url: string) => {
 	return fetch(`${ SERVER_URL }${ url }`)
 	.then(res => res.json())
@@ -9,6 +10,7 @@ export const fetcher = async (url: string) => {
 		console.error(error.message);
 	})
 };
+// export const fetcherQuery = <T>(url: string) => useSWR<T>(url, fetcher)
 
 export const fetcherMutation = async (
 	url: string,
@@ -34,7 +36,7 @@ export const fetcherMutation = async (
 			const errText = await res.text();
 			throw new Error(errText || res.statusText);
 		}
-
+		toast.success("Success ✅")
 		return await res.json();
 	} catch (error: unknown) {
 		if (error instanceof Error) {
@@ -44,7 +46,7 @@ export const fetcherMutation = async (
 		}
 		// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 		// @ts-expect-error
-		toast.error(error.message);
+		toast.error(`${ error.message } ❌`);
 		return null
 	}
 };
